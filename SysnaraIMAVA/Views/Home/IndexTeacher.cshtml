@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var años = ViewBag.Años as List<SysnaraIMAVA.Models.Año>;
+}
+
+<div class="header" style="margin-bottom: 0px; padding-bottom: 0px;">
+    <!--Contenido antes de las olas-->
+    <div class="inner-header flex">
+        @* ICONO DEL TITULO  *@
+        <i class="fas fa-graduation-cap" style="font-size: 50px; color: white; margin-right: 10px;"></i>
+        <!-- Contenedor de texto con "SYSNARA" y "Sistema de Matricula Anglosajón / Internacional" -->
+        <div class="titulo-container">
+            <h1 class="display-4">SYSNARA</h1>
+            <h6>Sistema de Matrícula <span class="word-container"><span class="word anglosajon">Estudiantil</span><span class="word internacional">Hondureño</span></span></h6>
+        </div>
+
+        <img id="imagenPrincipal" src="~/Recursos/home.png" width="450px;" height="auto;" />
+    </div>
+
+    <!-- Waves Container -->
+    <div>
+        <svg class="waves" viewBox="1 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+            <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="parallax">
+                <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7)" />
+                <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+                <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+                <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+            </g>
+        </svg>
+    </div>
+</div>
+
+<script>
+
+</script>
+
+@* Cargar jQuery solo en la vista Index *@
+<script src="~/lib/jquery360/jquery-3.6.0.min.js"></script>
+@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  *@
+
+

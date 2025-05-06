@@ -50,6 +50,11 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+// ** Asegúrate de añadir esto aquí para habilitar el uso de sesiones **
+app.UseSession();  // Aquí agregas el middleware de sesión (LOGIN)
+
+app.UseRouting();
+
 app.UseAuthorization();
 
 app.MapStaticAssets();

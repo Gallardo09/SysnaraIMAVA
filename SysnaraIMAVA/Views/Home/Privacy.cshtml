@@ -1,6 +1,35 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
-}
-<h1>@ViewData["Title"]</h1>
+﻿<div class="container contact-container">
+    <h1 class="contact-title">@ViewData["Title"]</h1>
+    <p class="contact-info">
+        Para cualquier información que necesites, puedes contactar con el desarrollador:<br>
+        <strong>Teléfono:</strong> (+504) 9782-4537<br>
+        <strong>Email:</strong> <a href="mailto:darbingallardo9@gmail.com">darbingallardo9@gmail.com</a>
+    </p>
+    <div class="contact-footer">
+        <p>Desarrollado con 💻 y ☕ por <strong>Darbín Gallardo</strong>.</p>
+        <p>&copy; 2025 Mi Sitio Web. Todos los derechos reservados.</p>
+    </div>
+</div>
+<style>
+    .contact-container {
+        margin-top: 50px;
+        text-align: center;
+    }
 
-<p>Use this page to detail your site's privacy policy.</p>
+    .contact-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .contact-info {
+        font-size: 1.25rem;
+        color: #555;
+    }
+
+    .contact-footer {
+        margin-top: 30px;
+        font-size: 1rem;
+        color: #777;
+    }
+</style>

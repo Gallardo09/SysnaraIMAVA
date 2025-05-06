@@ -1,0 +1,40 @@
+﻿@keyframes neon-border-animation {
+    0% {
+        box-shadow: 0 0 3px #00bfff, 0 0 6px #00bfff, 0 0 9px #00bfff, 0 0 12px #00bfff;
+        border-color: #00bfff; /* Azul */
+    }
+
+    25% {
+        box-shadow: 0 0 3px #b0b0b0, 0 0 6px #b0b0b0, 0 0 9px #b0b0b0, 0 0 12px #b0b0b0;
+        border-color: #b0b0b0; /* Gris */
+    }
+
+    50% {
+        box-shadow: 0 0 3px #ffffff, 0 0 6px #ffffff, 0 0 9px #ffffff, 0 0 12px #ffffff;
+        border-color: #ffffff; /* Blanco */
+    }
+
+    75% {
+        box-shadow: 0 0 3px #b0b0b0, 0 0 6px #b0b0b0, 0 0 9px #b0b0b0, 0 0 12px #b0b0b0;
+        border-color: #b0b0b0; /* Gris */
+    }
+
+    100% {
+        box-shadow: 0 0 3px #00bfff, 0 0 6px #00bfff, 0 0 9px #00bfff, 0 0 12px #00bfff;
+        border-color: #00bfff; /* Azul */
+    }
+}
+
+.neon-border {
+    border: 0.5px solid #ff00ff; /* Borde más delgado */
+    border-radius: 5px; /* Radio del borde */
+    animation: neon-border-animation 20s infinite linear; /* Animación continua */
+    padding: 10px; /* Ajusta el padding según lo necesites */
+   /* text-align: center; /* Centrar el texto dentro del div */
+    color: white; /* Color del texto dentro del elemento */
+    font-family: Arial, sans-serif; /* Fuente del texto */
+}
+
+label {
+    color: black; /* Asegura que los labels sean visibles */
+}
