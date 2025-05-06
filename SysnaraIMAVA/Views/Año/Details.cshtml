@@ -1,0 +1,49 @@
+﻿@model SystemSysnara.Models.Año
+
+@{
+    ViewData["Title"] = "Detalles del Año";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center" style="font-family: Russo One, sans-serif;">Detalles del Año</h2>
+
+    <!-- Card para los detalles -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="card-title">Información del Año</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3 text-bold">ID Año</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Idaño)</dd>
+
+                <dt class="col-sm-3 text-bold">Fecha Inicial</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.AñoInicio)</dd>
+
+                <dt class="col-sm-3 text-bold">Fecha Final</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.AñoFin)</dd>
+
+                <dt class="col-sm-3 text-bold">Observación</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Observacion)</dd>
+
+                <dt class="col-sm-3 text-bold">Sistema</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Sistema)</dd>
+
+                <dt class="col-sm-3 text-bold">Periodo del Sistema</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.SistemaPeriodo)</dd>
+            </dl>
+        </div>
+        <div class="card-footer text-center">
+            <a asp-action="Edit" class="btn btn-warning" asp-route-id="@Model?.Idaño">
+                <i class="fas fa-edit"></i> Editar
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Regresar a la lista
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Para los íconos de FontAwesome -->
+}

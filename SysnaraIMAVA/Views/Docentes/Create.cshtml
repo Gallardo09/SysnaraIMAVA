@@ -1,0 +1,113 @@
+﻿@model SystemSysnara.Models.Docente
+
+@{
+    ViewData["Title"] = "Registrar Docente";
+}
+
+<div class="container mt-5">
+    <!-- Título de la página -->
+    <h2 class="text-center mb-4 text-primary" style="font-family: 'Roboto', sans-serif; font-weight: 700;">Registrar Nuevo Docente</h2>
+
+    <!-- Card Contenedor -->
+    <div class="card shadow-lg border-light">
+        <div class="card-header bg-info text-white">
+            <h4 class="card-title text-center">Formulario de Registro</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                <!-- Fila 1 -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="Idaño" class="control-label"><i class="fas fa-calendar-alt"></i> Año</label>
+                            <select asp-for="Idaño" class="form-control" asp-items="ViewBag.Idaño"></select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="Iddocente" class="control-label"><i class="fas fa-id-badge"></i> Identidad del Docente</label>
+                            <input asp-for="Iddocente" class="form-control" />
+                            <span asp-validation-for="Iddocente" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="NombreCompleto" class="control-label"><i class="fas fa-user"></i> Nombre Completo</label>
+                            <input asp-for="NombreCompleto" class="form-control" />
+                            <span asp-validation-for="NombreCompleto" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fila 2 -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label asp-for="Genero" class="control-label"><i class="fas fa-transgender"></i> Género</label>
+                            <select asp-for="Genero" class="form-control">
+                                <option value="">Seleccione...</option>
+                                <option value="MASCULINO">MASCULINO</option>
+                                <option value="FEMENINO">FEMENINO</option>
+                            </select>
+                            <span asp-validation-for="Genero" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label asp-for="Telefono" class="control-label"><i class="fas fa-phone"></i> Teléfono</label>
+                            <input asp-for="Telefono" class="form-control" />
+                            <span asp-validation-for="Telefono" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label asp-for="Celular" class="control-label"><i class="fas fa-mobile-alt"></i> Celular</label>
+                            <input asp-for="Celular" class="form-control" />
+                            <span asp-validation-for="Celular" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label asp-for="Correo" class="control-label"><i class="fas fa-envelope"></i> Correo</label>
+                            <input asp-for="Correo" class="form-control" />
+                            <span asp-validation-for="Correo" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fila 3 -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Direccion" class="control-label"><i class="fas fa-map-marker-alt"></i> Dirección</label>
+                            <input asp-for="Direccion" class="form-control" />
+                            <span asp-validation-for="Direccion" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Profesion" class="control-label"><i class="fas fa-graduation-cap"></i> Profesión</label>
+                            <input asp-for="Profesion" class="form-control" />
+                            <span asp-validation-for="Profesion" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="form-group text-center">
+                    <input type="submit" value="Registrar" class="btn btn-primary" />
+                    <a class="btn btn-warning" asp-action="Index"><i class="fas fa-arrow-left"></i> Regresar a la lista</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome for Icons -->
+}

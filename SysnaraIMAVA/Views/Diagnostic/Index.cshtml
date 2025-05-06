@@ -1,0 +1,154 @@
+﻿@{
+    ViewData["Title"] = "Diagnostic Tests";
+}
+
+<!-- Estilos personalizados -->
+<style>
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+        border-radius: 10px;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        transition: background-color 0.3s ease;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+    .list-group-item {
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 5px;
+        transition: background-color 0.3s ease;
+    }
+    .list-group-item:hover {
+        background-color: #f8f9fa;
+    }
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+    }
+    .card-text {
+        color: #666;
+    }
+</style>
+
+<div class="container text-center mt-2">
+    <h1 class="display-4 mb-4">🩺 Diagnostic Tests</h1>
+    <p class="lead mb-5">Select a diagnostic test.</p>
+
+    <div class="row">
+        @{
+            // Diccionario con las rutas de los PDFs agrupados por grado
+            var librosPorGrado = new Dictionary<string, List<(string Ruta, string Nombre)>>
+            {
+                {
+                    "Second",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Diagnostic/2th/Prueba Diagnostica Matematicas 2do grado.pdf", "Prueba Diagnóstica Matematicas 2do°"),
+                    }
+                },
+                {
+                    "Third",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Diagnostic/3th/Prueba Diagnostica Matematicas 3er grado.pdf", "Prueba Diagnóstica Matematicas 3er"),
+                    }
+                },
+                {
+                    "Fourth",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Diagnostic/4th/Prueba Diagnostica Matematicas 4to grado.pdf", "Prueba Diagnóstica Matematicas 4to"),
+                    }
+                },
+                {
+                    "Fifth",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Diagnostic/5th/Prueba Diagnostica Matematicas 5to grado.pdf", "Prueba Diagnóstica Matematicas 5to"),
+                    }
+                },
+                {
+                    "Sixth",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Diagnostic/6th/Prueba Diagnostica Matematicas 6to grado.pdf", "Prueba Diagnóstica Matematicas 6to"),
+                    }
+                },
+                {
+                    "Seventh",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Diagnostic/7th/Prueba Diagnostica Matematicas 7mo grado.pdf", "Prueba Diagnóstica Matematicas 7mo"),
+                    }
+                },
+                {
+                    "Eighth",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Diagnostic/8th/Prueba Diagnostica Matematicas 8vo grado.pdf", "Prueba Diagnóstica Matematicas 8vo"),
+                    }
+                },
+                {
+                    "Ninth",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Diagnostic/9th/Prueba Diagnostica Matematicas 9no grado.pdf", "Prueba Diagnóstica Matematicas 9no"),
+                    }
+                },
+                {
+                    "Tenth",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Diagnostic/10th/Pruebas Diagnóstica Español  10°.pdf", "Pruebas Diagnóstica Español  10°"),
+                        ("/LibrosBooks/TestsHonduras/Diagnostic/10th/Prueba Diagnóstica Matemáticas 10.pdf", "Prueba Diagnóstica Matemáticas 10"),
+                    }
+                },
+                {
+                    "Eleventh",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Diagnostic/11th/Pruebas Diagnóstica Español  11°.pdf", "Pruebas Diagnóstica Español  11°"),
+                        ("/LibrosBooks/TestsHonduras/Diagnostic/11th/Prueba Diagnóstica Matemáticas 11.pdf", "Prueba Diagnóstica Matemáticas 11"),
+                    }
+                },
+            };
+        }
+
+        @foreach (var grado in librosPorGrado.Keys)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@grado</h5>
+                        <p class="card-text">Diagnostic Tests</p>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@grado" aria-expanded="false" aria-controls="collapse-@grado">
+                            📂 View Documents
+                        </button>
+                        <div class="collapse mt-3" id="collapse-@grado">
+                            <div class="list-group">
+                                @foreach (var libro in librosPorGrado[grado])
+                                {
+                                    <a href="@libro.Ruta" class="list-group-item list-group-item-action" target="_blank">
+                                        📄 @libro.Nombre
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

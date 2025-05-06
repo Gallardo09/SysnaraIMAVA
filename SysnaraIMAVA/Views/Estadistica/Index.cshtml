@@ -1,0 +1,427 @@
+﻿@{
+    ViewData["Title"] = "Estadísticas de Matrículas";
+}
+
+<div class="container">
+    <h2 class="card-title" style="text-align: center;">DATOS ESTADÍSTICOS</h2>
+    <div class="card shadow-sm border-light">
+        <div class="card-body">
+            <div class="row justify-content-center">
+                <div class="col-md-3 mb-2">
+                    <label for="filtroAño" class="form-label">Año</label>
+                    <select class="form-select" id="filtroAño">
+                        <option value="">Seleccione un año</option>
+                        @if (ViewBag.Años != null)
+                        {
+                            @foreach (var año in ViewBag.Años)
+                            {
+                                <option value="@año.Idaño">@año.Idaño</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label for="filtroSistema" class="form-label">Sistema</label>
+                    <select class="form-select" id="filtroSistema">
+                        <option value="">Seleccione un sistema</option>
+                        <option value="ANGLOSAJÓN">ANGLOSAJÓN</option>
+                        <option value="TRADICIONAL">TRADICIONAL</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-3 mb-4">
+            <div class="card overlay-card matriculados">
+                <div class="card-body">
+                    <h5 class="card-title">Matriculados</h5>
+                    <h3 class="card-text">0</h3>
+                    <i class="la la-graduation-cap icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card overlay-card ninas">
+                <div class="card-body">
+                    <h5 class="card-title">Niñas</h5>
+                    <h3 class="card-text">0</h3>
+                    <i class="la la-female icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card overlay-card varones">
+                <div class="card-body">
+                    <h5 class="card-title">Varones</h5>
+                    <h3 class="card-text">0</h3>
+                    <i class="la la-male icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card overlay-card nuevo-ingreso">
+                <div class="card-body">
+                    <h5 class="card-title">Nuevo Ingreso</h5>
+                    <h3 class="card-text">0</h3>
+                    <i class="la la-user-plus icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card overlay-card reingreso">
+                <div class="card-body">
+                    <h5 class="card-title">Reingreso</h5>
+                    <h3 class="card-text">0</h3>
+                    <i class="la la-redo icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-12">
+            <h4>Estadísticas por Grado y Sección</h4>
+            <table id="tablaEstadisticas" class="table table-striped table-hover" style="width:100%; font-size: 13px;">
+                <thead>
+                    <tr>
+                        <th>ID Grado</th>
+                        <th>Grado</th>
+                        <th>Sección</th>
+                        <th>Total</th>
+                        <th>Femenino</th>
+                        <th>Masculino</th>
+                        <th>Primer Ingreso</th>
+                        <th>Reingreso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Los datos se llenarán dinámicamente con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6">
+            <canvas id="graficoGenero"></canvas>
+        </div>
+        <div class="col-md-6">
+            <canvas id="graficoIngreso"></canvas>
+        </div>
+    </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            let graficoGenero, graficoIngreso;
+            let table = $('#tablaEstadisticas').DataTable({
+                columns: [
+                    { data: 'idgrado' },
+                    { data: 'grado' },
+                    { data: 'seccion' },
+                    { data: 'total' },
+                    { data: 'femenino' },
+                    { data: 'masculino' },
+                    { data: 'primerIngreso' },
+                    { data: 'reingreso' }
+                ]
+            });
+
+            // Función para animar el conteo
+            function animateValue(obj, start, end, duration) {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    const currentValue = Math.floor(progress * (end - start) + start);
+                    $(obj).text(currentValue.toLocaleString()); // Usar jQuery para asegurar que funcione
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+
+            // Función para actualizar las tarjetas con los datos obtenidos
+            function actualizarTarjetas(data) {
+                animateValue($('.matriculados .card-text')[0], 0, data.totalMatriculados, 1000);
+                animateValue($('.ninas .card-text')[0], 0, data.alumnosFemeninos, 1000);
+                animateValue($('.varones .card-text')[0], 0, data.alumnosMasculinos, 1000);
+                animateValue($('.nuevo-ingreso .card-text')[0], 0, data.nuevoIngreso, 1000);
+                animateValue($('.reingreso .card-text')[0], 0, data.reingreso, 1000);
+            }
+
+            // Función para actualizar la tabla de estadísticas por grado y sección
+            function actualizarTabla(data) {
+                console.log(data.estadisticasPorGrado); // Verifica los datos en la consola
+                table.clear().rows.add(data.estadisticasPorGrado).draw();
+            }
+            // Función para actualizar los gráficos
+            let graficoGrado;
+
+            function actualizarGraficos(data) {
+                const ctxGenero = document.getElementById('graficoGenero').getContext('2d');
+                const ctxIngreso = document.getElementById('graficoIngreso').getContext('2d');
+                const ctxGrado = document.getElementById('graficoGrado').getContext('2d');
+
+                // Destruir gráficos anteriores si existen
+                if (graficoGenero) graficoGenero.destroy();
+                if (graficoIngreso) graficoIngreso.destroy();
+                if (graficoGrado) graficoGrado.destroy();
+
+                // Gráfico de género
+                graficoGenero = new Chart(ctxGenero, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Femenino', 'Masculino'],
+                        datasets: [{
+                            data: [data.alumnosFemeninos, data.alumnosMasculinos],
+                            backgroundColor: ['#FF6384', '#36A2EB']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Distribución por Género'
+                            }
+                        }
+                    }
+                });
+
+                // Gráfico de ingreso
+                graficoIngreso = new Chart(ctxIngreso, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Primer Ingreso', 'Reingreso'],
+                        datasets: [{
+                            label: 'Cantidad',
+                            data: [data.nuevoIngreso, data.reingreso],
+                            backgroundColor: ['#4BC0C0', '#FFCE56']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Distribución por Tipo de Ingreso'
+                            }
+                        }
+                    }
+                });
+
+                // Gráfico de distribución por grado
+                const grados = data.estadisticasPorGrado.map(g => `${g.Grado} - ${g.Seccion}`);
+                const totales = data.estadisticasPorGrado.map(g => g.Total);
+
+                graficoGrado = new Chart(ctxGrado, {
+                    type: 'bar',
+                    data: {
+                        labels: grados,
+                        datasets: [{
+                            label: 'Total Matriculados',
+                            data: totales,
+                            backgroundColor: '#FF9F40'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Distribución por Grado y Sección'
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Evento para filtrar los datos cuando cambian los selectores
+            $('#filtroAño, #filtroSistema').change(function () {
+                var filtroAño = $('#filtroAño').val();
+                var filtroSistema = $('#filtroSistema').val();
+
+                $.ajax({
+                    url: '@Url.Action("ObtenerDatosEstadisticos", "Estadistica")',
+                    type: 'GET',
+                    data: { filtroAño: filtroAño, filtroSistema: filtroSistema },
+                    success: function (response) {
+                        console.log(response); // Verifica la respuesta en la consola
+                        if (response.success) {
+                            actualizarTarjetas(response);
+                            actualizarTabla(response);
+                            actualizarGraficos(response);
+                        } else {
+                            toastr.error("No se pudieron obtener los datos.");
+                        }
+                    },
+                    error: function () {
+                        toastr.error("Ocurrió un error al obtener los datos.");
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script src="~/lib/jquery360/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/lib/datatables.net/jquery.dataTables2.0.5.js"></script>
+    <script src="~/lib/datatables.net/dataTables.bootstrap5.js"></script>
+}
+
+<style>
+        /* Estilos generales */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f9;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0056b3, #003b7d);
+            color: white;
+            padding: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .inner-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        .titulo-container {
+            text-align: center;
+            margin-right: 20px;
+        }
+
+            .titulo-container h1 {
+                font-size: 48px;
+                margin: 0;
+            }
+
+            .titulo-container h6 {
+                font-size: 18px;
+                margin: 0;
+            }
+
+        #imagenPrincipal {
+            width: 450px;
+            height: auto;
+        }
+
+        .waves {
+            position: relative;
+            width: 100%;
+            height: 15vh;
+            margin-bottom: -7px;
+            min-height: 100px;
+            max-height: 150px;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .icon {
+            font-size: 40px;
+            color: #0056b3;
+        }
+
+        /* Media Queries para pantallas pequeñas */
+        @@media (max-width: 768px) {
+            .inner-header
+
+        {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .titulo-container {
+            margin-right: 0;
+            margin-bottom: 20px;
+        }
+
+            .titulo-container h1 {
+                font-size: 36px;
+            }
+
+            .titulo-container h6 {
+                font-size: 16px;
+            }
+
+        #imagenPrincipal {
+            width: 300px;
+        }
+
+        .card-title {
+            font-size: 20px;
+        }
+
+        .card-text {
+            font-size: 28px;
+        }
+
+        .icon {
+            font-size: 30px;
+        }
+
+        }
+
+        @@media (max-width: 480px) {
+            .titulo-container h1
+
+        {
+            font-size: 28px;
+        }
+
+        .titulo-container h6 {
+            font-size: 14px;
+        }
+
+        #imagenPrincipal {
+            width: 200px;
+        }
+
+        .card-title {
+            font-size: 18px;
+        }
+
+        .card-text {
+            font-size: 24px;
+        }
+
+        .icon {
+            font-size: 24px;
+        }
+
+        }
+    </style>

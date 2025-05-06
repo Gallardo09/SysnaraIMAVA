@@ -1,0 +1,28 @@
+﻿@{
+    var pdfBase64 = TempData["PdfStream"] as string;
+    var fileName = TempData["PdfFileName"] as string;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #pdf-viewer {
+            width: 100%;
+            height: 79vh;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    @if (!string.IsNullOrEmpty(pdfBase64))
+    {
+        <iframe id="pdf-viewer" src="data:application/pdf;base64,@pdfBase64"></iframe>
+    }
+    <br />
+@*  <a href="@Url.Action("DescargarPdf")">Descargar Reporte</a>*@
+    <a class="btn btn-danger" href="@Url.Action("Index", "ReporteTradicional")">Cerrar</a> 
+</body>
+</html>

@@ -1,0 +1,216 @@
+﻿@model IEnumerable<SystemSysnara.Models.Nota>
+@{
+    ViewData["Title"] = "Cuadro de Honor";
+    var años = ViewBag.Años as List<SystemSysnara.Models.Año>;
+}
+
+<div class="container-fluid mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">
+                    <i class="fas fa-trophy me-2"></i> @ViewData["Title"]
+                </h3>
+                <div class="badge bg-white text-primary fs-6 p-2">
+                    <i class="fas fa-calendar-alt me-1"></i> @DateTime.Now.ToString("dd/MM/yyyy")
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row mb-4 g-3">
+                <div class="col-md-4">
+                    <div class="form-floating">
+                        <select class="form-select" id="filtroAño">
+                            <option value="">Seleccione un año</option>
+                            @if (años != null)
+                            {
+                                @foreach (var año in años)
+                                {
+                                    <option value="@año.Idaño">@año.Idaño</option>
+                                }
+                            }
+                        </select>
+                        <label for="filtroAño">Año Académico</label>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-floating">
+                        <select class="form-select" id="filtroGrado" disabled>
+                            <option value="">Seleccione un grado</option>
+                        </select>
+                        <label for="filtroGrado">Grado</label>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-floating">
+                        <select class="form-select" id="filtroParcial">
+                            <option value="1">I Parcial</option>
+                            <option value="2">II Parcial</option>
+                            <option value="3">III Parcial</option>
+                            <option value="4">IV Parcial</option>
+                            <option value="0">Promedio Final</option>
+                        </select>
+                        <label for="filtroParcial">Parcial</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table id="cuadroHonorTable" class="table table-hover table-striped" style="width:100%; font-size: 14px;">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Posición</th>
+                            <th>Identidad</th>
+                            <th>Nombre del Estudiante</th>
+                            <th>Género</th>
+                            <th>Grado</th>
+                            <th>Sección</th>
+                            <th>Asignaturas</th>
+                            <th>Promedio</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var table = $('#cuadroHonorTable').DataTable({
+                dom: '<"top"f>rt<"bottom"lip><"clear">',
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+                },
+                columns: [
+                    { data: 'posicion' },
+                    { data: 'ididentidad' },
+                    { data: 'nombreEstudiante' },
+                    { data: 'genero' },
+                    { data: 'grado' },
+                    { data: 'seccion' },
+                    {
+                        data: 'cantidadAsignaturas',
+                        render: function(data, type, row) {
+                            // Muestra "X de Y" asignaturas
+                            return `${data} de ${row.totalAsignaturas}`;
+                        }
+                    },
+                    {
+                        data: 'promedio',
+                        render: function(data) {
+                            return parseFloat(data).toFixed(2);
+                        }
+                    }
+                ],
+                order: [[0, 'asc']]
+            });
+
+            // Cargar grados cuando se selecciona un año
+            $('#filtroAño').change(function () {
+                var idAño = $(this).val();
+                $('#filtroGrado').empty().append('<option value="">Seleccione un grado</option>');
+
+                if (idAño) {
+                    $.ajax({
+                        url: '/CuadroHonor/GetGrados',
+                        data: { idAño: idAño },
+                        success: function (data) {
+                            $.each(data, function (index, item) {
+                                $('#filtroGrado').append($('<option>', {
+                                    value: item.idgrado,
+                                    text: item.gradoCompleto
+                                }));
+                            });
+                            $('#filtroGrado').prop('disabled', false);
+                        }
+                    });
+                } else {
+                    $('#filtroGrado').prop('disabled', true);
+                    table.clear().draw();
+                }
+                cargarCuadroHonor();
+            });
+
+            // Cargar cuadro de honor al cambiar filtros
+            $('#filtroGrado, #filtroParcial').change(cargarCuadroHonor);
+
+            function cargarCuadroHonor() {
+                var idAño = $('#filtroAño').val();
+                var idGrado = $('#filtroGrado').val();
+                var parcial = $('#filtroParcial').val();
+
+                if (idAño) {
+                    $.ajax({
+                        url: '/CuadroHonor/GetCuadroHonor',
+                        data: {
+                            idAño: idAño,
+                            idGrado: idGrado,
+                            parcial: parcial
+                        },
+                        success: function (data) {
+                            // Agregar posición a cada estudiante
+                            var dataWithPosition = data.map((item, index) => ({
+                                ...item,
+                                posicion: index + 1
+                            }));
+
+                            table.clear().rows.add(dataWithPosition).draw();
+                        },
+                        error: function () {
+                            toastr.error('Error al cargar el cuadro de honor');
+                        }
+                    });
+                } else {
+                    table.clear().draw();
+                }
+            }
+        });
+    </script>
+}
+
+<style>
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .table th {
+        white-space: nowrap;
+        position: relative;
+        background-color: #343a40 !important;
+        color: white;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+
+    .badge {
+        border-radius: 50px;
+        font-weight: 500;
+    }
+
+    .form-floating label {
+        color: #6c757d;
+    }
+
+    /* Estilo para las primeras posiciones */
+    tr:first-child td {
+        background-color: #fff3cd !important; /* Amarillo claro para el 1er lugar */
+        font-weight: bold;
+    }
+
+    tr:nth-child(2) td {
+        background-color: #e2e3e5 !important; /* Gris claro para el 2do lugar */
+    }
+
+    tr:nth-child(3) td {
+        background-color: #d1e7dd !important; /* Verde claro para el 3er lugar */
+    }
+</style>

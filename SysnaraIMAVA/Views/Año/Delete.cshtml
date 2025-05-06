@@ -1,0 +1,55 @@
+﻿@model SystemSysnara.Models.Año
+
+@{
+    ViewData["Title"] = "Eliminar Año";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center" style="font-family: Russo One, sans-serif;">Eliminar Año</h2>
+
+    <!-- Card para la confirmación de eliminación -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-danger text-white">
+            <h4 class="card-title">Confirmar Eliminación</h4>
+        </div>
+        <div class="card-body">
+            <h5 class="text-warning text-center mb-4">¿Estás seguro de que deseas eliminar este registro?</h5>
+
+            <!-- Detalles del Año -->
+            <dl class="row">
+                <dt class="col-sm-3 text-bold">ID Año</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Idaño)</dd>
+
+                <dt class="col-sm-3 text-bold">Fecha Inicial</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.AñoInicio)</dd>
+
+                <dt class="col-sm-3 text-bold">Fecha Final</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.AñoFin)</dd>
+
+                <dt class="col-sm-3 text-bold">Observación</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Observacion)</dd>
+
+                <dt class="col-sm-3 text-bold">Sistema</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Sistema)</dd>
+
+                <dt class="col-sm-3 text-bold">Periodo del Sistema</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.SistemaPeriodo)</dd>
+            </dl>
+        </div>
+        <div class="card-footer text-center">
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Idaño" />
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash-alt"></i> Eliminar
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Regresar a la lista
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Para los íconos de FontAwesome -->
+}

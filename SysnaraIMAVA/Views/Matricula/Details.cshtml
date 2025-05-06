@@ -1,0 +1,175 @@
+﻿@model SystemSysnara.Models.Matricula
+
+@{
+    ViewData["Title"] = "Detalles de Matrícula";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4" style="font-family: 'Russo One', sans-serif; color: #007bff;">Detalles de Matrícula</h2>
+
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="card-title mb-0">Información del Estudiante</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Datos del Padre de Familia -->
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title mb-0">Datos del Padre de Familia</h5>
+                        </div>
+                        <div class="card-body">
+                            <dl class="row">
+                                <dt class="col-sm-4">ID Padre:</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.Idpadre)</dd>
+
+                                <dt class="col-sm-4">Nombre:</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.NombrePadre)</dd>
+
+                                <dt class="col-sm-4">Parentesco:</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.Parentesco)</dd>
+
+                                <dt class="col-sm-4">Teléfono:</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.TelefonoPadre)</dd>
+
+                                <dt class="col-sm-4">Celular:</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.CelPadre)</dd>
+
+                                <dt class="col-sm-4">Dirección:</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.DireccionPadre)</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Datos del Estudiante -->
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="card-title mb-0">Datos del Estudiante</h5>
+                        </div>
+                        <div class="card-body">
+                            <dl class="row">
+                                <dt class="col-sm-4">Nombre:</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.NombreEstudiante)</dd>
+
+                                <dt class="col-sm-4">Nacimiento:</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.FechaNacimiento)</dd>
+
+                                <dt class="col-sm-4">Lugar:</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.LugarNacimiento)</dd>
+
+                                <dt class="col-sm-4">Género:</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.Genero)</dd>
+
+                                <dt class="col-sm-4">Sangre:</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.TipoSangre)</dd>
+
+                                <dt class="col-sm-4">Alergia:</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.Alergia)</dd>
+
+                                <dt class="col-sm-4">Edad:</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.Edad)</dd>
+
+                                <dt class="col-sm-4">Teléfono:</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.TelefonoEstudiante)</dd>
+
+                                <dt class="col-sm-4">Celular:</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.CelularEstudiante)</dd>
+
+                                <dt class="col-sm-4">Correo:</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.Correo)</dd>
+
+                                <dt class="col-sm-4">Dirección:</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.Direccion)</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fotografía del Estudiante -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card mb-4">
+                        <div class="card-header bg-warning text-white">
+                            <h5 class="card-title mb-0">Perfil Estudiantil</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="photo-frame">
+                                @if (Model.FotoData != null)
+                                {
+                                    <img src="@Url.Action("MostrarFoto", "Matricula", new { id = Model.Idest })" alt="Foto del estudiante" class="img-fluid rounded" style="max-width: 100%; max-height: 300px;" />
+                                }
+                                else
+                                {
+                                    <p class="text-muted">No hay foto disponible</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="text-center mt-4">
+        <a class="btn btn-primary btn-lg" asp-action="Edit" asp-route-id="@Model?.Idest">
+            <i class="fas fa-edit"></i> Editar
+        </a>
+        <a class="btn btn-warning btn-lg" asp-action="Index">
+            <i class="fas fa-arrow-left"></i> Regresar a la Lista
+        </a>
+    </div>
+</div>
+
+<!-- Estilos Personalizados -->
+<style>
+    .photo-frame {
+        width: 100%;
+        height: 300px;
+        border: 2px solid #ddd;
+        background-color: #f8f9fa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .photo-frame img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    dt {
+        font-weight: bold;
+        color: #555;
+    }
+
+    dd {
+        margin-bottom: 10px;
+        color: #777;
+    }
+
+    .btn-lg {
+        padding: 10px 20px;
+        font-size: 1.1rem;
+    }
+</style>

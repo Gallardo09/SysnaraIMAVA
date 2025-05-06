@@ -1,0 +1,119 @@
+﻿@model SystemSysnara.Models.Padre
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center" style="font-family: Russo One, sans-serif;">Registrar Nuevo Padre o Encargado</h2>
+    <form asp-action="Create" class="bg-light p-4 rounded shadow">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Idpadre" class="control-label">ID Padre</label>
+                    <input asp-for="Idpadre" class="form-control" />
+                    <span asp-validation-for="Idpadre" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="form-group">
+                    <label asp-for="NombrePadre" class="control-label">Nombre del Padre o Encargado</label>
+                    <input asp-for="NombrePadre" class="form-control" />
+                    <span asp-validation-for="NombrePadre" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Parentesco" class="control-label">Parentesco</label>
+                    <select asp-for="Parentesco" class="form-control">
+                        <option value=""></option>
+                        <option value="padre">PADRE</option>
+                        <option value="madre">MADRE</option>
+                        <option value="encargado">ENCARGADO(A)</option>
+                        <option value="hermano">HERMANO(A)</option>
+                        <option value="tio">TIO(A)</option>
+                        <option value="abuelo">ABUELO(A)</option>
+                        <option value="primo">PRIMO(A)</option>
+                    </select>
+                    <span asp-validation-for="Parentesco" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Profesion" class="control-label">Profesión</label>
+                    <input asp-for="Profesion" class="form-control" />
+                    <span asp-validation-for="Profesion" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Genero" class="control-label">Género</label>
+                    <input asp-for="Genero" class="form-control" />
+                    <span asp-validation-for="Genero" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="TelefonoPadre" class="control-label">Teléfono</label>
+                    <input asp-for="TelefonoPadre" class="form-control" />
+                    <span asp-validation-for="TelefonoPadre" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="CelPadre" class="control-label">Celular</label>
+                    <input asp-for="CelPadre" class="form-control" />
+                    <span asp-validation-for="CelPadre" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Correo" class="control-label">Correo</label>
+                    <input asp-for="Correo" class="form-control" />
+                    <span asp-validation-for="Correo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label asp-for="DireccionPadre" class="control-label">Dirección</label>
+                    <input asp-for="DireccionPadre" class="form-control" />
+                    <span asp-validation-for="DireccionPadre" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label asp-for="Observacion" class="control-label">Observación</label>
+                    <input asp-for="Observacion" class="form-control" />
+                    <span asp-validation-for="Observacion" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a class="btn btn-secondary" asp-action="Index">Regresar a la Lista</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

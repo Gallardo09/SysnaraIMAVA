@@ -1,0 +1,109 @@
+﻿@model SystemSysnara.Models.Grado
+
+@{
+    ViewData["Title"] = "Eliminar";
+}
+
+<div class="container mt-5">
+    <!-- Título -->
+    <h2 class="text-center mb-4" style="font-family: Russo One, sans-serif; color: #343a40;">Eliminar Grado</h2>
+
+    <!-- Card para confirmación de eliminación -->
+    <div class="card shadow-lg">
+        <div class="card-header bg-danger text-white text-center">
+            <h4 class="card-title">Confirmar Eliminación</h4>
+        </div>
+        <div class="card-body">
+            <h5 class="text-warning text-center mb-4">¿Estás seguro de que deseas eliminar este registro?</h5>
+
+            <div class="row mb-3">
+                <div class="col-sm-3">
+                    <strong>@("Año Escolar")</strong>
+                </div>
+                <div class="col-sm-9" style="text-align: left;">
+                    @Html.DisplayFor(model => model.IdañoNavigation.Idaño)
+                </div>
+            </div>
+            <!-- Detalles del Grado -->
+            <div class="row mb-3">
+                <div class="col-sm-3">
+                    <strong>@("Grado Académico")</strong>
+                </div>
+                <div class="col-sm-9" style="text-align: left;">
+                    @Html.DisplayFor(model => model.Grado1)
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-3">
+                    <strong>@("Sección")</strong>
+                </div>
+                <div class="col-sm-9" style="text-align: left;">
+                    @Html.DisplayFor(model => model.Seccion)
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-3">
+                    <strong>@Html.DisplayNameFor(model => model.Jornada)</strong>
+                </div>
+                <div class="col-sm-9" style="text-align: left;">
+                    @Html.DisplayFor(model => model.Jornada)
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-3">
+                    <strong>@("Nivel Académico")</strong>
+                </div>
+                <div class="col-sm-9" style="text-align: left;">
+                    @Html.DisplayFor(model => model.NivelDescripcion)
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-3">
+                    <strong>@Html.DisplayNameFor(model => model.Sistema)</strong>
+                </div>
+                <div class="col-sm-9" style="text-align: left;">
+                    @Html.DisplayFor(model => model.Sistema)
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-3">
+                    <strong>@("Sistema Clase")</strong>
+                </div>
+                <div class="col-sm-9" style="text-align: left;">
+                    @Html.DisplayFor(model => model.SistemaClase)
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-3">
+                    <strong>@("Sistema Tiempo")</strong>
+                </div>
+                <div class="col-sm-9" style="text-align: left;">
+                    @Html.DisplayFor(model => model.SistemaTiempo)
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="card-footer text-center">
+            <form asp-action="Delete">
+                <input class="btn btn-primary" type="hidden" asp-for="Idgrado" />
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash-alt"></i> Eliminar
+                </button>
+                <a class="btn btn-warning" asp-action="Index">
+                    <i class="fas fa-arrow-left"></i> Regresar a la lista
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Para los íconos de FontAwesome -->
+}

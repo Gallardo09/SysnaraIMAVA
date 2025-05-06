@@ -1,0 +1,173 @@
+﻿@{
+    ViewData["Title"] = "Formative Tests";
+}
+
+<!-- Estilos personalizados -->
+<style>
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+        border-radius: 10px;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        transition: background-color 0.3s ease;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+    .list-group-item {
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 5px;
+        transition: background-color 0.3s ease;
+    }
+    .list-group-item:hover {
+        background-color: #f8f9fa;
+    }
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+    }
+    .card-text {
+        color: #666;
+    }
+</style>
+
+<div class="container text-center mt-2">
+    <h1 class="display-4 mb-4">📚 Formative Tests</h1>
+    <p class="lead mb-5">Select a degree to access the training tests.</p>
+
+    <div class="row">
+        @{
+            // Diccionario con las rutas de los PDFs agrupados por grado
+            var librosPorGrado = new Dictionary<string, List<(string Ruta, string Nombre)>>
+            {
+                {
+                    "Preparatory",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Formative/Preparatory/Prueba Formativa Trimestral Pre-Básica (Febrero- Marzo-Abril).pdf", "Prueba Febrero-Marzo-Abril"),
+                        ("/LibrosBooks/TestsHonduras/Formative/Preparatory/Prueba Formativa Trimestral Pre-Básica (Mayo-Junio-Julio).pdf", "Prueba Mayo-Junio-Julio"),
+                        ("/LibrosBooks/TestsHonduras/Formative/Preparatory/Prueba Formativa Trimestral Pre-Básica (Agosto-Septiembre-Octubre).pdf", "Prueba Agosto-Septiembre-Octubre")
+                    }
+                },
+                {
+                    "First",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Formative/1th/Pruebas Formativas Español y Matemáticas 1°.pdf", "Pruebas Formativas Español y Matemáticas 1°"),
+                    }
+                },
+                {
+                    "Second",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Formative/2th/Pruebas Formativas Español y Matemáticas 2°.pdf", "Pruebas Formativas Español y Matemáticas 2°"),
+                    }
+                },
+                {
+                    "Third",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Formative/3th/Pruebas Formativas Español y Matemáticas 3°.pdf", "Pruebas Formativas Español y Matemáticas 3°"),
+                    }
+                },
+                {
+                    "Fourth",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Formative/4th/Pruebas Formativas Español y Matemáticas 4°.pdf", "Pruebas Formativas Español y Matemáticas 4°"),
+                    }
+                },
+                {
+                    "Fifth",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Formative/5th/Pruebas Formativas Español y Matemáticas 5.pdf", "Pruebas Formativas Español y Matemáticas 5"),
+                    }
+                },
+                {
+                    "Sixth",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Formative/6th/Pruebas Formativas Español y Matemáticas 6°.pdf", "Pruebas Formativas Español y Matemáticas 6°"),
+                    }
+                },
+                {
+                    "Seventh",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Formative/7th/Pruebas Formativas Español 7°.pdf", "Pruebas Formativas Español 7°"),
+                        ("/LibrosBooks/TestsHonduras/Formative/7th/Pruebas Formativas Matemáticas 7°.pdf", "Pruebas Formativas Matemáticas 7°"),
+                    }
+                },
+                {
+                    "Eighth",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Formative/8th/Pruebas Formativas Español 8°.pdf", "Pruebas Formativas Español 8°"),
+                        ("/LibrosBooks/TestsHonduras/Formative/8th/Pruebas Formativas Matemáticas 8°.pdf", "Pruebas Formativas Matemáticas 8°"),
+                    }
+                },
+                {
+                    "Ninth",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Formative/9th/Pruebas Formativas Español 9°.pdf", "Pruebas Formativas Español 9°"),
+                        ("/LibrosBooks/TestsHonduras/Formative/9th/Pruebas Formativas Matemáticas 9°.pdf", "Pruebas Formativas Matemáticas 9°"),
+                    }
+                },
+                {
+                    "Tenth",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Formative/10th/Prueba Formativa 10º Español (2011).pdf", "Prueba Formativa 10º Español (2011)"),
+                        ("/LibrosBooks/TestsHonduras/Formative/10th/Prueba Formativa 10º Matemáticas (2011).pdf", "Prueba Formativa 10º Matemáticas (2011)"),
+                    }
+                },
+                {
+                    "Eleventh",
+                    new List<(string Ruta, string Nombre)>
+                    {
+                        ("/LibrosBooks/TestsHonduras/Formative/11th/Prueba Formativa 11º Español (2011).pdf", "Prueba Formativa 11º Español (2011)"),
+                        ("/LibrosBooks/TestsHonduras/Formative/11th/Prueba Formativa 11º Matemáticas (2011).pdf", "Prueba Formativa 11º Matemáticas (2011)"),
+                    }
+                },
+            };
+        }
+
+        @foreach (var grado in librosPorGrado.Keys)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@grado</h5>
+                        <p class="card-text">Formative Tests</p>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@grado" aria-expanded="false" aria-controls="collapse-@grado">
+                            📂 View Documents
+                        </button>
+                        <div class="collapse mt-3" id="collapse-@grado">
+                            <div class="list-group">
+                                @foreach (var libro in librosPorGrado[grado])
+                                {
+                                    <a href="@libro.Ruta" class="list-group-item list-group-item-action" target="_blank">
+                                        📄 @libro.Nombre
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

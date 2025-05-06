@@ -1,0 +1,241 @@
+﻿@model SystemSysnara.Models.Grado
+
+@{
+    ViewData["Title"] = "Crear";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center" style="font-family: Russo One, sans-serif;">Registrar Nuevo Grado</h2>
+    <form asp-action="Create" class="bg-light p-4 rounded shadow">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Idgrado" class="control-label">ID Grado (automático)</label>
+                    <input type="hidden" asp-for="Idgrado" class="form-control" />
+                    <span asp-validation-for="Idgrado" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Idaño" class="control-label">ID Año</label>
+                    <select asp-for="Idaño" class="form-control" asp-items="ViewBag.Idaño"></select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Grado1" class="control-label">Grado</label>
+                    <select asp-for="Grado1" class="form-control" asp-items="ViewBag.Grado1">
+                        <option value="">Seleccione un grado</option>
+                    </select>
+                    <span asp-validation-for="Grado1" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="Seccion" class="control-label">Sección</label>
+                    <select id="Seccion" name="Seccion" class="form-control">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="Jornada" class="control-label">Jornada</label>
+                    <select id="Jornada" name="Jornada" class="form-control">
+                        <option value=""></option>
+                    </select>
+                    <span asp-validation-for="Jornada" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="NivelDescripcion" class="control-label">Nivel Descriptivo del Grado</label>
+                    <select id="NivelDescripcion" name="NivelDescripcion" class="form-control">
+                        <option value="">Seleccione un Nivel Descriptivo</option>
+                    </select>
+                    <span asp-validation-for="NivelDescripcion" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Sistema" class="control-label">Sistema</label>
+                    <select id="Sistema" name="Sistema" class="form-control">
+                        <option value="">Seleccione un sistema</option>
+                    </select>
+                    <span asp-validation-for="Sistema" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="SistemaTiempo" class="control-label">Sistema (Periodo)</label>
+                    <input id="SistemaTiempo" name="SistemaTiempo" class="form-control" />
+                    <span asp-validation-for="SistemaTiempo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <button type="submit" class="btn btn-primary">Crear</button>
+                <a class="btn btn-secondary" asp-action="Index">Regresar a la Lista</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    @* Scrip para agregar las secciones al select SECCION *@
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Lista de opciones
+            var secciones = ["A", "B", "C", "D", "E", "U"];
+
+            // Referencia al select
+            var selectSeccion = document.getElementById('Seccion');
+
+            // Agregar las opciones al select
+            secciones.forEach(function(seccion) {
+                var option = document.createElement('option');
+                option.value = seccion;
+                option.textContent = seccion;
+                selectSeccion.appendChild(option);
+            });
+        });
+    </script>
+
+    @* AGREGAR LISTA DE JORNADA EN EL SELECT  *@
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Lista de opciones para Jornada
+            var jornadas = ["MATUTINA", "VESPERTINA"];
+
+            // Referencia al select
+            var selectJornada = document.getElementById('Jornada');
+
+            // Agregar las opciones al select
+            jornadas.forEach(function (jornada) {
+                var option = document.createElement('option');
+                option.value = jornada;
+                option.textContent = jornada;
+                selectJornada.appendChild(option);
+            });
+        });
+    </script>
+
+    @* AGREGAR LISTA DE NIVELES QUE HAY EN LA INSTITUCIÓN MEDIANTE EL SELECT  *@
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Lista de opciones para Nivel Descriptivo del Grado
+            var niveles = [
+                "EDUCACIÓN PRE-BÁSICA",
+                "I CICLO DE EDUCACIÓN BÁSICA",
+                "II CICLO DE EDUCACIÓN BÁSICA",
+                "III CICLO DE EDUCACIÓN BÁSICA",
+                "BACHILLERATO TÉCNICO PROFESIONAL",
+                "BACHILLERATO TÉCNICO PROFESIONAL EN INFORMÁTICA",
+                "BACHILLERATO PROFESIONAL EN CIENCIAS Y HUMANIDADES (BILINGÜE)"
+            ];
+
+            // Referencia al select
+            var selectNivel = document.getElementById('NivelDescripcion');
+
+            // Agregar las opciones al select
+            niveles.forEach(function (nivel) {
+                var option = document.createElement('option');
+                option.value = nivel;
+                option.textContent = nivel;
+                selectNivel.appendChild(option);
+            });
+        });
+    </script>
+
+    @* PARA EL TIPO DE SISTEMA ANGLOSAJÓN O INTERNACIONAL *@
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Lista de opciones para Sistema
+            var sistemas = ["TRADICIONAL", "ANGLOSAJÓN"];
+        
+            // Referencia al select
+            var selectSistema = document.getElementById('Sistema');
+
+            // Agregar las opciones al select
+            sistemas.forEach(function(sistema) {
+                var option = document.createElement('option');
+                option.value = sistema;
+                option.textContent = sistema;
+                selectSistema.appendChild(option);
+            });
+        });
+    </script>
+
+    @* ID GRADO AUTOMÁTICO  *@
+    <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const idAnoSelect = document.querySelector("select[name='Idaño']");
+                const gradoSelect = document.querySelector("select[name='Grado1']");
+                const seccionSelect = document.querySelector("select[name='Seccion']");
+                const jornadaSelect = document.querySelector("select[name='Jornada']");
+                const sistemaSelect = document.querySelector("select[name='Sistema']");
+                const idGradoInput = document.querySelector("input[name='Idgrado']");
+
+                function generateIDGrado() {
+                    const idAnoValue = idAnoSelect.value.slice(-2);
+                    const gradoValue = gradoSelect.value.substring(0, 3).toUpperCase();
+                    const seccionValue = seccionSelect.value.substring(0, 1).toUpperCase();
+                    const jornadaValue = jornadaSelect.value.substring(0, 1).toUpperCase();
+                    const sistemaValue = sistemaSelect.value.substring(0, 3).toUpperCase();
+
+                    const idGrado = `${idAnoValue}-${gradoValue}-${seccionValue}-${jornadaValue}-${sistemaValue}`;
+                    idGradoInput.value = idGrado;
+                }
+
+                idAnoSelect.addEventListener("change", generateIDGrado);
+                gradoSelect.addEventListener("change", generateIDGrado);
+                seccionSelect.addEventListener("change", generateIDGrado);
+                jornadaSelect.addEventListener("change", generateIDGrado);
+                sistemaSelect.addEventListener("change", generateIDGrado);
+            });
+    </script>
+
+    @* EL SISTEMA PERIODO AUTOMÁTICO DEPENDIENDO DEL SISTEMA *@
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const idAnoSelect = document.querySelector("select[name='Idaño']");
+            const sistemaSelect = document.querySelector("select[name='Sistema']");
+            const sistemaTiempoInput = document.querySelector("input[name='SistemaTiempo']");
+
+            function updateSistemaPeriodo() {
+                const idAnoValue = idAnoSelect.value;
+                let sistemaPeriodo = idAnoValue;
+
+                // Asegurarse de que el año esté en formato numérico
+                const anio = parseInt(idAnoValue, 10);
+                if (isNaN(anio)) {
+                    return; // Si el IDAño no es válido, no hacer nada
+                }
+
+                if (sistemaSelect.value === "ANGLOSAJÓN") {
+                    const nextYear = anio + 1;
+                    sistemaPeriodo = `${idAnoValue}-${nextYear}`;
+                }
+
+                sistemaTiempoInput.value = sistemaPeriodo;
+            }
+
+            idAnoSelect.addEventListener("change", updateSistemaPeriodo);
+            sistemaSelect.addEventListener("change", updateSistemaPeriodo);
+        });
+    </script>
+}

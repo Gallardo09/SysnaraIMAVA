@@ -1,0 +1,500 @@
+﻿@model IEnumerable<SystemSysnara.Models.Nota>
+@{
+    ViewData["Title"] = "Registrar Notas";
+    var años = ViewBag.Años as List<SystemSysnara.Models.Año>;
+}
+
+<div class="notas-container">
+    <div class="row">
+        <div class="notas-header">
+            <h1 class="notas-title">Registro de Notas</h1>
+        </div>
+        <div class="notas-filters">
+            <div class="col-2">
+                <label for="filtroAño">Año</label>
+                <select class="form-select" id="filtroAño">
+                    <option value="">Seleccione un año</option>
+                    @if (años != null)
+                    {
+                        foreach (var año in años)
+                        {
+                            <option value="@año.Idaño">@año.Idaño</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="filtroGrado">Grado</label>
+                <select class="form-select" id="filtroGrado" disabled>
+                    <option value="">Seleccione un grado</option>
+                </select>
+            </div>
+            <div class="col-2">
+                <label>&nbsp;</label>
+                <button id="BtnSubir" class="btn btn-success form-control" data-bs-toggle="modal" data-bs-target="#miModal">
+                    <i class="fa-regular fa-circle-up"></i> Subir
+                </button>
+            </div>
+            <div class="col-2">
+                <label>&nbsp;</label>
+                <a class="btn btn-warning form-control" id="BtnPersonalidad" data-bs-toggle="modal" data-bs-target="#parcialModal">
+                    <i class="fa-solid fa-person-circle-check"></i> Personalidad
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<table id="notasTable" class="table table-striped table-hover" style="width:100%; font-size: 13px;">
+    <thead>
+        <tr>
+            <th>Año</th>
+            <th>ID Grado</th>
+            <th>Grado</th>
+            <th>ID Asignatura</th>
+            <th>Asignatura</th>
+            <th>Estado</th>
+            <th>Ver</th>
+            <th>Descargar</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<!-- MODAL VER NOTAS  -->
+<div class="modal fade" id="notasModal" tabindex="-1" role="dialog" aria-labelledby="notasModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg-custom" style="max-width: 80%; width: 80%;" role="document">
+        <div class="modal-content" style="border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+            <div class="modal-header" style="background-color: #007bff; color: white; border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                <h5 class="modal-title" id="notasModalLabel" style="font-weight: bold; margin: 0;">Notas Registradas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="font-size: 1.5rem; color: white; background-color: transparent; border: none; cursor: pointer;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <!-- La tabla se inyectará aquí -->
+            </div>
+            <div class="modal-footer" style="border-top: none; padding: 1rem 2rem;">
+                <p style="text-align:left; margin: 0; font-size: 0.9rem; color: #555;">N/A: significa que la nota no ha sido agregada.</p>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #6c757d; border: none; border-radius: 30px; padding: 10px 25px; font-weight: bold; transition: all 0.3s ease;">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- MODAL SUBIR NOTAS -->
+<div class="modal fade" id="miModal" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 800px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="miModalLabel">Cargar Archivo NOTAS de Excel</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="file" class="form-control" accept=".xls,.xlsx" id="archivoExcel">
+            </div>
+            <div class="modal-footer d-flex justify-content-evenly">
+                <div class="col-5">
+                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Cerrar
+                    </button>
+                </div>
+                <div class="col-5">
+                    <button type="button" class="btn btn-primary w-100" id="btnSubirModal">
+                        <i class="fas fa-upload"></i> Subir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* MODAL PERSONALIDAD *@
+<!-- Modal -->
+<div class="modal fade" id="parcialModal" tabindex="-1" aria-labelledby="parcialModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="parcialModalLabel">Seleccione un PARCIAL de la PERSONALIDAD</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label for="parcialSelect">Elija un Parcial:</label>
+                <select class="form-select" id="parcialSelect">
+                    <option value="1">I Parcial</option>
+                    <option value="2">II Parcial</option>
+                    <option value="3">III Parcial</option>
+                    <option value="4">IV Parcial</option>
+                </select>
+            </div>
+            <div class="modal-footer d-flex justify-content-evenly w-100">
+                <div class="col-5">
+                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Cerrar
+                    </button>
+                </div>
+                <div class="col-5">
+                    <button type="button" class="btn btn-primary w-100" id="btnSeleccionarParcial">
+                        <i class="fas fa-check"></i> Seleccionar
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var table = $('#notasTable').DataTable({
+                columns: [
+                    { data: 'idaño' },
+                    { data: 'idgrado' },
+                    { data: 'grado' },
+                    { data: 'idasignatura' },
+                    { data: 'asignatura' },
+                    {
+                        data: 'estado',
+                        render: function (data) {
+                            return `<div style="text-align: center;">
+                            <span style="color: ${data ? 'green' : 'red'};">
+                                ${data ? '✔️' : '❌'}
+                            </span>
+                        </div>`;
+                        }
+                    },
+                    {
+                        data: 'verNotas',
+                        render: function (data, type, row) {
+                            return `<button class="btn btn-info btn-sm" onclick="mostrarNotas(${row.idaño}, '${row.idasignatura}')">
+                                        <i class="fa-regular fa-eye"></i> Ver
+                                    </button>`;
+                        }
+                    },
+                    {
+                        data: 'idasignatura',
+                        render: function (idasignatura, type, row) {
+                            return `<a class="btn btn-primary btn-sm" href="/Notas/${row.estado ? 'DescargarExcel' : 'DescargarExcelEnBlanco'}?idasignatura=${idasignatura}" target="_blank">
+                            <i class="fa-regular fa-circle-down"></i> Descargar
+                        </a>`;
+                        }
+                    }
+                ]
+            });
+
+            $('#filtroAño').change(function () {
+                var idAño = $(this).val();
+                $('#filtroGrado').empty().append('<option value="">Seleccione un grado</option>');
+                if (idAño) {
+                    $.ajax({
+                        url: '/Matricula/GetGrados',
+                        data: { idAño: idAño },
+                        success: function (data) {
+                            $.each(data, function (index, item) {
+                                $('#filtroGrado').append($('<option>', {
+                                    value: item.idgrado,
+                                    text: item.gradoCompleto
+                                }));
+                            });
+                            $('#filtroGrado').prop('disabled', false);
+                        }
+                    });
+                } else {
+                    $('#filtroGrado').prop('disabled', true);
+                }
+                table.clear().draw();
+            });
+
+            $('#filtroGrado').change(function () {
+                cargarMatriculas();
+            });
+
+            function cargarMatriculas() {
+                var idAño = $('#filtroAño').val();
+                var idGrado = $('#filtroGrado').val();
+
+                if (idAño && idGrado) {
+                    $.ajax({
+                        url: '/Notas/GetMatriculas',
+                        data: { idAño: idAño, idGrado: idGrado },
+                        success: function (data) {
+                            table.clear().rows.add(data).draw();
+                        }
+                    });
+                } else {
+                    table.clear().draw();
+                }
+            }
+        });
+
+
+        //VER NOTAS
+        function mostrarNotas(idaño, idasignatura) {
+            console.log(`ID Año: ${idaño}, ID Asignatura: ${idasignatura}`);
+            $.ajax({
+                url: '/Notas/GetNotas',
+                data: { idAño: idaño, idAsignatura: idasignatura },
+                success: function (data) {
+                    console.log(data); // Verifica aquí los datos que se reciben
+                    $('#notasModal .modal-body').html(generarTablaNotas(data, idaño, idasignatura));
+                    $('#notasModal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    console.error(`Error: ${error}`);
+                }
+            });
+        }
+        function generarTablaNotas(data, idaño, idasignatura) {
+            let tabla = `
+                <h5 style="font-weight: bold; text-align: center; margin: 0; padding: 5px;">Año: ${idaño}, Asignatura: ${idasignatura}</h5>
+                <table style="width: 100%; border-collapse: collapse; margin: 0; padding: 0;">
+                    <thead style="background-color: #007bff; color: white;">
+                        <tr>
+                            <th style="padding: 5px; border: 1px solid #dee2e6;">ID Estudiante</th>
+                            <th style="padding: 5px; border: 1px solid #dee2e6;">Nombre Estudiante</th>
+                            <th style="padding: 5px; border: 1px solid #dee2e6;">ID Nota</th>
+                            <th style="padding: 5px; border: 1px solid #dee2e6;">I Parcial</th>
+                            <th style="padding: 5px; border: 1px solid #dee2e6;">II Parcial</th>
+                            <th style="padding: 5px; border: 1px solid #dee2e6;">III Parcial</th>
+                            <th style="padding: 5px; border: 1px solid #dee2e6;">IV Parcial</th>
+                            <th style="padding: 5px; border: 1px solid #dee2e6;">I Semestre</th>
+                            <th style="padding: 5px; border: 1px solid #dee2e6;">II Semestre</th>
+                            <th style="padding: 5px; border: 1px solid #dee2e6;">Promedio Final</th>
+                            <th style="padding: 5px; border: 1px solid #dee2e6;">Recuperación I</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+            if (!data || data.length === 0) {
+                tabla += '<tr><td colspan="11" class="text-center" style="padding: 5px; border: 1px solid #dee2e6;">No hay notas registradas</td></tr>';
+            } else {
+                data.forEach(nota => {
+                    tabla += `
+                        <tr style="background-color: #ffffff;">
+                            <td style="padding: 5px; border: 1px solid #dee2e6;">${nota.ididentidad || 'N/A'}</td>
+                            <td style="padding: 5px; border: 1px solid #dee2e6;">${nota.nombreEstudiante || 'N/A'}</td>
+                            <td style="padding: 5px; border: 1px solid #dee2e6;">${nota.idnota || 'N/A'}</td>
+                            <td style="padding: 5px; border: 1px solid #dee2e6;">${nota.iparcial || 'N/A'}</td>
+                            <td style="padding: 5px; border: 1px solid #dee2e6;">${nota.iiparcial || 'N/A'}</td>
+                            <td style="padding: 5px; border: 1px solid #dee2e6;">${nota.iiiparcial || 'N/A'}</td>
+                            <td style="padding: 5px; border: 1px solid #dee2e6;">${nota.ivparcial || 'N/A'}</td>
+                            <td style="padding: 5px; border: 1px solid #dee2e6;">${nota.isemestre || 'N/A'}</td>
+                            <td style="padding: 5px; border: 1px solid #dee2e6;">${nota.iisemestre || 'N/A'}</td>
+                            <td style="padding: 5px; border: 1px solid #dee2e6;">${nota.promedioFinal || 'N/A'}</td>
+                            <td style="padding: 5px; border: 1px solid #dee2e6;">${nota.recuperacionI || 'N/A'}</td>
+                        </tr>`;
+                });
+            }
+
+            tabla += `
+                    </tbody>
+                </table>`;
+
+            return tabla;
+        }
+
+        //para que cierre el modal
+        $('#notasModal').on('click', '[data-dismiss="modal"]', function () {
+            $('#notasModal').modal('hide');
+        });
+    </script>
+
+    <script>
+        // SCRIPT Y VALIDACIÓN PARA SUBIR NOTAS *
+        $(document).ready(function () {
+            $('#btnSubirModal').on('click', function () {
+                const archivoInput = $('#archivoExcel')[0];
+                const archivo = archivoInput.files[0];
+                if (archivo) {
+                    const formData = new FormData();
+                    formData.append('archivoExcel', archivo);
+
+                    // Mostrar indicador de progreso
+                    Swal.fire({
+                        title: 'Subiendo notas',
+                        html: 'Por favor, espere...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Notas/SubirNotas',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            // Cerrar el modal primero
+                            $('#miModal').modal('hide');
+
+                            // Asegurarse de que el backdrop se elimine
+                            $('body').removeClass('modal-open');
+                            $('.modal-backdrop').remove();
+
+                            // Mostrar el mensaje de éxito
+                            Swal.fire({
+                                icon: 'success',
+                                title: '¡Éxito!',
+                                text: response,
+                                confirmButtonText: 'Aceptar'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Aquí puedes agregar código para actualizar la vista si es necesario
+                                    // Por ejemplo, recargar la página o actualizar una tabla de datos
+                                    location.reload(); // Esto recargará la página
+                                }
+                            });
+                        },
+                        error: function (xhr) {
+                            let errorMessage = 'Ocurrió un error al subir las notas.';
+                            if (xhr.responseText) {
+                                errorMessage = xhr.responseText;
+                            }
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: errorMessage,
+                                confirmButtonText: 'Aceptar'
+                            });
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Por favor, selecciona un archivo.',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+            });
+        });
+    </script>
+
+    @* SCRIPT PARA EL MODAL DE LA PERSONALIDAD  *@
+    <script>
+        document.getElementById('btnSeleccionarParcial').addEventListener('click', function () {
+            // Obtener el valor seleccionado del select
+            var selectedValue = document.getElementById('parcialSelect').value;
+
+            // Según el valor, redirigir a la URL que corresponde para cada parcial
+            var url = '';
+
+            switch (selectedValue) {
+                case '1':
+                    // toastr.info('Se esta trabajando en este modulo I Parcial.', 'Información');
+                    url = '@Url.Action("Index", "PersonalidadIParcial", new { parcial = "I" })';
+                    break;
+                case '2':
+                    // toastr.info('Se esta trabajando en este modulo II Parcial.', 'Información');
+                    url = '@Url.Action("Index", "PersonalidadIParcial", new { parcial = "II" })';
+                    break;
+                case '3':
+                    // toastr.info('Se esta trabajando en este modulo III Parcial.', 'Información');
+                    url = '@Url.Action("Index", "PersonalidadIParcial", new { parcial = "III" })';
+                    break;
+                case '4':
+                    // toastr.info('Se esta trabajando en este modulo IV Parcial.', 'Información');
+                    url = '@Url.Action("Index", "PersonalidadIParcial", new { parcial = "IV" })';
+                    break;
+            }
+
+            // Redirigir a la URL seleccionada
+            if (url) {
+                window.location.href = url;
+            }
+
+            // Cerrar el modal
+            var modal = bootstrap.Modal.getInstance(document.getElementById('parcialModal'));
+            modal.hide();
+        });
+    </script>
+}
+
+
+<style>
+    .notas-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .notas-header {
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .notas-title {
+        font-family: 'Russo One', sans-serif;
+        color: #007bff;
+        font-size: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .notas-filters {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .filter-group {
+        flex: 1;
+    }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-weight: bold;
+            color: #495057;
+        }
+
+    .form-select, .btn {
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .action-btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        line-height: 1.5;
+        white-space: nowrap;
+        width: auto;
+    }
+
+        .action-btn i {
+            margin-right: 0.25rem;
+        }
+
+    #notasTable td {
+        vertical-align: middle;
+    }
+
+/*    @@media (max-width: 768px) {
+        .notas-filters {
+            flex-direction: column;
+        }
+
+        .filter-group {
+            width: 100%;
+        }
+    } */
+
+    .modal-lg-custom {
+        max-width: 90%; /* Cambia este valor según lo necesites */
+    }
+</style>

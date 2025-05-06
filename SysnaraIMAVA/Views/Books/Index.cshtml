@@ -1,0 +1,176 @@
+﻿@model Dictionary<string, Dictionary<string, string>>
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment _hostingEnvironment
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books by Grade</title>
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+    <link rel="stylesheet" href="~/lib/line-awesome-1.3.0/css/line-awesome.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        /* Contenedor principal */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Grid para las cards */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* Estilo de cada card */
+        .card {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+            /* Efecto hover en las cards */
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            }
+
+        /* Imagen de la portada del libro */
+        .card-img-top {
+            width: 100%;
+            height: 250px;
+            object-fit: contain; /* Muestra la imagen completa sin recortes */
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        /* Cuerpo de la card */
+        .card-body {
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Título del libro */
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2d87f0;
+            text-transform: uppercase; /* Convertir texto a mayúsculas */
+        }
+
+        /* Botón de previsualización */
+        .btn-preview {
+            background-color: #2d87f0;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none; /* Eliminar subrayado */
+        }
+
+            /* Efecto hover en el botón */
+            .btn-preview:hover {
+                background-color: #1a6ad4;
+            }
+
+        /* Título del grado */
+        .grade-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-transform: uppercase; /* Convertir texto a mayúsculas */
+        }
+
+        /* Responsive para pantallas pequeñas */
+        @@media (max-width: 768px) {
+            .books-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .card-img-top {
+                height: 180px;
+            }
+
+            .card-title {
+                font-size: 16px;
+            }
+
+            .btn-preview {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+
+            .grade-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        @foreach (var grado in Model)
+        {
+            <div class="grade-section">
+                <h2 class="grade-title my-0">Available Books</h2>
+                <div class="books-grid">
+                    @foreach (var libro in grado.Value)
+                    {
+                        <div class="card" onclick="window.open('@libro.Value', '_blank')">
+                            <!-- Ruta de la portada -->
+                            @{
+                                var imagePath = GetImagePath(grado.Key, libro.Key);
+                            }
+                            <img src="@imagePath" class="card-img-top" alt="Portada de @libro.Key">
+                            <div class="card-body">
+                                <h5 class="card-title">@libro.Key.ToUpper()</h5>
+                                <!-- Botón de previsualización -->
+                                <a href="@libro.Value" class="btn-preview" target="_blank">
+                                    Preview
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    @functions {
+        // Método para obtener la ruta de la imagen en diferentes formatos
+        private string GetImagePath(string grado, string libro)
+        {
+            var basePath = $"LibrosBooks/{grado}/{libro.ToLower()}";
+            var extensions = new[] { ".png", ".jpg", ".jpeg" };
+
+            foreach (var ext in extensions)
+            {
+                var imagePath = $"{basePath}{ext}";
+                var physicalPath = System.IO.Path.Combine(_hostingEnvironment.WebRootPath, imagePath);
+                if (System.IO.File.Exists(physicalPath))
+                {
+                    return $"/{imagePath}"; // Devuelve la ruta relativa
+                }
+            }
+
+            // Si no se encuentra la imagen, devolver una imagen por defecto
+            return "/images/default-book.png";
+        }
+    }
+</body>
+</html>

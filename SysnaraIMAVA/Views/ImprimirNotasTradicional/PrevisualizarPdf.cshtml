@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Previsualizar PDF";
+    var pdfStream = TempData["PdfStream"] as string;
+    var pdfFileName = TempData["PdfFileName"] as string;
+}
+
+<h2>Previsualizar PDF</h2>
+
+@if (!string.IsNullOrEmpty(pdfStream))
+{
+    <div>
+        <embed src="data:application/pdf;base64,@pdfStream" type="application/pdf" width="100%" height="600px" />
+    </div>
+@*     <div>
+        <a href="@Url.Action("DescargarPdf", "ImprimirNotas", new { fileName = pdfFileName })" class="btn btn-primary">Descargar PDF</a>
+    </div> *@
+}
+else
+{
+    <p>No se pudo generar el PDF.</p>
+}

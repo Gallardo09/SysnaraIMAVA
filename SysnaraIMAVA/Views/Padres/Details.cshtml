@@ -1,0 +1,76 @@
+﻿@model SystemSysnara.Models.Padre
+
+@{
+    ViewData["Title"] = "Details";
+}
+<h2 style="font-family: Russo One, sans-serif;">Detalles del Padre</h2
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Identidad   
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Idpadre)
+        </dd>
+        <dt class = "col-sm-2">
+            Nombre del Padre o Encargado
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NombrePadre)
+        </dd>
+        <dt class = "col-sm-2">
+            Parentesco
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Parentesco)
+        </dd>
+        <dt class = "col-sm-2">
+            Profesión
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Profesion)
+        </dd>
+        <dt class = "col-sm-2">
+            Género
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Genero)
+        </dd>
+        <dt class = "col-sm-2">
+            Teléfono
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TelefonoPadre)
+        </dd>
+        <dt class = "col-sm-2">
+            Celular
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CelPadre)
+        </dd>
+        <dt class = "col-sm-2">
+            Correo
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Correo)
+        </dd>
+        <dt class = "col-sm-2">
+            Dirección donde vive el padre
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DireccionPadre)
+        </dd>
+        <dt class = "col-sm-2">
+            Observación
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Observacion)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model?.Idencargado">Editar</a> |
+    <a class="btn btn-warning" asp-action="Index">Regresar a la Lista</a>
+</div>

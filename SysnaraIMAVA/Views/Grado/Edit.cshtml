@@ -1,0 +1,87 @@
+﻿@model SystemSysnara.Models.Grado
+
+@{
+    ViewData["Title"] = "Editar";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center" style="font-family: Russo One, sans-serif;">Editar Grado</h2>
+    <form asp-action="Edit" class="bg-light p-4 rounded shadow">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Idgrado" />
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Idaño" class="control-label">ID Año</label>
+                    <select asp-for="Idaño" class="form-control" asp-items="ViewBag.Idaño"></select>
+                    <span asp-validation-for="Idaño" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Grado1" class="control-label">Grado</label>
+                    <input asp-for="Grado1" class="form-control" />
+                    <span asp-validation-for="Grado1" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Seccion" class="control-label">Sección</label>
+                    <input asp-for="Seccion" class="form-control" />
+                    <span asp-validation-for="Seccion" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Jornada" class="control-label">Jornada</label>
+                    <input asp-for="Jornada" class="form-control" />
+                    <span asp-validation-for="Jornada" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label asp-for="NivelDescripcion" class="control-label">Nivel Académico</label>
+                    <input asp-for="NivelDescripcion" class="form-control" />
+                    <span asp-validation-for="NivelDescripcion" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Sistema" class="control-label">Sistema</label>
+                    <select asp-for="Sistema" class="form-control">
+                        <option value="INTERNACIONAL">INTERNACIONAL</option>
+                        <option value="ANGLOSAJÓN">ANGLOSAJÓN</option>
+                    </select>
+                    <span asp-validation-for="Sistema" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="SistemaTiempo" class="control-label">Sistema (Periodo)</label>
+                    <input asp-for="SistemaTiempo" class="form-control" />
+                    <span asp-validation-for="SistemaTiempo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a class="btn btn-secondary" asp-action="Index">Regresar a la Lista</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

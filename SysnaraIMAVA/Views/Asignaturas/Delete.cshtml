@@ -1,0 +1,72 @@
+﻿@model SystemSysnara.Models.Asignatura
+
+@{
+    ViewData["Title"] = "Eliminar";
+}
+
+<div class="container mt-5">
+    <!-- Título -->
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="text-danger">Eliminar Asignatura</h1>
+            <h3 class="text-muted">¿Estás seguro(a) de que deseas eliminar este registro?</h3>
+        </div>
+    </div>
+
+    <!-- Card para mostrar los detalles de la asignatura -->
+    <div class="card shadow-lg border-danger mt-4">
+        <div class="card-header bg-danger text-white text-center">
+            <h4 class="card-title">Detalles de la Asignatura</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4 font-weight-bold">Año</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.IdañoNavigation.Idaño)</dd>
+
+                <dt class="col-sm-4 font-weight-bold">ID Grado</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.IdgradoNavigation.Idgrado)</dd>
+
+                <dt class="col-sm-4 font-weight-bold">Grado</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Grado)</dd>
+
+                <dt class="col-sm-4 font-weight-bold">Sección</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Seccion)</dd>
+
+                <dt class="col-sm-4 font-weight-bold">Jornada</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Jornada)</dd>
+
+                <dt class="col-sm-4 font-weight-bold">Nivel Descripción</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.NivelDescripcion)</dd>
+
+                <dt class="col-sm-4 font-weight-bold">Asignatura</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Asignatura1)</dd>
+
+                <dt class="col-sm-4 font-weight-bold">Periodo</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Periodo)</dd>
+
+                <dt class="col-sm-4 font-weight-bold">Sistema</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Sistema)</dd>
+
+                <dt class="col-sm-4 font-weight-bold">Sistema Clase</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.SistemaClase)</dd>
+
+                <dt class="col-sm-4 font-weight-bold">Sistema Tiempo</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.SistemaTiempo)</dd>
+            </dl>
+        </div>
+
+        <div class="card-footer text-center">
+            <form asp-action="Delete">
+                <input class="btn btn-danger btn-lg" type="hidden" asp-for="Idasignatura" />
+                <input type="submit" value="Eliminar" class="btn btn-danger btn-lg" /> |
+                <a class="btn btn-secondary btn-lg" asp-action="Index">
+                    Regresar a la lista
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Para los íconos de FontAwesome -->
+}

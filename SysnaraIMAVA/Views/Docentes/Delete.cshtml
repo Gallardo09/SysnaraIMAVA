@@ -1,0 +1,60 @@
+﻿@model SystemSysnara.Models.Docente
+
+@{
+    ViewData["Title"] = "Eliminar";
+}
+
+<div class="container mt-5">
+    <!-- Título de la página -->
+    <h2 class="text-center mb-4" style="font-family: 'Roboto', sans-serif; font-weight: 700;">Eliminar Docente</h2>
+
+    <!-- Card Contenedor -->
+    <div class="card shadow-sm border-light">
+        <div class="card-body">
+            <h3 class="text-center mb-4">¿Estás seguro(a) de querer eliminar este docente?</h3>
+
+            <!-- Detalles del Docente -->
+            <dl class="row">
+                <dt class="col-sm-3"><strong>ID Docente</strong></dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Iddocente)</dd>
+
+                <dt class="col-sm-3"><strong>Nombre Completo</strong></dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.NombreCompleto)</dd>
+
+                <dt class="col-sm-3"><strong>Género</strong></dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Genero)</dd>
+
+                <dt class="col-sm-3"><strong>Teléfono</strong></dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Telefono)</dd>
+
+                <dt class="col-sm-3"><strong>Celular</strong></dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Celular)</dd>
+
+                <dt class="col-sm-3"><strong>Correo</strong></dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Correo)</dd>
+
+                <dt class="col-sm-3"><strong>Dirección</strong></dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Direccion)</dd>
+
+                <dt class="col-sm-3"><strong>Profesión</strong></dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Profesion)</dd>
+
+                <dt class="col-sm-3"><strong>Año de Registro</strong></dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.IdañoNavigation.Idaño)</dd>
+            </dl>
+
+            <!-- Formulario para eliminar -->
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Idpk" />
+                <div class="form-group text-center">
+                    <input type="submit" value="Eliminar" class="btn btn-danger" />
+                    <a class="btn btn-warning" asp-action="Index">Regresar a la lista</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome for Icons -->
+}

@@ -1,0 +1,344 @@
+﻿@model SystemSysnara.Models.Asignatura
+
+@{
+    ViewData["Title"] = "Crear Asignatura";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Registrar Nueva Asignatura</h2>
+    <form asp-action="Create" id="createAsignaturaForm" class="bg-light p-4 rounded shadow">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Idaño" class="control-label">ID Año</label>
+                    <select asp-for="Idaño" class="form-control" id="Idaño" asp-items="ViewBag.Idaño"></select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Idgrado" class="control-label">ID Grado</label>
+                    <select asp-for="Idgrado" id="Idgrado" class="form-control" asp-items="ViewBag.Idgrado"></select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Grado" class="control-label">Grado</label>
+                    <input asp-for="Grado" id="Grado" readonly class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Seccion" class="control-label">Sección</label>
+                    <input asp-for="Seccion" id="Seccion" readonly class="form-control" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Jornada" class="control-label">Jornada</label>
+                    <input asp-for="Jornada" id="Jornada" readonly class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="NivelDescripcion" class="control-label">Nivel Descriptivo Académico</label>
+                    <input asp-for="NivelDescripcion" id="NivelDescripcion" readonly class="form-control" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Sistema" class="control-label">Sistema</label>
+                    <input asp-for="Sistema" id="Sistema" readonly class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Idasignatura" class="control-label">ID Asignatura</label>
+                    <input asp-for="Idasignatura" id="Idasignatura" class="form-control" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Asignatura1" class="control-label">Asignatura</label>
+                    <select asp-for="Asignatura1" id="Asignatura1" class="form-control">
+                        <option value="">Seleccione una asignatura</option>
+                    </select>
+                    <input type="text" id="nuevaAsignatura" class="form-control mt-2" style="display:none;" placeholder="Agregar nueva asignatura">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Periodo" class="control-label">Periodo</label>
+                    <select asp-for="Periodo" id="Periodo" class="form-control">
+                        <option value="">Seleccione el Periodo</option>
+                        <option value="parcial">PARCIAL</option>
+                        <option value="semestral">I_SEMESTRE</option>
+                        <option value="semestral">II_SEMESTRE</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <button type="submit" class="btn btn-primary" id="guardarBtn">Guardar</button>
+                <a class="btn btn-secondary" asp-action="Index">Regresar a la Lista</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    @* ID GRADOS SEGUN EL ID AÑO SELECCIONADO *@
+    <script>
+        $(document).ready(function () {
+            $('#Idaño').change(function () {
+                var idAnio = $(this).val();
+                if (idAnio) {
+                    $.get('@Url.Action("GetGradosPorAnio", "Asignaturas")', { idAnio: idAnio })
+                        .done(function (grados) {
+                            var selectGrado = $('#Idgrado');
+                            selectGrado.empty();
+                            selectGrado.append($('<option></option>').val('').text('Seleccione un grado'));
+                            $.each(grados, function (index, grado) {
+                                selectGrado.append($('<option></option>').val(grado.idgrado).text(grado.idgrado));
+                            });
+                        })
+                        .fail(function () {
+                            mostrarAlerta('Error al cargar los grados', 'error');
+                            limpiarCampos();
+                        });
+                } else {
+                    $('#Idgrado').empty().append($('<option></option>').val('').text('Seleccione un grado'));
+                    limpiarCampos();
+                }
+            });
+
+            function limpiarCampos() {
+                $('#Grado').val('');
+                $('#Seccion').val('');
+                $('#Jornada').val('');
+                $('#NivelDescripcion').val('');
+                $('#Sistema').val('');
+                $('#Idasignatura').val('');
+                $('#Asignatura1').val('');
+                $('#Periodo').val('');
+            }
+
+            function mostrarAlerta(mensaje, tipo) {
+                Swal.fire({
+                    title: 'Atención',
+                    text: mensaje,
+                    icon: tipo,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                });
+            }
+        });
+    </script>
+
+    @* FUNCION PARA AUTORELLENER LOS DEMAS DATOS AL SELECCIONAR EL ID GRADO *@
+    <script>
+        $(document).ready(function () {
+            // Evento change para el select de Idgrado
+            $('#Idgrado').change(function () {
+                var idGrado = $(this).val();
+                if (idGrado) {
+                    $.get('@Url.Action("GetDetallesGrado", "Asignaturas")', { idGrado: idGrado })
+                        .done(function (detalles) {
+                            if (detalles) {
+                                $('#Grado').val(detalles.grado1);
+                                $('#Seccion').val(detalles.seccion);
+                                $('#Jornada').val(detalles.jornada);
+                                $('#NivelDescripcion').val(detalles.nivelDescripcion);
+                                $('#Sistema').val(detalles.sistema);
+                            } else {
+                                limpiarCampos();
+                            }
+                        })
+                        .fail(function () {
+                            mostrarAlerta('Error al cargar los detalles del grado', 'error');
+                            limpiarCampos();
+                        });
+                } else {
+                    limpiarCampos();
+                }
+            });
+
+            function limpiarCampos() {
+                $('#Grado').val('');
+                $('#Seccion').val('');
+                $('#Jornada').val('');
+                $('#NivelDescripcion').val('');
+                $('#Sistema').val('');
+            }
+
+            function mostrarAlerta(mensaje, tipo) {
+                Swal.fire({
+                    title: 'Atención',
+                    text: mensaje,
+                    icon: tipo,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                });
+            }
+        });
+    </script>
+    @* ID ASIGNATURAS AUTOMÁTICO  *@
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const idAsignaturaElement = document.querySelector('input[name="Idasignatura"]');
+
+            async function getNextAsignaturaId() {
+                try {
+                    const response = await fetch('/Asignaturas/GetNextAsignaturaId'); // Ajusta la ruta según tu estructura
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error('Error fetching next asignatura ID:', error);
+                    return null;
+                }
+            }
+
+            async function updateIdAsignatura() {
+                console.log('Actualizando ID Asignatura');
+
+                const nextId = await getNextAsignaturaId();
+                if (nextId) {
+                    const nuevoId = `ASIG-${nextId}`;
+                    idAsignaturaElement.value = nuevoId;
+                    console.log('Nuevo ID:', nuevoId);
+                } else {
+                    idAsignaturaElement.value = '';
+                    console.log('Error al obtener el siguiente ID');
+                }
+            }
+
+            // Actualización inicial
+            updateIdAsignatura();
+
+            // Puedes llamar a updateIdAsignatura() cuando sea necesario,
+            // por ejemplo, cuando se abre el formulario para una nueva asignatura
+        });
+    </script>
+
+    @* SCRIPT PARA PODER SELECCIONAR UNA ASIGNATURA DEPENDIENDO DEL GRADO SELECCIONADO O INGRESAR LA ASIGNATURA MANUALMENTE *@
+    <script>
+        $(document).ready(function () {
+            const gradoInput = $('#Grado');
+            const asignaturaSelect = $('#Asignatura1');
+            const nuevaAsignaturaInput = $('#nuevaAsignatura');
+
+            // Objeto con las asignaturas por grado
+            const asignaturasPorGrado = {
+                'KINDERGARTEN': ['', ''],
+                'PREPARATORY': [''],
+                'FIRST GRADE': ['EDUCACIÓN FISICA Y DEPORTES - P.E.', 'ESPAÑOL - SPANISH', 'MATEMÁTICAS - MATH', 'FONÉTICA - PHONICS', 'LENGUAJE ESCRITO Y ORAL - LANGUAGE', 'ACTIVIDADES AGROPECUARIAS - AGROPECUARY', 'CALIGRAFÍA - PENMASHIP', 'DIBUJO - DRAWING - (ARTÍSTICA)', 'MÚSICA - MUSIC', 'EDUCACIÓN PARA EL HOGAR - HOME ECONOMICS', 'ARTES MANUALES - MANUAL ARTS', 'BIBLIA - BIBLE', 'CIENCIAS - SCIENCE', 'CIENCIAS SOCIALES (ESPAÑOL) - SOCIAL STUDIES', 'LECTURA - READING', 'ESTUDIOS SOCIALES (INGLÉS) - SOCIAL STUDIES', 'ORTOGRAFÍA - SPELLING'],
+                'SECOND GRADE': ['EDUCACIÓN FISICA Y DEPORTES - P.E.', 'FONÉTICA - PHONICS', 'LENGUAJE ESCRITO Y ORAL - LANGUAGE', 'CALIGRAFÍA - PENMASHIP', 'DIBUJO - DRAWING', 'MÚSICA - MUSIC', 'EDUCACIÓN PARA EL HOGAR - HOME ECONOMICS', 'ARTES MANUALES - MANUAL ARTS', 'LABORATORIO - LABORATORY', 'BIBLIA - BIBLE', 'ESPAÑOL - SPANISH', 'MATEMÁTICAS - MATH', 'CIENCIAS - SCIENCE', 'CIENCIAS SOCIALES (ESPAÑOL) - SOCIAL STUDIES', 'ESTUDIOS SOCIALES (INGLÉS) - SOCIAL STUDIES', 'LECTURA - READING', 'ORTOGRAFÍA - SPELLING'],
+                'THIRD GRADE': ['EDUCACIÓN FISICA Y DEPORTES - P.E.', 'EDUCACIÓN PARA EL HOGAR - HOME ECONOMICS', 'ARTES MANUALES - MANUAL ARTS', 'ESPAÑOL - SPANISH', 'COMPUTACIÓN - COMPUTER', 'ACTIVIDADES AGROPECUARIAS - AGROPECUARY', 'CALIGRAFÍA - PENMASHIP', 'DIBUJO - DRAWING', 'MÚSICA - MUSIC', 'ESTUDIOS SOCIALES (INGLÉS) - SOCIAL STUDIES', 'MATEMÁTICAS - MATH', 'LENGUAJE ESCRITO Y ORAL - LANGUAGE', 'CIENCIAS - SCIENCE', 'FONÉTICA - PHONICS', 'LABORATORIO - LABORATORY', 'ORTOGRAFÍA - SPELLING', 'LECTURA - READING', 'BIBLIA - BIBLE', 'CIENCIAS SOCIALES (ESPAÑOL) - SOCIAL STUDIES'],
+                'FOURTH GRADE': ['EDUCACIÓN FISICA Y DEPORTES - P.E.', 'LENGUAJE ESCRITO Y ORAL - LANGUAGE', 'CALIGRAFÍA - PENMASHIP', 'DIBUJO - DRAWING', 'MÚSICA - MUSIC', 'EDUCACIÓN PARA EL HOGAR - HOME ECONOMICS', 'ARTES MANUALES - MANUAL ARTS', 'ACTIVIDADES AGROPECUARIAS - AGROPECUARY', 'BIBLIA - BIBLE', 'CÍVICA - CIVIC', 'ESPAÑOL - SPANISH', 'MATEMÁTICAS - MATH', 'CIENCIAS - SCIENCE', 'CIENCIAS SOCIALES (ESPAÑOL) - SOCIAL STUDIES', 'INGLÉS (PRONUNCIACIÓN) - SPELLING', 'ESTUDIOS SOCIALES (INGLÉS) - SOCIAL STUDIES', 'COMPUTACIÓN - COMPUTER', 'LECTURA - READING'],
+                'FIFTH GRADE': ['ORTOGRAFÍA - SPELLING', 'ESTUDIOS SOCIALES (INGLÉS) - SOCIAL STUDIES', 'EDUCACIÓN PARA EL HOGAR - HOME ECONOMICS', 'ARTES MANUALES - MANUAL ARTS', 'LABORATORIO - LABORATORY', 'EDUCACIÓN FISICA Y DEPORTES - P.E.', 'MATEMÁTICAS - MATH', 'LECTURA - READING', 'CIENCIAS - SCIENCE', 'LENGUAJE ESCRITO Y ORAL - LANGUAGE', 'COMPUTACIÓN - COMPUTER', 'ESPAÑOL - SPANISH', 'CIENCIAS SOCIALES (ESPAÑOL) -SOCIAL STUDIES', 'DIBUJO - DRAWING', 'CALIGRAFÍA - PENMASHIP', 'CÍVICA - CIVIC', 'MÚSICA - MUSIC', 'BIBLIA - BIBLE', 'ACTIVIDADES AGROPECUARIAS - AGROPECUARY'],
+                'SIXTH GRADE': ['EDUCACIÓN FISICA Y DEPORTES - P.E.', 'CALIGRAFÍA - PENMASHIP', 'DIBUJO - DRAWING', 'MÚSICA - MUSIC', 'EDUCACIÓN PARA EL HOGAR - HOME ECONOMICS', 'ARTES MANUALES - MANUAL ARTS', 'ACTIVIDADES AGROPECUARIAS - AGROPECUARY', 'BIBLIA - BIBLE', 'CÍVICA - CIVIC', 'COMPUTACIÓN - COMPUTER', 'ESPAÑOL - SPANISH', 'ESTUDIOS SOCIALES (INGLÉS) -SOCIAL STUDIES', 'ORTOGRAFÍA - SPELLING', 'MATEMÁTICAS - MATH', 'CIENCIAS - SCIENCE', 'CIENCIAS SOCIALES (ESPAÑOL)- SOCIAL STUDIES', 'LECTURA - READING', 'LABORATORIO - LABORATORY', 'LENGUAJE ESCRITO Y ORAL - LANGUAGE'],
+                'SEVENTH GRADE': ['EDUCACIÓN ARTÍSTICA - EDUCT ARTISTICA', 'BIBLIA - BIBLE', 'ORTOGRAFÍA - PENMASHIP', 'EDUCACIÓN CÍVICA - CIVIC EDUCATION', 'ESPAÑOL - SPANISH', 'ESTUDIOS SOCIALES (ESPAÑOL) - SOCIAL STUDIES', 'GRAMÁTICA - GRAMMAR', 'INGLÉS (PRONUNCIACIÓN) - READING', 'CIENCIAS - SCIENCE', 'ESTUDIOS SOCIALES (INGLÉS) - SOCIAL STUDIES', 'EDUCACIÓN FISICA Y DEPORTES - P.E.', 'TECNOLOGÍA - TECNOLOGY', 'INGLÉS (PRONUNCIACIÓN) - SPELLING'],
+                'EIGHTH GRADE': ['GRAMÁTICA - GRAMMAR', 'ESTUDIOS SOCIALES (INGLÉS) - SOCIAL ESTUDIES', 'TECNOLOGÍA - TECNOLOGY', 'EDUCACIÓN ARTÍSTICA - EDUCT ARTISTICA', 'CIENCIAS NATURALES - SCIENCE', 'INGLÉS (PRONUNCIACIÓN) - SPELLING', 'EDUCACIÓN CÍVICA - CIVIC EDUCATION', 'ORTOGRAFÍA - PENMASHIP', 'INGLÉS (PRONUNCIACIÓN) - READING', 'ESPAÑOL - SPANISH', 'ESTUDIOS SOCIALES (ESPAÑOL) - SOCIAL STUDIES', 'MATEMÁTICAS - MATH', 'BIBLIA - BIBLE'],
+                'NINTH GRADE': ['GRAMÁTICA - GRAMMAR', 'BIBLIA - BIBLE', 'TECNOLOGÍA - TECNOLOGY', 'EDUCACIÓN CÍVICA - CIVIC EDUCATION', 'MATEMÁTICAS - MATH', 'INGLÉS (PRONUNCIACIÓN) - READING', 'ESTUDIOS SOCIALES (ESPAÑOL) - SOCIAL STUDIES', 'EDUCACIÓN FÍSICA Y DEPORTES - P.E.', 'CIENCIAS NATURALES - SCIENCE', 'ESTUDIOS SOCIALES (INGLÉS) - SOCIAL ESTUDIES', 'ESPAÑOL - SPANISH', 'ORTOGRAFÍA - PENMASHIP', 'INGLÉS (PRONUNCIACIÓN) - SPELLING'],
+                'TENTH GRADE': ['ESPAÑOL I - SPANISH I', 'SOCIOLOGÍA - SOCIOLOGY', 'HISTORIA DE HONDURAS - HONDURAS HISTORY', 'ORTOGRAFÍA - PENMASHIP', 'PSICOLOGÍA - PSYCHOLOGY', 'INFORMÁTICA - INFORMATIC', 'BIOLOGÍA I - BIOLOGY I', 'GRAMÁTICA (INGLÉS I) - GRAMMAR', 'INGLÉS I (PRONUNCIACIÓN) - SPELLING', 'INGLÉS I (LECTURA) - READING', 'GEOGRAFÍA - GEOGRAPHY', 'MATEMÁTICA I - MATH I', 'FÍSICA I - PHYSICS I', 'QUÍMICA I - CHEMISTRY I', 'EDUCACIÓN FÍSICA Y DEPORTES - P.E.', 'BIBLIA - BIBLE'],
+                'ELEVENTH GRADE': ['FÍSICA APLICADA - APPLIED PHYSICS', 'QUÍMICA III - CHEMISTRY III', 'ORTOGRAFÍA - PENMASHIP', 'COMMUNICATION TECHNOLOGY', 'DIBUJO TÉCNICO - TECHNİCAL DRAWING', 'ANTROPOLOGÍA - ANTHROPOLOGY', 'BIOLOGÍA HUMANA - HUMAN BIOLOGY', 'FILOSOFÍA - PHILOSOPHY', 'ESPAÑOL II - SPANISH II', 'INGLÉS III (GRAMÁTICA) - GRAMMAR', 'INGLÉS III (LECTURA) - READING', 'APPRECIATION', 'INGLÉS III (PRONUNCIACIÓN) - SPELLING', 'MATEMÁTICA III - MATH III', 'HISTORIA UNIVERSAL', 'BIBLIA - BELE', 'FÍSICA II - PHYSIC II', 'ETIQUETA - LABEL', 'ESPAÑOL - SPANISH', 'APRECIACIÓN ARTÍSTICA - ARTISTIC APPRECIATION', 'MATEMÁTICA III (APLICADA) - APPLIED MATHEMATICS', 'DIBUJO TÉCNICO - TECHNICAL DRAWING', 'LEGISLATION', 'PROGRAMACIÓN - PROGRAMMING', 'ANÁLISIS Y DISEÑO I - ANALYSIS AND DESIGN I', 'COMPUTER LAB', 'EDUCACIÓN FISICA Y DEPORTES - P.E.'],
+                'TWELVE GRADE': ['REDES INFORMÁTICAS - COMPUTER NETWORKS', 'GESTIÓN EMPRESARIAL ORIENTADO A LA INFORMÁTICA', 'PROGRAMACIÓN - PROGRAMMING', 'PRODUCCIONES DIGITALES', 'DESARROLLO WEB - WEB DEVELOPMENT', 'MANTENIMIENTO Y REPARACIÓN - MAINTENANCE AND REPAIR', 'GRAMÁTICA - GRAMMAR', 'LABORATORIO DE INFORMÁTICA - COMPUTER LAB', 'ORTOGRAFÍA - PENMASHIP', 'INGLÉS (PRONUNCIACIÓN) - SPELLING', 'ORIENTACIÓN A LA EDUCACIÓN SUPERIOR - ORIENTATION TO HIGHER EDUCATION', 'INGLÉS (LECTURA) - READING', 'BIBLIA - BIBLE'],
+            };
+
+            // Función para cargar asignaturas según el grado
+            function cargarAsignaturas(grado) {
+                asignaturaSelect.empty();
+                asignaturaSelect.append($('<option></option>').val('').text('Seleccione una asignatura'));
+                if (asignaturasPorGrado[grado]) {
+                    asignaturasPorGrado[grado].forEach(asignatura => {
+                        asignaturaSelect.append($('<option></option>').val(asignatura).text(asignatura));
+                    });
+                }
+                asignaturaSelect.append($('<option></option>').val('NUEVA').text('Agregar nueva asignatura'));
+            }
+
+            // Observar cambios en el input de Grado
+            function checkGradoChanges() {
+                let currentGrado = gradoInput.val();
+                setInterval(() => {
+                    if (gradoInput.val() !== currentGrado) {
+                        currentGrado = gradoInput.val();
+                        cargarAsignaturas(currentGrado);
+                    }
+                }, 100);
+            }
+
+            checkGradoChanges();
+
+            // Manejar la selección de asignatura
+            asignaturaSelect.change(function () {
+                if ($(this).val() === 'NUEVA') {
+                    nuevaAsignaturaInput.show();
+                } else {
+                    nuevaAsignaturaInput.hide();
+                }
+            });
+
+            // Convertir a mayúsculas y agregar nueva asignatura
+            nuevaAsignaturaInput.on('input', function () {
+                $(this).val($(this).val().toUpperCase());
+            }).on('blur', function () {
+                let nuevaAsignatura = $(this).val().trim();
+                if (nuevaAsignatura) {
+                    asignaturaSelect.append($('<option></option>').val(nuevaAsignatura).text(nuevaAsignatura));
+                    asignaturaSelect.val(nuevaAsignatura);
+                    $(this).hide().val('');
+                }
+            });
+        });
+    </script>
+
+    @* SCRIPT PARA MOSTRAR MENSAJE QUE SE GUARDO SATISFACTORIMENTE  *@
+    @* PENDIENTE  *@
+
+   <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .form-control:read-only {
+            background-color: #e9ecef;
+        }
+        label {
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+        .btn-secondary:hover {
+            background-color: #545b62;
+            border-color: #4e555b;
+        }
+    </style>
+}

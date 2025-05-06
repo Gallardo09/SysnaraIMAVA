@@ -1,0 +1,93 @@
+﻿@model SystemSysnara.Models.Docente
+
+@{
+    ViewData["Title"] = "Detalles Docente";
+}
+
+<div class="container mt-5">
+    <!-- Título de la página -->
+    <h2 class="text-center mb-4 text-primary" style="font-family: 'Roboto', sans-serif; font-weight: 700;">Detalles del Docente</h2>
+
+    <!-- Card Contenedor -->
+    <div class="card shadow-lg border-light">
+        <div class="card-header bg-info text-white">
+            <h4 class="card-title text-center">Información del Docente</h4>
+        </div>
+        <div class="card-body">
+
+            <!-- Detalles del Docente -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="info-box">
+                        <h5><i class="fas fa-id-badge"></i> ID Docente</h5>
+                        <p>@Html.DisplayFor(model => model.Iddocente)</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-box">
+                        <h5><i class="fas fa-user"></i> Nombre Completo</h5>
+                        <p>@Html.DisplayFor(model => model.NombreCompleto)</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-box">
+                        <h5><i class="fas fa-transgender"></i> Género</h5>
+                        <p>@Html.DisplayFor(model => model.Genero)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="info-box">
+                        <h5><i class="fas fa-phone"></i> Teléfono</h5>
+                        <p>@Html.DisplayFor(model => model.Telefono)</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-box">
+                        <h5><i class="fas fa-mobile-alt"></i> Celular</h5>
+                        <p>@Html.DisplayFor(model => model.Celular)</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-box">
+                        <h5><i class="fas fa-envelope"></i> Correo</h5>
+                        <p>@Html.DisplayFor(model => model.Correo)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="info-box">
+                        <h5><i class="fas fa-map-marker-alt"></i> Dirección</h5>
+                        <p>@Html.DisplayFor(model => model.Direccion)</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-box">
+                        <h5><i class="fas fa-graduation-cap"></i> Profesión</h5>
+                        <p>@Html.DisplayFor(model => model.Profesion)</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-box">
+                        <h5><i class="fas fa-calendar-alt"></i> Año de Registro</h5>
+                        <p>@Html.DisplayFor(model => model.IdañoNavigation.Idaño)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="form-group text-center mt-5">
+        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model?.Idpk"><i class="fas fa-edit"></i> Editar</a>
+        <a class="btn btn-primary" asp-action="Index"><i class="fas fa-arrow-left"></i> Regresar a la lista</a>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Font Awesome for Icons -->
+}

@@ -1,0 +1,97 @@
+﻿@model IEnumerable<SystemSysnara.Models.Padre>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Registrar Padre de Familia</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Registrar Nuevo</a>
+</p>
+<table id="example" class="table table-striped table-hover" style="width:100%; font-size: 13px;">
+    <thead>
+        <tr>
+            <th>
+                ID Padre
+            </th>
+            <th>
+                Nombre del Padre
+            </th>
+            <th>
+                Parentesco
+            </th>
+            <th>
+                Profesión
+            </th>
+            <th>
+                Género
+            </th>
+            <th>
+                Teléfono
+            </th>
+            <th>
+                Celular 
+            </th>
+            <th>
+                Correo
+            </th>
+            <th>
+                Dirección 
+            </th>
+            <th>
+                Observación
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Idpadre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombrePadre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Parentesco)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Profesion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Genero)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TelefonoPadre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CelPadre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Correo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DireccionPadre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Observacion)
+            </td>
+            
+            <td>
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Idencargado">Editar</a>
+            </td>
+            <td>
+                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Idencargado">Detalles</a>
+            </td>
+            <td>
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Idencargado">Eliminar</a>
+            </td>
+            
+        </tr>
+}
+    </tbody>
+</table>

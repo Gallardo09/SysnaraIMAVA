@@ -1,0 +1,301 @@
+﻿@model IEnumerable<SystemSysnara.Models.Matricula>
+@{
+    ViewData["Title"] = "Matrícula Estudiantil";
+    var años = ViewBag.Años as List<SystemSysnara.Models.Año>;
+}
+
+<div class="matricula-container">
+    <div class="row">
+        <div class="matricula-header">
+            <h1 class="matricula-title">Reporte Tradicional</h1>
+        </div>
+        <div class="matricula-filters">
+            <div class="filter-group">
+                <label for="filtroAño">Año</label>
+                <select class="form-select" id="filtroAño">
+                    <option value="">Seleccione un año</option>
+                    @if (años != null)
+                    {
+                        @foreach (var año in años)
+                        {
+                            <option value="@año.Idaño">@año.Idaño</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="filtroGrado">Grado</label>
+                <select class="form-select" id="filtroGrado" disabled>
+                    <option value="">Seleccione un grado</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="filtroSistema">Sistema</label>
+                <select class="form-select" id="filtroSistema">
+                    <option value="">Seleccione un sistema</option>
+                    <option value="internacional">INTERNACIONAL</option>
+                    <option value="anglosajon">ANGLOSAJÓN</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="filter-group">
+            <label>&nbsp;</label>
+            <button id="controlAsistenciaBtn" class="btn btn-primary form-control" disabled>Control de Asistencia</button>
+        </div>
+        <div class="filter-group">
+            <label>&nbsp;</label>
+            <button id="controlAcumuladosBtn" class="btn btn-primary form-control" disabled>Control de Acumulados</button>
+        </div>
+        <div class="filter-group">
+            <label>&nbsp;</label>
+            <button id="controlPersonalidadBtn" class="btn btn-primary form-control" disabled>Control de Personalidad</button>
+        </div>
+        <div class="filter-group">
+            <label>&nbsp;</label>
+            <button id="controlEstudiantilBtn" class="btn btn-primary form-control" disabled>Reporte de Matricula</button>
+        </div>
+        <div class="filter-group">
+            <label>&nbsp;</label>
+            <button id="controlPagosBtn" class="btn btn-primary form-control" disabled>Control de Pagos</button>
+        </div>
+    </div>
+</div>
+
+<table id="matriculasTable" class="table table-striped table-hover" style="width:100%; font-size: 13px;">
+    <thead>
+        <tr>
+            <th>IDSI</th>
+            <th>Identidad</th>
+            <th>Nombre del Estudiante</th>
+            <th>Fecha de Nacimiento</th>
+            <th>Genero</th>
+            <th>Sistema</th>
+            <th>Editar</th>
+            <th>Detalles</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var table = $('#matriculasTable').DataTable({
+                columns: [
+                    { data: 'idsi' },
+                    { data: 'ididentidad' },
+                    { data: 'nombreEstudiante' },
+                    { data: 'fechaNacimiento' },
+                    { data: 'genero' },
+                    { data: 'sistema' },
+                    {
+                        data: 'idest',
+                        render: function (data, type, row) {
+                            var idAño = $('#filtroAño').val(); // Obtiene el año seleccionado
+                            return '<a class="btn btn-primary btn-sm action-btn" href="/ReporteTradicional/GenerarConstanciaMatricula?idaño=' + idAño + '&ididentidad=' + row.ididentidad + '"><i class="fas fa-edit"></i> Constancia Matricula</a>';
+                        }
+                    },
+                    {
+                        data: 'idest',
+                        render: function (data, type, row) {
+                            var disabled = (row.sistema === 'internacional') ? 'disabled' : ''; // Deshabilita basado en alguna condición específica del sistema
+                            return '<a class="btn btn-info btn-sm action-btn ' + disabled + '" href="#' + data + '"><i class="fas fa-info-circle"></i> Constancia Conducta</a>';
+                        }
+                    },
+                    {
+                        data: 'idest',
+                        render: function (data, type, row) {
+                            var disabled = (row.sistema === 'internacional') ? 'disabled' : ''; // Deshabilita basado en alguna condición específica del sistema
+                            return '<a class="btn btn-danger btn-sm action-btn ' + disabled + '" href="#' + data + '"><i class="fas fa-trash-alt"></i> Constancia Cupo</a>';
+                        }
+                    }
+
+                ]
+            });
+
+            // Función para cargar los grados según el año seleccionado
+            $('#filtroAño').change(function () {
+                var idAño = $(this).val();
+                $('#filtroGrado').empty().append('<option value="">Seleccione un grado</option>');
+                if (idAño) {
+                    $.ajax({
+                        url: '/Matricula/GetGrados',
+                        data: { idAño: idAño },
+                        success: function (data) {
+                            $.each(data, function (index, item) {
+                                $('#filtroGrado').append($('<option>', {
+                                    value: item.idgrado,
+                                    text: item.gradoCompleto
+                                }));
+                            });
+                            $('#filtroGrado').prop('disabled', false);
+                        }
+                    });
+                } else {
+                    $('#filtroGrado').prop('disabled', true);
+                }
+                cargarMatriculas();
+            });
+
+            // Función para cargar las matrículas según los filtros seleccionados
+            function cargarMatriculas() {
+                var idAño = $('#filtroAño').val();
+                var idGrado = $('#filtroGrado').val();
+                var sistema = $('#filtroSistema').val();
+
+                if (idAño) {
+                    $.ajax({
+                        url: '/Matricula/GetMatriculas',
+                        data: { idAño: idAño, idGrado: idGrado, sistema: sistema },
+                        success: function (data) {
+                            table.clear().rows.add(data).draw();
+                        }
+                    });
+                } else {
+                    table.clear().draw();
+                }
+            }
+
+            // Llama a la función de cargar matrículas cuando se cambian los filtros
+            $('#filtroGrado, #filtroSistema').change(cargarMatriculas);
+
+            // Habilita los BOTONES solo si hay un grado seleccionado
+            $('#filtroGrado').change(function () {
+                $('#controlPagosBtn').prop('disabled', !this.value)
+                $('#controlEstudiantilBtn').prop('disabled', !this.value);
+                $('#controlAcumuladosBtn').prop('disabled', !this.value);
+                $('#controlAsistenciaBtn').prop('disabled', !this.value);
+                $('#controlPersonalidadBtn').prop('disabled', !this.value);
+            });
+
+            // Redirige al reporte de Control de Pagos cuando se presiona el botón
+            $('#controlPagosBtn').click(function () {
+                var idGrado = $('#filtroGrado').val();
+                if (idGrado) {
+                    window.location.href = `/ReporteTradicional/GenerarReporteMuestra?idGrado=${encodeURIComponent(idGrado)}`;
+                } else {
+                    alert('Seleccione un grado antes de generar el reporte.');
+                }
+            })
+
+            // Redirige al reporte de Matricula por Grado cuando se presiona el botón
+            $('#controlEstudiantilBtn').click(function () {
+                var idGrado = $('#filtroGrado').val();
+                if (idGrado) {
+                    window.location.href = `/ReporteTradicional/GenerarReporteMatricula?idGrado=${encodeURIComponent(idGrado)}`;
+                } else {
+                    alert('Seleccione un grado antes de generar el reporte.');
+                }
+            })
+
+            // Redirige al Reporte de Control de Acumulados por Grado cuando se presiona el botón
+            $('#controlAcumuladosBtn').click(function () {
+                var idGrado = $('#filtroGrado').val();
+                if (idGrado) {
+                    window.location.href = `/ReporteTradicional/GenerarReporteAcumulados?idGrado=${encodeURIComponent(idGrado)}`;
+                } else {
+                    alert('Seleccione un grado antes de generar el reporte.');
+                }
+            })
+
+            // Redirige al Reporte de Control de Asistencia por Grado cuando se presiona el botón
+            $('#controlAsistenciaBtn').click(function () {
+                var idGrado = $('#filtroGrado').val();
+                if (idGrado) {
+                    window.location.href = `/ReporteTradicional/GenerarReporteAsistencia?idGrado=${encodeURIComponent(idGrado)}`;
+                } else {
+                    alert('Seleccione un grado antes de generar el reporte.');
+                }
+            })
+
+            // Redirige al Reporte de Control de PERSONALIDAD por Grado cuando se presiona el botón
+            $('#controlPersonalidadBtn').click(function () {
+                var idGrado = $('#filtroGrado').val();
+                if (idGrado) {
+                    window.location.href = `/ReporteTradicional/GenerarReportePersonalidad?idGrado=${encodeURIComponent(idGrado)}`;
+                } else {
+                    alert('Seleccione un grado antes de generar el reporte.');
+                }
+            })
+        });
+    </script>
+}
+
+<style>
+    .matricula-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .matricula-header {
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .matricula-title {
+        font-family: 'Russo One', sans-serif;
+        color: #21a20d;
+        font-size: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .matricula-filters {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .filter-group {
+        flex: 1;
+    }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-weight: bold;
+            color: #495057;
+        }
+
+    .form-select, .btn {
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .action-btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        line-height: 1.5;
+        white-space: nowrap;
+        width: auto;
+    }
+
+        .action-btn i {
+            margin-right: 0.25rem;
+        }
+
+    #matriculasTable td {
+        vertical-align: middle;
+    }
+
+/*    @@media (max-width: 768px) {
+        .matricula-filters {
+            flex-direction: column;
+        }
+
+        .filter-group {
+            width: 100%;
+        }
+    } */
+</style>
