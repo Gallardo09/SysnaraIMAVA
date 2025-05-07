@@ -47,7 +47,7 @@ namespace SysnaraIMAVA.Controllers
         // POST: Año/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Idaño,AñoInicio,AñoFin,Observacion,Sistema,SistemaPeriodo")] Año año)
+        public async Task<IActionResult> Create([Bind("Idaño,AñoInicio,AñoFin,Observacion")] Año año)
         {
             if (ModelState.IsValid)
             {
@@ -89,11 +89,9 @@ namespace SysnaraIMAVA.Controllers
         }
 
         // POST: Año/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Idaño,AñoInicio,AñoFin,Observacion,Sistema,SistemaPeriodo")] Año año)
+        public async Task<IActionResult> Edit(int id, [Bind("Idaño,AñoInicio,AñoFin,Observacion")] Año año)
         {
             if (id != año.Idaño)
             {
@@ -104,9 +102,6 @@ namespace SysnaraIMAVA.Controllers
             {
                 try
                 {
-                    // Convertir el valor de Sistema a mayúsculas antes de guardarlo
-                   // año.Sistema = año.Sistema.ToUpper();
-
                     _context.Update(año);
                     await _context.SaveChangesAsync();
                 }

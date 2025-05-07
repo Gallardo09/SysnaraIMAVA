@@ -1,4 +1,4 @@
-﻿@model SystemSysnara.Models.Matricula
+﻿@model SysnaraIMAVA.Models.Matricula
 
 @{
     ViewData["Title"] = "Crear Matricula";
@@ -56,9 +56,9 @@
                         <select asp-for="Idaño" id="Idaño" class="form-control" asp-items="ViewBag.Idaño"></select>
                     </div>
                     <div class="form-group col-md-2">
-                        <label asp-for="Ididentidad" class="control-label">Identidad</label>
-                        <input asp-for="Ididentidad" class="form-control" id="Ididentidad" onkeydown="buscarEstudiante(event)" />
-                        <span asp-validation-for="Ididentidad" class="text-danger"></span>
+                        <label asp-for="Idestudiante" class="control-label">Identidad</label>
+                        <input asp-for="Idestudiante" class="form-control" id="Ididentidad" onkeydown="buscarEstudiante(event)" />
+                        <span asp-validation-for="Idestudiante" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-4">
                         <label asp-for="NombreEstudiante" class="control-label">Nombre del Estudiante</label>
@@ -225,12 +225,12 @@
                         <span asp-validation-for="RepiteAño" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3">
-                        <label asp-for="EstadoIngreso" class="control-label">Estado de Ingreso</label>
-                        <select asp-for="EstadoIngreso" class="form-control">
+                        <label asp-for="EstadoMatricula" class="control-label">Estado de Ingreso</label>
+                        <select asp-for="EstadoMatricula" class="form-control">
                             <option value="REINGRESO">REINGRESO</option>
                             <option value="PRIMER INGRESO">PRIMER INGRESO</option>
                         </select>
-                        <span asp-validation-for="EstadoIngreso" class="text-danger"></span>
+                        <span asp-validation-for="EstadoMatricula" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -245,7 +245,7 @@
                         <input type="date" asp-for="FechaIngreso" class="form-control" />
                         <span asp-validation-for="FechaIngreso" class="text-danger"></span>
                     </div>
-                    <div class="form-group col-md-2">
+@*                     <div class="form-group col-md-2">
                         <label asp-for="Sistema" class="control-label">Sistema</label>
                         <select asp-for="Sistema" id="Sistema" class="form-control">
                             <option value="ANGLOSAJÓN">ANGLOSAJÓN</option>
@@ -257,17 +257,17 @@
                         <label asp-for="SistemaTiempo" class="control-label">Sistema (Periodo)</label>
                         <input asp-for="SistemaTiempo" id="SistemaTiempo" readonly class="form-control" />
                         <span asp-validation-for="SistemaTiempo" class="text-danger"></span>
-                    </div>
+                    </div> *@
                 </div>
 
-                <div class="row mt-3">
+@*                 <div class="row mt-3">
                     <div class="form-group col-md-4">
                         <label class="control-label">Fotografía</label>
                         <input type="file" name="fotoInput" class="form-control" id="fotoInput" accept="image/*" />
                         <img id="previewFoto" src="#" alt="Vista previa de la foto" style="max-width: 200px; max-height: 200px; display: none;" class="mt-2" />
                         <span asp-validation-for="FotoData" class="text-danger"></span>
                     </div>
-                </div>
+                </div> *@
             </div>
         </div>
 

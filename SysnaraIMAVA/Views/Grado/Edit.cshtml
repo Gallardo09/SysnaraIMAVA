@@ -1,4 +1,4 @@
-﻿@model SystemSysnara.Models.Grado
+﻿@model SysnaraIMAVA.Models.Grado
 
 @{
     ViewData["Title"] = "Editar";
@@ -50,27 +50,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="Sistema" class="control-label">Sistema</label>
-                    <select asp-for="Sistema" class="form-control">
-                        <option value="INTERNACIONAL">INTERNACIONAL</option>
-                        <option value="ANGLOSAJÓN">ANGLOSAJÓN</option>
-                    </select>
-                    <span asp-validation-for="Sistema" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="SistemaTiempo" class="control-label">Sistema (Periodo)</label>
-                    <input asp-for="SistemaTiempo" class="form-control" />
-                    <span asp-validation-for="SistemaTiempo" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-
         <div class="row">
             <div class="col-md-12 text-center">
                 <button type="submit" class="btn btn-primary">Guardar</button>

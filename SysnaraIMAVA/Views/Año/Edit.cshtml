@@ -1,4 +1,4 @@
-﻿@model SystemSysnara.Models.Año
+﻿@model SysnaraIMAVA.Models.Año
 
 @{
     ViewData["Title"] = "Editar";
@@ -45,26 +45,6 @@
             </div>
         </div>
 
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="Sistema" class="control-label">Sistema</label>
-                    <select asp-for="Sistema" class="form-control" id="SistemaSelect">
-                        <option value="tradicional">TRADICIONAL</option>
-                        <option value="anglosajon">ANGLOSAJÓN</option>
-                    </select>
-                    <span asp-validation-for="Sistema" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="SistemaPeriodo" class="control-label">Periodo del Sistema</label>
-                    <input type="text" asp-for="SistemaPeriodo" class="form-control" id="SistemaPeriodoInput" placeholder="20XX-20XX" readonly />
-                    <span asp-validation-for="SistemaPeriodo" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-
         <div class="row">
             <div class="col-md-12 text-center">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
@@ -78,39 +58,4 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const idAnoInput = document.querySelector("input[name='Idaño']"); // Campo de Idaño
-            const sistemaSelect = document.querySelector("#SistemaSelect"); // Campo de Sistema
-            const sistemaPeriodoInput = document.querySelector("#SistemaPeriodoInput"); // Campo de SistemaPeriodo
-
-            function updateSistemaPeriodo() {
-                const idAnoValue = idAnoInput.value;
-                const anio = parseInt(idAnoValue, 10);
-
-                // Si el valor no es un número, no hacer nada
-                if (isNaN(anio)) {
-                    return;
-                }
-
-                let sistemaPeriodo = idAnoValue; // Valor por defecto del SistemaPeriodo (solo el año)
-
-                // Si se selecciona ANGLOSAJÓN, concatenamos el año siguiente
-                if (sistemaSelect.value === "anglosajon") {
-                    const siguienteAnio = anio + 1;
-                    sistemaPeriodo = `${idAnoValue}-${siguienteAnio}`;
-                }
-
-                // Asignamos el valor al campo SistemaPeriodo
-                sistemaPeriodoInput.value = sistemaPeriodo;
-            }
-
-            // Llamar a la función de inmediato para asegurarse de que se actualice cuando ya haya valores
-            updateSistemaPeriodo();
-
-            // Asociar la función al evento change tanto del select de Idaño como de Sistema
-            sistemaSelect.addEventListener("change", updateSistemaPeriodo); // Si el usuario cambia el valor de Sistema
-        });
-    </script>
 }

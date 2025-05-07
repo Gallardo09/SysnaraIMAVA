@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SystemSysnara.Models.Padre>
+﻿@model IEnumerable<SysnaraIMAVA.Models.Padre>
 
 @{
     ViewData["Title"] = "Index";
@@ -82,13 +82,13 @@
             </td>
             
             <td>
-                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Idencargado">Editar</a>
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Idimvencargado">Editar</a>
             </td>
             <td>
-                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Idencargado">Detalles</a>
+                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Idimvencargado">Detalles</a>
             </td>
             <td>
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Idencargado">Eliminar</a>
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Idimvencargado">Eliminar</a>
             </td>
             
         </tr>

@@ -1,4 +1,4 @@
-﻿@model SystemSysnara.Models.Matricula
+﻿@model SysnaraIMAVA.Models.Matricula
 
 @{
     ViewData["Title"] = "Edit";
@@ -17,9 +17,9 @@
                 <span asp-validation-for="Idaño" class="text-danger"></span>
             </div>
             <div class="form-group col-2" hidden>
-                <label asp-for="Idencargado" class="control-label">ID Encargado</label>
-                <select asp-for="Idencargado" class="form-control" asp-items="ViewBag.Idencargado"></select>
-                <span asp-validation-for="Idencargado" class="text-danger"></span>
+                <label asp-for="Idimvencargado" class="control-label">ID Encargado</label>
+                <select asp-for="Idimvencargado" class="form-control" asp-items="ViewBag.Idencargado"></select>
+                <span asp-validation-for="Idimvencargado" class="text-danger"></span>
             </div>
             <div class="form-group col-2">
                 <label asp-for="Idpadre" class="control-label">ID Padre</label>
@@ -70,9 +70,9 @@
         <div class="row"> 
             <input type="hidden" asp-for="Idest" />
             <div class="form-group col-2">
-                <label asp-for="Ididentidad" class="control-label">Identidad</label>
-                <input asp-for="Ididentidad" class="form-control" />
-                <span asp-validation-for="Ididentidad" class="text-danger"></span>
+                <label asp-for="Idestudiante" class="control-label">Identidad</label>
+                <input asp-for="Idestudiante" class="form-control" />
+                <span asp-validation-for="Idestudiante" class="text-danger"></span>
             </div>
             <div class="form-group col-3">
                 <label asp-for="NombreEstudiante" class="control-label">Nombre del Estudiante</label>
@@ -220,9 +220,9 @@
                 <span asp-validation-for="RepiteAño" class="text-danger"></span>
             </div>
             <div class="form-group col-2">
-                <label asp-for="EstadoIngreso" class="control-label">Estado de Ingreso</label>
-                <input asp-for="EstadoIngreso" class="form-control" />
-                <span asp-validation-for="EstadoIngreso" class="text-danger"></span>
+                <label asp-for="EstadoMatricula" class="control-label">Estado de Ingreso</label>
+                <input asp-for="EstadoMatricula" class="form-control" />
+                <span asp-validation-for="EstadoMatricula" class="text-danger"></span>
             </div>
             <div class="form-group col-4">
                 <label asp-for="Observacion" class="control-label">Observación</label>
@@ -234,26 +234,26 @@
                 <input asp-for="FechaIngreso" class="form-control" />
                 <span asp-validation-for="FechaIngreso" class="text-danger"></span>
             </div>
-            <div class="form-group col-2">
+@*             <div class="form-group col-2">
                 <label asp-for="Sistema" class="control-label">Sistema</label>
                 <input asp-for="Sistema" class="form-control" />
                 <span asp-validation-for="Sistema" class="text-danger"></span>
-            </div>
+            </div> *@
 @*             <div class="form-group">
                 <label asp-for="SistemaClase" class="control-label"></label>
                 <input asp-for="SistemaClase" class="form-control" />
                 <span asp-validation-for="SistemaClase" class="text-danger"></span>
             </div> *@
-            <div class="form-group col-2">
+@*             <div class="form-group col-2">
                 <label asp-for="SistemaTiempo" class="control-label">Sistema (Periodo)</label>
                 <input asp-for="SistemaTiempo" class="form-control" />
                 <span asp-validation-for="SistemaTiempo" class="text-danger"></span>
-            </div>
-                <div class="form-group col-2">
+            </div> *@
+@*                 <div class="form-group col-2">
                     <label class="control-label">Fotografía</label>
                     <input type="file" name="fotoInput" class="form-control" accept="image/*" />
                     <span asp-validation-for="FotoData" class="text-danger"></span>
-                </div>
+                </div> *@
         </div>
     </div>
         <br /><br />

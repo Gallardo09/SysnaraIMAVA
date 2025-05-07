@@ -1,4 +1,4 @@
-﻿@model SystemSysnara.Models.Padre
+﻿@model SysnaraIMAVA.Models.Padre
 
 @{
     ViewData["Title"] = "Delete";
@@ -73,7 +73,7 @@
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="Idencargado" />
+        <input type="hidden" asp-for="Idimvencargado" />
         <input type="submit" value="Eliminar" class="btn btn-danger" /> |
         <a class="btn btn-warning" asp-action="Index">Regresar a la Lista</a>
     </form>

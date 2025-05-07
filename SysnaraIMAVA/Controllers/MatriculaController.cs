@@ -57,16 +57,16 @@ namespace SysnaraIMAVA.Controllers
             var matriculas = await query
                 .Select(m => new {
                     m.Idest,
-                    m.Idsi,
-                    m.Ididentidad,
+                    m.Idimv,
+                    m.Idestudiante,
                     m.Nacionalidad,
                     m.NombreEstudiante,
                     m.FechaNacimiento,
                     m.Genero,
                     m.Estado,
                     m.Grado,
-                    m.EstadoIngreso,
-                    m.Sistema // Añadimos el campo Sistema
+                    m.EstadoMatricula,
+                    //m.Sistema // Añadimos el campo Sistema
                 })
                 .OrderBy(m => m.Genero) // Ordenar primero por género (niñas primero)
                 .ThenBy(m => m.NombreEstudiante) // Luego por nombre (A-Z)
