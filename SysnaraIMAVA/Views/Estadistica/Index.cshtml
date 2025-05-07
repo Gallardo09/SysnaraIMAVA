@@ -20,20 +20,12 @@
                         }
                     </select>
                 </div>
-                <div class="col-md-3 mb-2">
-                    <label for="filtroSistema" class="form-label">Sistema</label>
-                    <select class="form-select" id="filtroSistema">
-                        <option value="">Seleccione un sistema</option>
-                        <option value="ANGLOSAJÓN">ANGLOSAJÓN</option>
-                        <option value="TRADICIONAL">TRADICIONAL</option>
-                    </select>
-                </div>
             </div>
         </div>
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-md-3 mb-4">
+        <div class="col-md-4 mb-4">
             <div class="card overlay-card matriculados">
                 <div class="card-body">
                     <h5 class="card-title">Matriculados</h5>
@@ -42,7 +34,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3 mb-4">
+        <div class="col-md-4 mb-4">
             <div class="card overlay-card ninas">
                 <div class="card-body">
                     <h5 class="card-title">Niñas</h5>
@@ -51,30 +43,12 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3 mb-4">
+        <div class="col-md-4 mb-4">
             <div class="card overlay-card varones">
                 <div class="card-body">
                     <h5 class="card-title">Varones</h5>
                     <h3 class="card-text">0</h3>
                     <i class="la la-male icon"></i>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card overlay-card nuevo-ingreso">
-                <div class="card-body">
-                    <h5 class="card-title">Nuevo Ingreso</h5>
-                    <h3 class="card-text">0</h3>
-                    <i class="la la-user-plus icon"></i>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card overlay-card reingreso">
-                <div class="card-body">
-                    <h5 class="card-title">Reingreso</h5>
-                    <h3 class="card-text">0</h3>
-                    <i class="la la-redo icon"></i>
                 </div>
             </div>
         </div>
@@ -92,8 +66,6 @@
                         <th>Total</th>
                         <th>Femenino</th>
                         <th>Masculino</th>
-                        <th>Primer Ingreso</th>
-                        <th>Reingreso</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -104,18 +76,16 @@
     </div>
 
     <div class="row justify-content-center mt-4">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <canvas id="graficoGenero"></canvas>
-        </div>
-        <div class="col-md-6">
-            <canvas id="graficoIngreso"></canvas>
         </div>
     </div>
 </div>
+
 @section Scripts {
     <script>
         $(document).ready(function () {
-            let graficoGenero, graficoIngreso;
+            let graficoGenero;
             let table = $('#tablaEstadisticas').DataTable({
                 columns: [
                     { data: 'idgrado' },
@@ -123,9 +93,7 @@
                     { data: 'seccion' },
                     { data: 'total' },
                     { data: 'femenino' },
-                    { data: 'masculino' },
-                    { data: 'primerIngreso' },
-                    { data: 'reingreso' }
+                    { data: 'masculino' }
                 ]
             });
 
@@ -136,7 +104,7 @@
                     if (!startTimestamp) startTimestamp = timestamp;
                     const progress = Math.min((timestamp - startTimestamp) / duration, 1);
                     const currentValue = Math.floor(progress * (end - start) + start);
-                    $(obj).text(currentValue.toLocaleString()); // Usar jQuery para asegurar que funcione
+                    $(obj).text(currentValue.toLocaleString());
                     if (progress < 1) {
                         window.requestAnimationFrame(step);
                     }
@@ -149,27 +117,19 @@
                 animateValue($('.matriculados .card-text')[0], 0, data.totalMatriculados, 1000);
                 animateValue($('.ninas .card-text')[0], 0, data.alumnosFemeninos, 1000);
                 animateValue($('.varones .card-text')[0], 0, data.alumnosMasculinos, 1000);
-                animateValue($('.nuevo-ingreso .card-text')[0], 0, data.nuevoIngreso, 1000);
-                animateValue($('.reingreso .card-text')[0], 0, data.reingreso, 1000);
             }
 
             // Función para actualizar la tabla de estadísticas por grado y sección
             function actualizarTabla(data) {
-                console.log(data.estadisticasPorGrado); // Verifica los datos en la consola
                 table.clear().rows.add(data.estadisticasPorGrado).draw();
             }
-            // Función para actualizar los gráficos
-            let graficoGrado;
 
+            // Función para actualizar los gráficos
             function actualizarGraficos(data) {
                 const ctxGenero = document.getElementById('graficoGenero').getContext('2d');
-                const ctxIngreso = document.getElementById('graficoIngreso').getContext('2d');
-                const ctxGrado = document.getElementById('graficoGrado').getContext('2d');
 
                 // Destruir gráficos anteriores si existen
                 if (graficoGenero) graficoGenero.destroy();
-                if (graficoIngreso) graficoIngreso.destroy();
-                if (graficoGrado) graficoGrado.destroy();
 
                 // Gráfico de género
                 graficoGenero = new Chart(ctxGenero, {
@@ -191,76 +151,27 @@
                         }
                     }
                 });
-
-                // Gráfico de ingreso
-                graficoIngreso = new Chart(ctxIngreso, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Primer Ingreso', 'Reingreso'],
-                        datasets: [{
-                            label: 'Cantidad',
-                            data: [data.nuevoIngreso, data.reingreso],
-                            backgroundColor: ['#4BC0C0', '#FFCE56']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Distribución por Tipo de Ingreso'
-                            }
-                        }
-                    }
-                });
-
-                // Gráfico de distribución por grado
-                const grados = data.estadisticasPorGrado.map(g => `${g.Grado} - ${g.Seccion}`);
-                const totales = data.estadisticasPorGrado.map(g => g.Total);
-
-                graficoGrado = new Chart(ctxGrado, {
-                    type: 'bar',
-                    data: {
-                        labels: grados,
-                        datasets: [{
-                            label: 'Total Matriculados',
-                            data: totales,
-                            backgroundColor: '#FF9F40'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Distribución por Grado y Sección'
-                            }
-                        }
-                    }
-                });
             }
 
-            // Evento para filtrar los datos cuando cambian los selectores
-            $('#filtroAño, #filtroSistema').change(function () {
+            // Evento para filtrar los datos cuando cambia el selector de año
+            $('#filtroAño').change(function () {
                 var filtroAño = $('#filtroAño').val();
-                var filtroSistema = $('#filtroSistema').val();
 
                 $.ajax({
                     url: '@Url.Action("ObtenerDatosEstadisticos", "Estadistica")',
                     type: 'GET',
-                    data: { filtroAño: filtroAño, filtroSistema: filtroSistema },
+                    data: { filtroAño: filtroAño },
                     success: function (response) {
-                        console.log(response); // Verifica la respuesta en la consola
                         if (response.success) {
                             actualizarTarjetas(response);
                             actualizarTabla(response);
                             actualizarGraficos(response);
                         } else {
-                            toastr.error("No se pudieron obtener los datos.");
+                            console.error("No se pudieron obtener los datos.");
                         }
                     },
                     error: function () {
-                        toastr.error("Ocurrió un error al obtener los datos.");
+                        console.error("Ocurrió un error al obtener los datos.");
                     }
                 });
             });
@@ -274,114 +185,73 @@
 }
 
 <style>
-        /* Estilos generales */
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f6f9;
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f6f9;
+    }
+
+    .header {
+        background: linear-gradient(135deg, #0056b3, #003b7d);
+        color: white;
+        padding: 20px 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card {
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-body {
+        padding: 20px;
+        position: relative;
+    }
+
+    .card-title {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .card-text {
+        font-size: 36px;
+        font-weight: bold;
+    }
+
+    .icon {
+        font-size: 40px;
+        color: #0056b3;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        opacity: 0.3;
+    }
+
+    .overlay-card {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .overlay-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 86, 179, 0.1), rgba(0, 59, 125, 0.1));
+            z-index: 1;
         }
 
-        .header {
-            background: linear-gradient(135deg, #0056b3, #003b7d);
-            color: white;
-            padding: 20px 0;
+        .overlay-card .card-body {
             position: relative;
-            overflow: hidden;
+            z-index: 2;
         }
 
-        .inner-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            padding: 20px;
-        }
-
-        .titulo-container {
-            text-align: center;
-            margin-right: 20px;
-        }
-
-            .titulo-container h1 {
-                font-size: 48px;
-                margin: 0;
-            }
-
-            .titulo-container h6 {
-                font-size: 18px;
-                margin: 0;
-            }
-
-        #imagenPrincipal {
-            width: 450px;
-            height: auto;
-        }
-
-        .waves {
-            position: relative;
-            width: 100%;
-            height: 15vh;
-            margin-bottom: -7px;
-            min-height: 100px;
-            max-height: 150px;
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        .card {
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-body {
-            padding: 20px;
-        }
-
-        .card-title {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .card-text {
-            font-size: 36px;
-            font-weight: bold;
-        }
-
-        .icon {
-            font-size: 40px;
-            color: #0056b3;
-        }
-
-        /* Media Queries para pantallas pequeñas */
-        @@media (max-width: 768px) {
-            .inner-header
-
-        {
-            flex-direction: column;
-            text-align: center;
-        }
-
-        .titulo-container {
-            margin-right: 0;
-            margin-bottom: 20px;
-        }
-
-            .titulo-container h1 {
-                font-size: 36px;
-            }
-
-            .titulo-container h6 {
-                font-size: 16px;
-            }
-
-        #imagenPrincipal {
-            width: 300px;
-        }
-
+    @@media (max-width: 768px) {
         .card-title {
             font-size: 20px;
         }
@@ -393,24 +263,9 @@
         .icon {
             font-size: 30px;
         }
+    }
 
-        }
-
-        @@media (max-width: 480px) {
-            .titulo-container h1
-
-        {
-            font-size: 28px;
-        }
-
-        .titulo-container h6 {
-            font-size: 14px;
-        }
-
-        #imagenPrincipal {
-            width: 200px;
-        }
-
+    @@media (max-width: 480px) {
         .card-title {
             font-size: 18px;
         }
@@ -422,6 +277,5 @@
         .icon {
             font-size: 24px;
         }
-
-        }
-    </style>
+    }
+</style>

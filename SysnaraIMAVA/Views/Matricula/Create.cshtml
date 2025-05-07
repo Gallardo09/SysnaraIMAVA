@@ -133,7 +133,7 @@
                 <div class="row mt-3">
                     <div class="form-group col-md-2">
                         <label asp-for="CelularEstudiante" class="control-label">Celular</label>
-                        <input asp-for="CelularEstudiante" class="form-control" placeholder="(+504)9999-9999"/>
+                        <input asp-for="CelularEstudiante" class="form-control" placeholder="(+504)9999-9999" />
                         <span asp-validation-for="CelularEstudiante" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3">
@@ -186,7 +186,7 @@
                     </div>
                     <div class="form-group col-md-1">
                         <label asp-for="Seccion" class="control-label">Sección</label>
-                        <input asp-for="Seccion" class="form-control" id="Seccion" readonly/>
+                        <input asp-for="Seccion" class="form-control" id="Seccion" readonly />
                         <span asp-validation-for="Seccion" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-2">
@@ -245,40 +245,17 @@
                         <input type="date" asp-for="FechaIngreso" class="form-control" />
                         <span asp-validation-for="FechaIngreso" class="text-danger"></span>
                     </div>
-@*                     <div class="form-group col-md-2">
-                        <label asp-for="Sistema" class="control-label">Sistema</label>
-                        <select asp-for="Sistema" id="Sistema" class="form-control">
-                            <option value="ANGLOSAJÓN">ANGLOSAJÓN</option>
-                            <option value="TRADICIONAL">TRADICIONAL</option>
-                        </select>
-                        <span asp-validation-for="Sistema" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label asp-for="SistemaTiempo" class="control-label">Sistema (Periodo)</label>
-                        <input asp-for="SistemaTiempo" id="SistemaTiempo" readonly class="form-control" />
-                        <span asp-validation-for="SistemaTiempo" class="text-danger"></span>
-                    </div> *@
                 </div>
-
-@*                 <div class="row mt-3">
-                    <div class="form-group col-md-4">
-                        <label class="control-label">Fotografía</label>
-                        <input type="file" name="fotoInput" class="form-control" id="fotoInput" accept="image/*" />
-                        <img id="previewFoto" src="#" alt="Vista previa de la foto" style="max-width: 200px; max-height: 200px; display: none;" class="mt-2" />
-                        <span asp-validation-for="FotoData" class="text-danger"></span>
-                    </div>
-                </div> *@
             </div>
         </div>
 
         <div class="form-group text-center mt-4">
-            <button type="button" id="btnMatricular" class="btn btn-primary btn-lg">Matricular</button>
+            <button type="submit" class="btn btn-primary btn-lg">Matricular</button>
             <a class="btn btn-warning btn-lg ml-2" asp-action="Index">Regresar a la Lista</a>
         </div>
     </form>
 </div>
 
-@* TOASTR DE BOOSTRAP *@
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
     <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
@@ -292,26 +269,10 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 
-    @* FUNCION para MOSTRAR FOTO PREVIEW *@
-    <script>
-        document.getElementById('fotoInput').onchange = function (evt) {
-            var tgt = evt.target || window.event.srcElement,
-                files = tgt.files;
-
-            if (FileReader && files && files.length) {
-                var fr = new FileReader();
-                fr.onload = function () {
-                    document.getElementById('previewFoto').src = fr.result;
-                    document.getElementById('previewFoto').style.display = 'block';
-                }
-                fr.readAsDataURL(files[0]);
-            }
-        }
-    </script>
-    
-    @* FUNCION para CARGAR DATOS AUTOMATICAMENTE / AUTORELLENER DATOS DEL PADRE *@
     <script>
         $(document).ready(function () {
             $('#Idpadre').on('keydown', function (e) {
@@ -323,7 +284,7 @@
 
             function buscarPadre() {
                 var idpadre = $('#Idpadre').val();
-                
+
                 $.get('@Url.Action("GetPadreInfo", "Matricula")', { idpadre: idpadre })
                     .done(function (result) {
                         if (result.success) {
@@ -352,9 +313,8 @@
                 });
             }
         });
-    </script>  
+    </script>
 
-    @* FUNCION PARA QUE CUANDO SELECCIONE EL ID AÑO, SE AUTORELLENEN LOS ID GRADOS EN EL SELECT *@
     <script>
         $(document).ready(function () {
             $('#Idaño').change(function () {
@@ -390,10 +350,8 @@
         });
     </script>
 
-    @* FUNCION PARA AUTORELLENER LOS DEMAS DATOS AL SELECCIONAR EL ID GRADO *@
     <script>
         $(document).ready(function () {
-            // Evento change para el select de Idgrado
             $('#Idgrado').change(function () {
                 var idGrado = $(this).val();
                 if (idGrado) {
@@ -437,41 +395,8 @@
         });
     </script>
 
-    @* FUNCION PARA SELECCIONAR EL TIPO DE SISTEMA SI ES ANGLOSAJÓN O INTERNACIONAL  *@
     <script>
         $(document).ready(function () {
-            // Función para actualizar el SistemaTiempo
-            function actualizarSistemaTiempo() {
-                var sistema = $('#Sistema').val();
-                var idAnio = $('#Idaño').val();
-
-                if (sistema === 'ANGLOSAJÓN') {
-                    var anioSiguiente = parseInt(idAnio) + 1;
-                    $('#SistemaTiempo').val(idAnio + '-' + anioSiguiente);
-                } else if (sistema === 'TRADICIONAL') {
-                    $('#SistemaTiempo').val(idAnio);
-                }
-            }
-
-            // Evento change para el select de Sistema
-            $('#Sistema').change(function () {
-                actualizarSistemaTiempo();
-            });
-
-            // Evento change para el select de Idaño
-            $('#Idaño').change(function () {
-                actualizarSistemaTiempo();
-            });
-
-            // Llamar a la función al cargar la página por si hay valores preseleccionados
-            actualizarSistemaTiempo();
-        });
-    </script>
-
-    @* FUNCION PARA CALCULAR LA EDAD *@
-    <script>
-        $(document).ready(function () {
-            // Función para calcular la edad
             function calcularEdad() {
                 var fechaNacimiento = new Date($('#FechaNacimiento').val());
                 var hoy = new Date();
@@ -485,29 +410,26 @@
                 $('#Edad').val(edad);
             }
 
-            // Evento change para el input de Fecha de Nacimiento
             $('#FechaNacimiento').change(function () {
                 calcularEdad();
             });
 
-            // Calcular la edad al cargar la página si ya hay una fecha seleccionada
             if ($('#FechaNacimiento').val()) {
                 calcularEdad();
             }
         });
     </script>
-    @* VALIADACIÓN DE QUE LA IDENTIDAD DEL ESTUDIANTE NO EXISTA *@
+
     <script>
         function buscarEstudiante(event) {
             if (event.key === 'Enter') {
                 event.preventDefault();
                 var ididentidad = document.getElementById('Ididentidad').value;
-                
+
                 fetch(`/Matricula/BuscarEstudiante?ididentidad=${ididentidad}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.estudianteRegistrado) {
-                            // Mostrar SweetAlert2
                             Swal.fire({
                                 title: 'Estudiante Registrado',
                                 text: 'El estudiante ya está registrado en años anteriores.',
@@ -516,7 +438,6 @@
                                 showConfirmButton: false
                             });
 
-                            // Rellenar los campos con los datos del estudiante
                             document.getElementById('NombreEstudiante').value = data.nombreEstudiante;
                             document.getElementById('Nacionalidad').value = data.nacionalidad;
                             document.getElementById('FechaNacimiento').value = data.fechaNacimiento;
@@ -531,23 +452,12 @@
                             document.getElementById('Direccion').value = data.direccion;
                             document.getElementById('Estado').value = data.estado;
                             document.getElementById('VacunasCovid').value = data.vacunasCovid;
-
-                            // Datos académicos
-                            document.getElementById('Idgrado').value = data.idgrado;
-                            document.getElementById('Grado').value = data.grado;
-                            document.getElementById('Seccion').value = data.seccion;
-                            document.getElementById('Jornada').value = data.jornada;
-                            document.getElementById('NivelDescripcion').value = data.nivelDescripcion;
                             document.getElementById('Proviene').value = data.proviene;
                             document.getElementById('Beca').value = data.beca;
                             document.getElementById('RepiteAño').value = data.repiteAño;
                             document.getElementById('Observacion').value = data.observacion;
-                            document.getElementById('EstadoIngreso').value = data.estadoIngreso;
+                            document.getElementById('EstadoMatricula').value = data.estadoIngreso;
                             document.getElementById('FechaIngreso').value = data.fechaIngreso;
-                            document.getElementById('Sistema').value = data.sistema;
-                            document.getElementById('SistemaTiempo').value = data.sistemaTiempo;
-
-                            // Datos del padre
                             document.getElementById('Idpadre').value = data.idpadre;
                             document.getElementById('NombrePadre').value = data.nombrePadre;
                             document.getElementById('Parentesco').value = data.parentesco;
@@ -555,12 +465,9 @@
                             document.getElementById('CelPadre').value = data.celPadre;
                             document.getElementById('DireccionPadre').value = data.direccionPadre;
                         } else {
-                            // Mostrar el toast
                             var toastLiveExample = document.getElementById('liveToast')
                             var toast = new bootstrap.Toast(toastLiveExample)
                             toast.show()
-                            
-                            // Enfocar el siguiente campo
                             document.getElementById('NombreEstudiante').focus();
                         }
                     });
@@ -568,73 +475,19 @@
         }
     </script>
 
-    @* SCRIPT PARA QUE EN SISTEMA PERIODO DE TIEMPO *@
     <script>
         $(document).ready(function () {
-            // Función para actualizar el campo "Sistema (Periodo)"
-            function actualizarSistemaTiempo() {
-                var sistema = $('#Sistema').val(); // Obtener el valor del sistema seleccionado
-                var idAnio = $('#Idaño').val(); // Obtener el valor del año seleccionado
-
-                if (sistema === 'ANGLOSAJÓN') {
-                    // Si el sistema es ANGLOSAJÓN, concatenar el año actual y el siguiente
-                    var anioSiguiente = parseInt(idAnio) + 1;
-                    $('#SistemaTiempo').val(idAnio + '-' + anioSiguiente);
-                } else if (sistema === 'TRADICIONAL') {
-                    // Si el sistema es TRADICIONAL, usar solo el año actual
-                    $('#SistemaTiempo').val(idAnio);
-                }
-            }
-
-            // Evento change para el select de Sistema
-            $('#Sistema').change(function () {
-                actualizarSistemaTiempo();
-            });
-
-            // Evento change para el select de Idaño
-            $('#Idaño').change(function () {
-                actualizarSistemaTiempo();
-            });
-
-            // Llamar a la función al cargar la página por si hay valores preseleccionados
-            actualizarSistemaTiempo();
-        });
-    </script>
-
-    @* ALTERTA DE SI SE MATRICULO O NO EL ESTUDIANTE  *@
-    <script>
-        $(document).ready(function () {
-            // Manejar el clic en el botón "Matricular"
-            $('#btnMatricular').click(function () {
-                // Obtener el nombre del estudiante y el grado desde el formulario
-                var nombreEstudiante = $('#NombreEstudiante').val();
-                var grado = $('#Grado').val();
-                var sistematiempo = $('#SistemaTiempo').val();
-
-                // Mostrar SweetAlert2 con el mensaje de éxito
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Matrícula Exitosa!',
-                    html: `El estudiante <strong>${nombreEstudiante}</strong> ha sido matriculado(a) en el grado <strong>${grado}</strong> del periodo escolar <strong>${sistematiempo}</strong>.`,
-                    confirmButtonText: 'Aceptar'
-                }).then(() => {
-                    // Enviar el formulario manualmente
-                    $('form').submit();
-                });
-            });
-
-            // Mostrar mensaje de éxito si existe (después de redirigir)
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <text>
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: '@TempData["SuccessMessage"]',
-                    confirmButtonText: 'Aceptar'
-                });
-                </text>
-            }
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: '@TempData["SuccessMessage"]',
+                        confirmButtonText: 'Aceptar'
+                    });
+            </text>
+        }
         });
     </script>
 }

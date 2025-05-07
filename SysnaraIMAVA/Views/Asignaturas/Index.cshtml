@@ -6,7 +6,6 @@
 }
 
 <div class="container mt-1" style="margin-bottom: 0px; margin-top: 0px; padding-bottom: 0px; padding-top: 0px;">
-    <!-- Encabezado -->
     <div class="row justify-content-center">
         <div class="col-md-8 text-center">
             <h2 class="text-primary mb-3" style="font-family: Russo One, sans-serif;">Registrar Asignatura</h2>
@@ -14,12 +13,10 @@
     </div>
 </div>
 
-<!-- Card Contenedor con diseño más suave -->
 <div class="container mt-0" style="margin-bottom: 0px; margin-top: 0px; padding-bottom: 0px; padding-top: 0px;">
     <div class="card shadow-sm border-light">
         <div class="card-body">
             <div class="row justify-content-center">
-                <!-- Filtro de Año -->
                 <div class="col-md-3 mb-2">
                     <label for="filtroAño" class="form-label">Año</label>
                     <select class="form-select" id="filtroAño">
@@ -34,15 +31,6 @@
                     </select>
                 </div>
 
-                <!-- Filtro de Grado -->
-@*                 <div class="col-md-3 mb-2">
-                    <label for="filtroGrado" class="form-label">Grado</label>
-                    <select class="form-select" id="filtroGrado">
-                        <option value="">Seleccione un grado</option>
-                        <!-- Aquí se cargarán los grados dinámicamente a través de AJAX -->
-                    </select>
-                </div> *@
-                <!-- Botón de Registrar -->
                 <div class="col-md-2 mb-2 d-flex align-items-end">
                     <a href="/Asignaturas/Create" class="btn btn-outline-primary w-100">
                         <i class="fas fa-plus-circle"></i> Registrar
@@ -54,7 +42,6 @@
 </div>
 <br />
 
-<!-- Tabla de asignaturas -->
 <table id="example" class="table table-striped table-hover" style="width:100%; font-size: 13px;">
     <thead>
         <tr>
@@ -80,12 +67,10 @@
     <script src="https://cdn.datatables.net/2.2.1/css/dataTables.dataTables.css"></script>
     <script>
         $(document).ready(function () {
-            // Destroy existing DataTable if it exists
             if ($.fn.DataTable.isDataTable('#example')) {
                 $('#example').DataTable().destroy();
             }
 
-            // Re-initialize DataTable
             var table = $('#example').DataTable({
                 columns: [
                     { data: 'idasignatura' },
@@ -96,7 +81,6 @@
                     { data: 'jornada' },
                     { data: 'periodo' },
                     { data: 'anio' },
-                    // { data: 'estado' },
                     {
                         data: 'idasignatura',
                         render: function (data) {
@@ -120,50 +104,19 @@
 
             function cargarAsignaturas() {
                 var idAño = $('#filtroAño').val();
-                var grado = $('#filtroGrado').val();
-                var seccion = $('#filtroSeccion').val();
 
-                // Debug logging
-                console.log('Filtros seleccionados:');
-                console.log('Año:', idAño);
-                console.log('Grado:', grado);
-                console.log('Sección:', seccion);
-
-                // Only load if a year is selected
                 if (idAño) {
                     $.ajax({
                         url: '/Asignaturas/GetAsignaturas',
                         type: 'GET',
                         data: {
-                            idAño: idAño,
-                            grado: grado,
-                            seccion: seccion
+                            idAño: idAño
                         },
                         success: function (data) {
-                            console.log('Datos recibidos:', data);
-
-                            // Debug: log number of rows received
-                            console.log('Número de registros:', data.length);
-
-                            // If filters are applied, manually filter data
-                            if (grado) {
-                                data = data.filter(item =>
-                                    item.grado.toUpperCase() === grado.toUpperCase()
-                                );
-                                console.log('Datos después de filtrar por grado:', data);
-                            }
-                            if (seccion) {
-                                data = data.filter(item =>
-                                    item.seccion.toUpperCase() === seccion.toUpperCase()
-                                );
-                                console.log('Datos después de filtrar por sección:', data);
-                            }
-
                             table.clear().rows.add(data).draw();
                         },
                         error: function (xhr, status, error) {
                             console.error('Error cargando asignaturas:', status, error);
-                            console.log('Texto de la respuesta:', xhr.responseText);
                         }
                     });
                 } else {
@@ -171,20 +124,10 @@
                 }
             }
 
-            // Trigger data load when filters change
             $('#filtroAño').change(function() {
                 cargarAsignaturas();
             });
 
-            $('#filtroGrado').change(function() {
-                cargarAsignaturas();
-            });
-
-            $('#filtroSeccion').change(function() {
-                cargarAsignaturas();
-            });
-
-            // Initial load (optional, depending on your requirements)
             cargarAsignaturas();
         });
     </script>

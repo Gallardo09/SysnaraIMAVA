@@ -63,25 +63,6 @@
             </div>
         </div>
 
-@*         <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="Sistema" class="control-label">Sistema</label>
-                    <select id="Sistema" name="Sistema" class="form-control">
-                        <option value="">Seleccione un sistema</option>
-                    </select>
-                    <span asp-validation-for="Sistema" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="SistemaTiempo" class="control-label">Sistema (Periodo)</label>
-                    <input id="SistemaTiempo" name="SistemaTiempo" class="form-control" />
-                    <span asp-validation-for="SistemaTiempo" class="text-danger"></span>
-                </div>
-            </div>
-        </div> *@
-
         <div class="row">
             <div class="col-md-12 text-center">
                 <button type="submit" class="btn btn-primary">Crear</button>
@@ -96,7 +77,7 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    @* Scrip para agregar las secciones al select SECCION *@
+    @* Script para agregar las secciones al select SECCION *@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Lista de opciones
@@ -139,13 +120,15 @@
         document.addEventListener('DOMContentLoaded', function () {
             // Lista de opciones para Nivel Descriptivo del Grado
             var niveles = [
-                "EDUCACIÓN PRE-BÁSICA",
                 "I CICLO DE EDUCACIÓN BÁSICA",
                 "II CICLO DE EDUCACIÓN BÁSICA",
                 "III CICLO DE EDUCACIÓN BÁSICA",
                 "BACHILLERATO TÉCNICO PROFESIONAL",
                 "BACHILLERATO TÉCNICO PROFESIONAL EN INFORMÁTICA",
-                "BACHILLERATO PROFESIONAL EN CIENCIAS Y HUMANIDADES (BILINGÜE)"
+                "BACHILLERATO TÉCNICO PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS",
+                "BACHILLERATO TÉCNICO PROFESIONAL EN ADMINISTRACIÓN HOTELERA",
+                "BACHILLERATO PROFESIONAL EN CIENCIAS Y HUMANIDADES",
+                "BACHILLERATO PROFESIONAL EN CIENCIAS Y HUMANIDADES (ACELERADO)"
             ];
 
             // Referencia al select
@@ -161,81 +144,29 @@
         });
     </script>
 
-    @* PARA EL TIPO DE SISTEMA ANGLOSAJÓN O INTERNACIONAL *@
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Lista de opciones para Sistema
-            var sistemas = ["TRADICIONAL", "ANGLOSAJÓN"];
-        
-            // Referencia al select
-            var selectSistema = document.getElementById('Sistema');
-
-            // Agregar las opciones al select
-            sistemas.forEach(function(sistema) {
-                var option = document.createElement('option');
-                option.value = sistema;
-                option.textContent = sistema;
-                selectSistema.appendChild(option);
-            });
-        });
-    </script>
-
-    @* ID GRADO AUTOMÁTICO  *@
-    <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const idAnoSelect = document.querySelector("select[name='Idaño']");
-                const gradoSelect = document.querySelector("select[name='Grado1']");
-                const seccionSelect = document.querySelector("select[name='Seccion']");
-                const jornadaSelect = document.querySelector("select[name='Jornada']");
-                const sistemaSelect = document.querySelector("select[name='Sistema']");
-                const idGradoInput = document.querySelector("input[name='Idgrado']");
-
-                function generateIDGrado() {
-                    const idAnoValue = idAnoSelect.value.slice(-2);
-                    const gradoValue = gradoSelect.value.substring(0, 3).toUpperCase();
-                    const seccionValue = seccionSelect.value.substring(0, 1).toUpperCase();
-                    const jornadaValue = jornadaSelect.value.substring(0, 1).toUpperCase();
-                    const sistemaValue = sistemaSelect.value.substring(0, 3).toUpperCase();
-
-                    const idGrado = `${idAnoValue}-${gradoValue}-${seccionValue}-${jornadaValue}-${sistemaValue}`;
-                    idGradoInput.value = idGrado;
-                }
-
-                idAnoSelect.addEventListener("change", generateIDGrado);
-                gradoSelect.addEventListener("change", generateIDGrado);
-                seccionSelect.addEventListener("change", generateIDGrado);
-                jornadaSelect.addEventListener("change", generateIDGrado);
-                sistemaSelect.addEventListener("change", generateIDGrado);
-            });
-    </script>
-
-    @* EL SISTEMA PERIODO AUTOMÁTICO DEPENDIENDO DEL SISTEMA *@
+    @* ID GRADO AUTOMÁTICO (VERSIÓN SIMPLIFICADA SIN SISTEMA) *@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const idAnoSelect = document.querySelector("select[name='Idaño']");
-            const sistemaSelect = document.querySelector("select[name='Sistema']");
-            const sistemaTiempoInput = document.querySelector("input[name='SistemaTiempo']");
+            const gradoSelect = document.querySelector("select[name='Grado1']");
+            const seccionSelect = document.querySelector("select[name='Seccion']");
+            const jornadaSelect = document.querySelector("select[name='Jornada']");
+            const idGradoInput = document.querySelector("input[name='Idgrado']");
 
-            function updateSistemaPeriodo() {
-                const idAnoValue = idAnoSelect.value;
-                let sistemaPeriodo = idAnoValue;
+            function generateIDGrado() {
+                const idAnoValue = idAnoSelect.value.slice(-2);
+                const gradoValue = gradoSelect.value.substring(0, 3).toUpperCase();
+                const seccionValue = seccionSelect.value.substring(0, 1).toUpperCase();
+                const jornadaValue = jornadaSelect.value.substring(0, 1).toUpperCase();
 
-                // Asegurarse de que el año esté en formato numérico
-                const anio = parseInt(idAnoValue, 10);
-                if (isNaN(anio)) {
-                    return; // Si el IDAño no es válido, no hacer nada
-                }
-
-                if (sistemaSelect.value === "ANGLOSAJÓN") {
-                    const nextYear = anio + 1;
-                    sistemaPeriodo = `${idAnoValue}-${nextYear}`;
-                }
-
-                sistemaTiempoInput.value = sistemaPeriodo;
+                const idGrado = `${idAnoValue}-${gradoValue}-${seccionValue}-${jornadaValue}`;
+                idGradoInput.value = idGrado;
             }
 
-            idAnoSelect.addEventListener("change", updateSistemaPeriodo);
-            sistemaSelect.addEventListener("change", updateSistemaPeriodo);
+            idAnoSelect.addEventListener("change", generateIDGrado);
+            gradoSelect.addEventListener("change", generateIDGrado);
+            seccionSelect.addEventListener("change", generateIDGrado);
+            jornadaSelect.addEventListener("change", generateIDGrado);
         });
     </script>
 }

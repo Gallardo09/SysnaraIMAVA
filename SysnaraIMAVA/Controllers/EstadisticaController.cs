@@ -25,9 +25,9 @@ namespace SysnaraIMAVA.Controllers
             return View();
         }
 
-        // Método para obtener datos estadísticos filtrados por año y sistema
+        // Método para obtener datos estadísticos filtrados por año
         [HttpGet]
-        public async Task<JsonResult> ObtenerDatosEstadisticos(int? filtroAño, string filtroSistema)
+        public async Task<JsonResult> ObtenerDatosEstadisticos(int? filtroAño)
         {
             var query = _context.Matriculas.AsQueryable();
 
@@ -36,29 +36,20 @@ namespace SysnaraIMAVA.Controllers
                 query = query.Where(m => m.Idaño == filtroAño.Value);
             }
 
-            if (!string.IsNullOrEmpty(filtroSistema))
-            {
-                query = query.Where(m => m.Sistema == filtroSistema);
-            }
-
             var totalMatriculados = await query.CountAsync();
             var alumnosFemeninos = await query.CountAsync(m => m.Genero == "FEMENINO");
             var alumnosMasculinos = await query.CountAsync(m => m.Genero == "MASCULINO");
-            var nuevoIngreso = await query.CountAsync(m => m.EstadoIngreso == "PRIMER INGRESO");
-            var reingreso = await query.CountAsync(m => m.EstadoIngreso == "REINGRESO");
 
             var estadisticasPorGrado = await query
                 .GroupBy(m => new { m.Idgrado, m.Grado, m.Seccion })
                 .Select(g => new
                 {
-                    Idgrado = g.Key.Idgrado, // Asegúrate de que sea "Idgrado"
+                    Idgrado = g.Key.Idgrado,
                     Grado = g.Key.Grado,
                     Seccion = g.Key.Seccion,
                     Total = g.Count(),
                     Femenino = g.Count(m => m.Genero == "FEMENINO"),
-                    Masculino = g.Count(m => m.Genero == "MASCULINO"),
-                    PrimerIngreso = g.Count(m => m.EstadoIngreso == "PRIMER INGRESO"),
-                    Reingreso = g.Count(m => m.EstadoIngreso == "REINGRESO")
+                    Masculino = g.Count(m => m.Genero == "MASCULINO")
                 })
                 .ToListAsync();
 
@@ -68,8 +59,6 @@ namespace SysnaraIMAVA.Controllers
                 totalMatriculados,
                 alumnosFemeninos,
                 alumnosMasculinos,
-                nuevoIngreso,
-                reingreso,
                 estadisticasPorGrado
             });
         }

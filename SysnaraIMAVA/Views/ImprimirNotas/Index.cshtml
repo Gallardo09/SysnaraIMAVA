@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<SysnaraIMAVA.Models.Matricula>
 @{
-    ViewData["Title"] = "Imprimir Notas - Sistema Anglosajón";
+    ViewData["Title"] = "Imprimir Notas";
     var años = ViewBag.Años as List<SysnaraIMAVA.Models.Año>;
 }
 
@@ -19,7 +19,7 @@
 
         <div class="card-body">
             <div class="row mb-4 g-3">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-floating">
                         <select class="form-select" id="filtroAño">
                             <option value="">Seleccione un año</option>
@@ -35,23 +35,12 @@
                     </div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-floating">
                         <select class="form-select" id="filtroGrado" disabled>
                             <option value="">Seleccione un grado</option>
                         </select>
                         <label for="filtroGrado">Grado</label>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="form-floating">
-                        <select class="form-select" id="filtroSistema">
-                            <option value="">Todos los sistemas</option>
-                            <option value="TRADICIONAL">TRADICIONAL</option>
-                            <option value="ANGLOSAJÓN">ANGLOSAJÓN</option>
-                        </select>
-                        <label for="filtroSistema">Sistema</label>
                     </div>
                 </div>
             </div>
@@ -61,13 +50,11 @@
                     <thead class="table-dark">
                         <tr>
                             <th>ID Año</th>
-                            <th>IDSI</th>
-                            <th>Identidad</th>
+                            <th>ID</th>
+                            <th>DNI</th>
                             <th>Nombre del Estudiante</th>
                             <th>Género</th>
                             <th>Grado</th>
-                            <th>Sistema</th>
-                            <th>Grados 1°-6°</th>
                             <th>Grados 7°-9°</th>
                             <th>Grados 10°-12°</th>
                         </tr>
@@ -85,23 +72,15 @@
             var table = $('#matriculasTable').DataTable({
                 dom: '<"top"f>rt<"bottom"lip><"clear">',
                 language: {
-                    // url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
                     url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
                 },
                 columns: [
                     { data: 'idaño' },
-                    { data: 'idsi' },
-                    { data: 'ididentidad' },
+                    { data: 'idimv' },
+                    { data: 'idestudiante' },
                     { data: 'nombreEstudiante' },
                     { data: 'genero' },
                     { data: 'grado' },
-                    { data: 'sistema' },
-                    {
-                        data: 'primaria',
-                        render: function (data, type, row) {
-                            return renderGradeButton(row, 'primaria');
-                        }
-                    },
                     {
                         data: 'ciclo',
                         render: function (data, type, row) {
@@ -118,43 +97,20 @@
                 order: [[4, 'asc'], [3, 'asc']]
             });
 
-            // Función para renderizar los botones según el grado
             function renderGradeButton(row, type) {
-                var gradosPrimaria = ['PREPARATORY', 'KINDERGARTEN', 'FIRST GRADE', 'SECOND GRADE',
-                    'THIRD GRADE', 'FOURTH GRADE', 'FIFTH GRADE', 'SIXTH GRADE'];
-                var gradosCiclo = ['SEVENTH GRADE', 'EIGHTH GRADE', 'NINTH GRADE'];
-                var gradosSecundaria = ['TENTH GRADE', 'ELEVENTH GRADE', 'TWELVE GRADE'];
-                var isPrimaria = gradosPrimaria.includes(row.grado);
+                var gradosCiclo = ['SÉPTIMO GRADO', 'OCTAVO GRADO', 'NOVENO GRADO'];
+                var gradosSecundaria = ['DÉCIMO GRADO', 'UNDÉCIMO GRADO', 'DUODÉCIMO GRADO'];
                 var isCiclo = gradosCiclo.includes(row.grado);
                 var isSecundaria = gradosSecundaria.includes(row.grado);
 
-                if ((type === 'primaria' && isPrimaria) || (type === 'ciclo' && isCiclo) || (type === 'secundaria' && isSecundaria)) {
-                    var idAño = $('#filtroAño').val();
+                if ((type === 'ciclo' && isCiclo) || (type === 'secundaria' && isSecundaria)) {
                     var uniqueId = 'dropdown-' + row.ididentidad + '-' + type;
-
-                    var listadoItems = '';
-                    if (isPrimaria) {
-                        listadoItems = `
-                        <li><a class="dropdown-item" href="/ImprimirNotas/GenerarNotasIParcialPrimaria?idaño=${row.idaño}&ididentidad=${row.ididentidad}&parcial=1">I Parcial</a></li>
-                        <li><a class="dropdown-item" href="/ImprimirNotas/GenerarNotasIIParcialPrimaria?idaño=${row.idaño}&ididentidad=${row.ididentidad}&parcial=1">II Parcial</a></li>
-                        <li><a class="dropdown-item" href="/ImprimirNotas/GenerarNotasIIIParcialPrimaria?idaño=${row.idaño}&ididentidad=${row.ididentidad}&parcial=1">III Parcial</a></li>
-                        <li><a class="dropdown-item" href="/ImprimirNotas/GenerarNotasIVParcialPrimaria?idaño=${row.idaño}&ididentidad=${row.ididentidad}&parcial=1">IV Parcial</a></li>
+                    var listadoItems = `
+                        <li><a class="dropdown-item" href="/ImprimirNotas/GenerarNotasIParcialPrimaria?idaño=${row.idaño}&ididentidad=${row.ididentidad}">I Parcial</a></li>
+                        <li><a class="dropdown-item" href="/ImprimirNotas/GenerarNotasIIParcialPrimaria?idaño=${row.idaño}&ididentidad=${row.ididentidad}">II Parcial</a></li>
+                        <li><a class="dropdown-item" href="/ImprimirNotas/GenerarNotasIIIParcialPrimaria?idaño=${row.idaño}&ididentidad=${row.ididentidad}">III Parcial</a></li>
+                        <li><a class="dropdown-item" href="/ImprimirNotas/GenerarNotasIVParcialPrimaria?idaño=${row.idaño}&ididentidad=${row.ididentidad}">IV Parcial</a></li>
                     `;
-                    } else if (isCiclo) {
-                        listadoItems = `
-                        <li><a class="dropdown-item" href="/ImprimirNotas/GenerarNotasIParcialPrimaria?idaño=${row.idaño}&ididentidad=${row.ididentidad}&parcial=1">I Parcial</a></li>
-                        <li><a class="dropdown-item" href="/ImprimirNotas/GenerarNotasIIParcialPrimaria?idaño=${row.idaño}&ididentidad=${row.ididentidad}&parcial=1">II Parcial</a></li>
-                        <li><a class="dropdown-item" href="/ImprimirNotas/GenerarNotasIIIParcialPrimaria?idaño=${row.idaño}&ididentidad=${row.ididentidad}&parcial=1">III Parcial</a></li>
-                        <li><a class="dropdown-item" href="/ImprimirNotas/GenerarNotasIVParcialPrimaria?idaño=${row.idaño}&ididentidad=${row.ididentidad}&parcial=1">IV Parcial</a></li>
-                    `;
-                    } else if (isSecundaria) {
-                        listadoItems = `
-                               <li><a class="dropdown-item" href="/ImprimirNotas/GenerarNotasIParcialPrimaria?idaño=${row.idaño}&ididentidad=${row.ididentidad}&parcial=1">I Parcial</a></li>
-                               <li><a class="dropdown-item" href="/ImprimirNotas/GenerarNotasIIParcialPrimaria?idaño=${row.idaño}&ididentidad=${row.ididentidad}&parcial=1">II Parcial</a></li>
-                               <li><a class="dropdown-item" href="/ImprimirNotas/GenerarNotasIIIParcialPrimaria?idaño=${row.idaño}&ididentidad=${row.ididentidad}&parcial=1">III Parcial</a></li>
-                               <li><a class="dropdown-item" href="/ImprimirNotas/GenerarNotasIVParcialPrimaria?idaño=${row.idaño}&ididentidad=${row.ididentidad}&parcial=1">IV Parcial</a></li>
-                                 `;
-                    }
 
                     return `
                     <div class="dropdown">
@@ -165,13 +121,12 @@
                             ${listadoItems}
                         </ul>
                     </div>
-                `;
+                    `;
                 } else {
                     return '<button class="btn btn-secondary btn-sm" disabled><i class="fas fa-ban me-1"></i>No disponible</button>';
                 }
             }
 
-            // Cargar grados cuando se selecciona un año
             $('#filtroAño').change(function () {
                 var idAño = $(this).val();
                 $('#filtroGrado').empty().append('<option value="">Seleccione un grado</option>');
@@ -197,115 +152,24 @@
                 cargarMatriculas();
             });
 
-            // Cargar matrículas automáticamente al cambiar filtros
-            $('#filtroGrado, #filtroSistema').change(cargarMatriculas);
+            $('#filtroGrado').change(cargarMatriculas);
 
             function cargarMatriculas() {
                 var idAño = $('#filtroAño').val();
                 var idGrado = $('#filtroGrado').val();
-                var sistema = $('#filtroSistema').val();
 
                 if (idAño) {
                     $.ajax({
                         url: '/ImprimirNotas/GetListaEstudiantesMatricula',
-                        data: {
-                            idAño: idAño,
-                            idGrado: idGrado,
-                            sistema: sistema
-                        },
+                        data: { idAño: idAño, idGrado: idGrado },
                         success: function (data) {
                             table.clear().rows.add(data).draw();
-                        },
-                        error: function () {
-                            toastr.error('Error al cargar los estudiantes');
                         }
                     });
                 } else {
                     table.clear().draw();
                 }
             }
-
-            // Abrir PDF en nueva pestaña
-            $(document).on('click', '.dropdown-item', function(e) {
-                e.preventDefault();
-                var href = $(this).attr('href');
-                if (href && href !== '#') {
-                    window.open(href, '_blank');
-                }
-            });
-
-            // Modificar esta parte para inicializar los dropdowns
-            table.on('draw', function () {
-                $('.dropdown-toggle').each(function() {
-                    new bootstrap.Dropdown(this);
-                });
-            });
-             // Alternativamente, puedes usar eventos delegados
-            $(document).on('click', '.dropdown-toggle', function(e) {
-                e.preventDefault();
-                var dropdownList = $(this).next('.dropdown-menu');
-                $('.dropdown-menu').not(dropdownList).removeClass('show');
-                dropdownList.toggleClass('show');
-            });
-
-            // Cerrar dropdowns al hacer clic fuera
-            $(document).on('click', function(e) {
-                if (!$(e.target).closest('.dropdown').length) {
-                    $('.dropdown-menu').removeClass('show');
-                }
-            });
         });
     </script>
 }
-
-<style>
-    .card {
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    .table th {
-        white-space: nowrap;
-        position: relative;
-        background-color: #343a40 !important;
-        color: white;
-    }
-
-    .table td {
-        vertical-align: middle;
-    }
-
-    .dropdown-menu {
-        min-width: 10rem;
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        border: none;
-    }
-
-    .dropdown-item {
-        padding: 0.5rem 1rem;
-        transition: all 0.2s;
-    }
-
-        .dropdown-item:hover {
-            background-color: #0d6efd;
-            color: white !important;
-        }
-
-    .badge {
-        border-radius: 50px;
-        font-weight: 500;
-    }
-
-    .form-floating label {
-        color: #6c757d;
-    }
-
-    .btn-sm {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.8rem;
-    }
-
-        .btn-sm i {
-            margin-right: 0.25rem;
-        }
-</style>

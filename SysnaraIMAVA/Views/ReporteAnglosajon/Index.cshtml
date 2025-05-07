@@ -29,14 +29,6 @@
                     <option value="">Seleccione un grado</option>
                 </select>
             </div>
-            <div class="filter-group">
-                <label for="filtroSistema">Sistema</label>
-                <select class="form-select" id="filtroSistema">
-                    <option value="">Seleccione un sistema</option>
-                    <option value="internacional">INTERNACIONAL</option>
-                    <option value="anglosajon">ANGLOSAJÓN</option>
-                </select>
-            </div>
         </div>
     </div>
     <div class="row">
@@ -66,12 +58,11 @@
 <table id="matriculasTable" class="table table-striped table-hover" style="width:100%; font-size: 13px;">
     <thead>
         <tr>
-            <th>IDSI</th>
+            <th>ID Estudiante</th>
             <th>Identidad</th>
             <th>Nombre del Estudiante</th>
             <th>Fecha de Nacimiento</th>
             <th>Genero</th>
-            <th>Sistema</th>
             <th>Editar</th>
             <th>Detalles</th>
             <th>Eliminar</th>
@@ -86,34 +77,30 @@
         $(document).ready(function () {
             var table = $('#matriculasTable').DataTable({
                 columns: [
-                    { data: 'idsi' },
-                    { data: 'ididentidad' },
+                    { data: 'idest' },
+                    { data: 'idestudiante' },
                     { data: 'nombreEstudiante' },
                     { data: 'fechaNacimiento' },
                     { data: 'genero' },
-                    { data: 'sistema' },
                     {
                         data: 'idest',
                         render: function (data, type, row) {
-                            var idAño = $('#filtroAño').val(); // Obtiene el año seleccionado
-                            return '<a class="btn btn-primary btn-sm action-btn" href="/ReporteAnglosajon/GenerarConstanciaMatricula?idaño=' + idAño + '&ididentidad=' + row.ididentidad + '"><i class="fas fa-edit"></i> Constancia Matricula</a>';
+                            var idAño = $('#filtroAño').val();
+                            return '<a class="btn btn-primary btn-sm action-btn" href="/ReporteAnglosajon/GenerarConstanciaMatricula?idaño=' + idAño + '&idestudiante=' + row.idestudiante + '"><i class="fas fa-edit"></i> Constancia Matricula</a>';
                         }
                     },
                     {
                         data: 'idest',
                         render: function (data, type, row) {
-                            var disabled = (row.sistema === 'internacional') ? 'disabled' : ''; // Deshabilita basado en alguna condición específica del sistema
-                            return '<a class="btn btn-info btn-sm action-btn ' + disabled + '" href="#' + data + '"><i class="fas fa-info-circle"></i> Constancia Conducta</a>';
+                            return '<a class="btn btn-info btn-sm action-btn" href="#' + data + '"><i class="fas fa-info-circle"></i> Constancia Conducta</a>';
                         }
                     },
                     {
                         data: 'idest',
                         render: function (data, type, row) {
-                            var disabled = (row.sistema === 'internacional') ? 'disabled' : ''; // Deshabilita basado en alguna condición específica del sistema
-                            return '<a class="btn btn-danger btn-sm action-btn ' + disabled + '" href="#' + data + '"><i class="fas fa-trash-alt"></i> Constancia Cupo</a>';
+                            return '<a class="btn btn-danger btn-sm action-btn" href="#' + data + '"><i class="fas fa-trash-alt"></i> Constancia Cupo</a>';
                         }
                     }
-
                 ]
             });
 
@@ -123,7 +110,7 @@
                 $('#filtroGrado').empty().append('<option value="">Seleccione un grado</option>');
                 if (idAño) {
                     $.ajax({
-                        url: '/Matricula/GetGrados',
+                        url: '/ReporteAnglosajon/GetGrados',
                         data: { idAño: idAño },
                         success: function (data) {
                             $.each(data, function (index, item) {
@@ -145,12 +132,11 @@
             function cargarMatriculas() {
                 var idAño = $('#filtroAño').val();
                 var idGrado = $('#filtroGrado').val();
-                var sistema = $('#filtroSistema').val();
 
                 if (idAño) {
                     $.ajax({
-                        url: '/Matricula/GetMatriculas',
-                        data: { idAño: idAño, idGrado: idGrado, sistema: sistema },
+                        url: '/ReporteAnglosajon/GetMatriculas',
+                        data: { idAño: idAño, idGrado: idGrado },
                         success: function (data) {
                             table.clear().rows.add(data).draw();
                         }
@@ -161,7 +147,7 @@
             }
 
             // Llama a la función de cargar matrículas cuando se cambian los filtros
-            $('#filtroGrado, #filtroSistema').change(cargarMatriculas);
+            $('#filtroGrado').change(cargarMatriculas);
 
             // Habilita los BOTONES solo si hay un grado seleccionado
             $('#filtroGrado').change(function () {
@@ -288,14 +274,4 @@
     #matriculasTable td {
         vertical-align: middle;
     }
-
-/*    @@media (max-width: 768px) {
-        .matricula-filters {
-            flex-direction: column;
-        }
-
-        .filter-group {
-            width: 100%;
-        }
-    } */
 </style>

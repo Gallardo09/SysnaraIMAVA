@@ -66,7 +66,6 @@
     </tbody>
 </table>
 
-
 <!-- MODAL SUBIR PERSONALIDAD -->
 <div class="modal fade" id="miModal" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="max-width: 800px;">
@@ -96,12 +95,12 @@
 
 @section Scripts {
     <script>
-           $(document).ready(function () {
+        $(document).ready(function () {
             var table = $('#PersonalidadTable').DataTable({
                 columns: [
                     { data: 'idaño' },
                     { data: 'idest' },
-                    { data: 'ididentidad' },
+                    { data: 'Idestudiante' },
                     { data: 'nombreestudiante' },
                     { data: 'genero' },
                     { data: 'idpersonalidad' },
@@ -142,7 +141,6 @@
                 habilitarBotonDescarga();
             });
 
-            // Función para cargar los datos en la tabla
             function cargarMatriculas() {
                 var idAño = $('#filtroAño').val();
                 var idGrado = $('#filtroGrado').val();
@@ -153,11 +151,9 @@
                         data: { idAño: idAño, idGrado: idGrado },
                         success: function (response) {
                             if (response.success) {
-                                // Si la respuesta es exitosa, añadimos los datos a la tabla
                                 table.clear().rows.add(response.data).draw();
                             } else {
-                                // Si no hay datos, mostramos un mensaje con SweetAlert2
-                                table.clear().draw(); // Limpiar la tabla
+                                table.clear().draw();
                                 Swal.fire({
                                     icon: 'warning',
                                     title: 'Oops...',
@@ -171,7 +167,6 @@
                 }
             }
 
-            // Habilitar el botón de descarga si ambos filtros están seleccionados
             function habilitarBotonDescarga() {
                 var idAño = $('#filtroAño').val();
                 var idGrado = $('#filtroGrado').val();
@@ -182,23 +177,19 @@
                 }
             }
 
-            //DESCARGAR BOTON FORMATO DE EXCEL
             $('#BtnDescargar').click(function () {
-            var idAño = $('#filtroAño').val();
-            var idGrado = $('#filtroGrado').val();
+                var idAño = $('#filtroAño').val();
+                var idGrado = $('#filtroGrado').val();
 
                 if (idAño && idGrado) {
-                    // Verificar si existen datos para ese Año y Grado
                     $.ajax({
                         url: '/PersonalidadIParcial/VerificarDatos',
                         type: 'GET',
                         data: { idAño: idAño, idGrado: idGrado },
                         success: function(response) {
                             if (response.existeDatos) {
-                                // Si hay datos, descargar con DescargarExcel
                                 window.location.href = '/PersonalidadIParcial/DescargarExcel?idAño=' + idAño + '&idGrado=' + idGrado;
                             } else {
-                                // Si no hay datos, descargar con DescargarExcelenBlancoPersonalidad
                                 window.location.href = '/PersonalidadIParcial/DescargarExcelenBlancoPersonalidad?idAño=' + idAño + '&idGrado=' + idGrado;
                             }
                         },
@@ -221,18 +212,6 @@
                 }
             });
 
-        });
-
-
-        //para que cierre el modal
-        $('#notasModal').on('click', '[data-dismiss="modal"]', function () {
-            $('#notasModal').modal('hide');
-        });
-    </script>
-
-    <script>
-        // SCRIPT Y VALIDACIÓN PARA SUBIR PERSONALIDADES
-        $(document).ready(function () {
             $('#btnSubirModal').on('click', function () {
                 const archivoInput = $('#archivoExcel')[0];
                 const archivo = archivoInput.files[0];
@@ -240,7 +219,6 @@
                     const formData = new FormData();
                     formData.append('archivoExcel', archivo);
 
-                    // Mostrar indicador de progreso
                     Swal.fire({
                         title: 'Subiendo personalidades',
                         html: 'Por favor, espere...',
@@ -252,37 +230,31 @@
 
                     $.ajax({
                         type: 'POST',
-                        url: '/PersonalidadIParcial/SubirPersonalidades', // URL del controlador
+                        url: '/PersonalidadIParcial/SubirPersonalidades',
                         data: formData,
                         contentType: false,
                         processData: false,
                         success: function (response) {
-                            // Cerrar el modal primero
                             $('#miModal').modal('hide');
-
-                            // Asegurarse de que el backdrop se elimine
                             $('body').removeClass('modal-open');
                             $('.modal-backdrop').remove();
 
-                            // Si el servidor devuelve un mensaje de error, lo mostramos
                             if (response.error) {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Error',
-                                    text: response.error, // Mostrar el mensaje de error recibido
+                                    text: response.error,
                                     confirmButtonText: 'Aceptar'
                                 });
                             } else {
-                                // Mostrar el mensaje de éxito
                                 Swal.fire({
                                     icon: 'success',
                                     title: '¡Éxito!',
-                                    text: response.success, // Mostrar mensaje de éxito
+                                    text: response.success,
                                     confirmButtonText: 'Aceptar'
                                 }).then((result) => {
                                     if (result.isConfirmed) {
-                                        // Recargar la página o actualizar la vista si es necesario
-                                        location.reload(); // Esto recargará la página
+                                        location.reload();
                                     }
                                 });
                             }
@@ -308,16 +280,6 @@
                         confirmButtonText: 'Aceptar'
                     });
                 }
-            });
-        });
-    </script>
-
-    @* EJEMPLO DE TOASTR *@
-    <script>
-        $(document).ready(function () {
-            // Mostrar una notificación Toastr al hacer clic en un botón
-            $('#BtnNotificacion').click(function () {
-                toastr.success('¡Notificación mostrada correctamente!', 'Éxito');
             });
         });
     </script>
@@ -387,17 +349,7 @@
         vertical-align: middle;
     }
 
-    /*    @@media (max-width: 768px) {
-            .notas-filters {
-                flex-direction: column;
-            }
-
-            .filter-group {
-                width: 100%;
-            }
-        } */
-
     .modal-lg-custom {
-        max-width: 90%; /* Cambia este valor según lo necesites */
+        max-width: 90%;
     }
 </style>

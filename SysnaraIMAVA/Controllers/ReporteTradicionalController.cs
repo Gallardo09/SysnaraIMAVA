@@ -22,7 +22,6 @@ namespace SysnaraIMAVA.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        // GET: ReportesController
         public async Task<ActionResult> IndexAsync()
         {
             var años = await _context.Años.ToListAsync();
@@ -42,7 +41,7 @@ namespace SysnaraIMAVA.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetMatriculas(int idAño, string idGrado, string sistema)
+        public async Task<JsonResult> GetMatriculas(int idAño, string idGrado)
         {
             var query = _context.Matriculas
                 .Where(m => m.Idaño == idAño);
@@ -52,20 +51,13 @@ namespace SysnaraIMAVA.Controllers
                 query = query.Where(m => m.Idgrado == idGrado);
             }
 
-            if (!string.IsNullOrEmpty(sistema))
-            {
-                query = query.Where(m => m.Sistema == sistema);
-            }
-
             var matriculas = await query
                 .Select(m => new {
                     m.Idest,
-                    m.Idsi,
-                    m.Ididentidad,
+                    m.Idestudiante,
                     m.NombreEstudiante,
                     m.FechaNacimiento,
-                    m.Genero,
-                    m.Sistema
+                    m.Genero
                 })
                 .ToListAsync();
 
@@ -85,16 +77,14 @@ namespace SysnaraIMAVA.Controllers
                 {
                     IDAño = m.Idaño,
                     IDEst = m.Idest,
-                    IDIdentidad = m.Ididentidad,
+                    IDEstudiante = m.Idestudiante,
                     Nombre_Estudiante = m.NombreEstudiante,
                     Genero = m.Genero,
                     IDGrado = m.Idgrado,
                     Grado = m.Grado,
                     Seccion = m.Seccion,
                     Jornada = m.Jornada,
-                    NivelAcademico = m.NivelDescripcion,
-                    Periodo = m.SistemaTiempo,
-                    Sistema = m.Sistema
+                    NivelAcademico = m.NivelDescripcion
                 }).ToList();
 
             if (!datos.Any())
@@ -103,7 +93,7 @@ namespace SysnaraIMAVA.Controllers
             }
 
             Report report = new Report();
-            string reportPath = $"{Directory.GetCurrentDirectory()}/Views/ReporteTradicional/FR_Control_Pagos.frx";
+            string reportPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Views", "ReporteTradicional", "FR_Control_Pagos.frx");
 
             try
             {
@@ -149,7 +139,7 @@ namespace SysnaraIMAVA.Controllers
                 {
                     IDAño = m.Idaño,
                     IDEst = m.Idest,
-                    IDIdentidad = m.Ididentidad,
+                    IDEstudiante = m.Idestudiante,
                     Nombre_Estudiante = m.NombreEstudiante,
                     Genero = m.Genero,
                     CelEst = m.CelularEstudiante,
@@ -157,9 +147,7 @@ namespace SysnaraIMAVA.Controllers
                     Grado = m.Grado,
                     Seccion = m.Seccion,
                     Jornada = m.Jornada,
-                    NivelAcademico = m.NivelDescripcion,
-                    Periodo = m.SistemaTiempo,
-                    Sistema = m.Sistema
+                    NivelAcademico = m.NivelDescripcion
                 }).ToList();
 
             if (!datos.Any())
@@ -214,7 +202,7 @@ namespace SysnaraIMAVA.Controllers
                 {
                     IDAño = m.Idaño,
                     IDEst = m.Idest,
-                    IDIdentidad = m.Ididentidad,
+                    IDEstudiante = m.Idestudiante,
                     Nombre_Estudiante = m.NombreEstudiante,
                     Genero = m.Genero,
                     CelEst = m.CelularEstudiante,
@@ -222,9 +210,7 @@ namespace SysnaraIMAVA.Controllers
                     Grado = m.Grado,
                     Seccion = m.Seccion,
                     Jornada = m.Jornada,
-                    NivelAcademico = m.NivelDescripcion,
-                    Periodo = m.SistemaTiempo,
-                    Sistema = m.Sistema
+                    NivelAcademico = m.NivelDescripcion
                 }).ToList();
 
             if (!datos.Any())
@@ -279,7 +265,7 @@ namespace SysnaraIMAVA.Controllers
                 {
                     IDAño = m.Idaño,
                     IDEst = m.Idest,
-                    IDIdentidad = m.Ididentidad,
+                    IDEstudiante = m.Idestudiante,
                     Nombre_Estudiante = m.NombreEstudiante,
                     Genero = m.Genero,
                     CelEst = m.CelularEstudiante,
@@ -287,9 +273,7 @@ namespace SysnaraIMAVA.Controllers
                     Grado = m.Grado,
                     Seccion = m.Seccion,
                     Jornada = m.Jornada,
-                    NivelAcademico = m.NivelDescripcion,
-                    Periodo = m.SistemaTiempo,
-                    Sistema = m.Sistema
+                    NivelAcademico = m.NivelDescripcion
                 }).ToList();
 
             if (!datos.Any())
@@ -344,7 +328,7 @@ namespace SysnaraIMAVA.Controllers
                 {
                     IDAño = m.Idaño,
                     IDEst = m.Idest,
-                    IDIdentidad = m.Ididentidad,
+                    IDEstudiante = m.Idestudiante,
                     Nombre_Estudiante = m.NombreEstudiante,
                     Genero = m.Genero,
                     CelEst = m.CelularEstudiante,
@@ -352,9 +336,7 @@ namespace SysnaraIMAVA.Controllers
                     Grado = m.Grado,
                     Seccion = m.Seccion,
                     Jornada = m.Jornada,
-                    NivelAcademico = m.NivelDescripcion,
-                    Periodo = m.SistemaTiempo,
-                    Sistema = m.Sistema
+                    NivelAcademico = m.NivelDescripcion
                 }).ToList();
 
             if (!datos.Any())
@@ -396,32 +378,31 @@ namespace SysnaraIMAVA.Controllers
             }
         }
 
-        public IActionResult GenerarConstanciaMatricula(int idaño, string ididentidad)
+        public IActionResult GenerarConstanciaMatricula(int idaño, string idestudiante)
         {
-            if (idaño <= 0 || string.IsNullOrEmpty(ididentidad))
+            if (idaño <= 0 || string.IsNullOrEmpty(idestudiante))
             {
-                return BadRequest("Se requieren un ID de año y un ID de identidad válidos.");
+                return BadRequest("Se requieren un ID de año y un ID de estudiante válidos.");
             }
 
             var datos = _context.Matriculas
-                .Where(m => m.Idaño == idaño && m.Ididentidad == ididentidad)
+                .Where(m => m.Idaño == idaño && m.Idestudiante == idestudiante)
                 .Select(m => new
                 {
                     IDAño = m.Idaño,
                     IDEst = m.Idest,
-                    IDIdentidad = m.Ididentidad,
+                    IDEstudiante = m.Idestudiante,
                     Nombre_Estudiante = m.NombreEstudiante,
                     Fecha_Nacimiento = m.FechaNacimiento,
                     Genero = m.Genero,
                     CelularEstudiante = m.CelularEstudiante,
-                    Sistema = m.Sistema,
                     Grado = m.Grado,
                     Seccion = m.Seccion
                 }).ToList();
 
             if (!datos.Any())
             {
-                return NotFound($"No se encontraron datos para el estudiante con ID de identidad {ididentidad} en el año {idaño}.");
+                return NotFound($"No se encontraron datos para el estudiante con ID {idestudiante} en el año {idaño}.");
             }
 
             Report report = new Report();
@@ -452,7 +433,7 @@ namespace SysnaraIMAVA.Controllers
                 ms.Position = 0;
 
                 TempData["PdfStream"] = Convert.ToBase64String(ms.ToArray());
-                TempData["PdfFileName"] = $"Constancia_Matricula_{ididentidad}.pdf";
+                TempData["PdfFileName"] = $"Constancia_Matricula_{idestudiante}.pdf";
 
                 return View("PrevisualizarPdf");
             }

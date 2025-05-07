@@ -52,12 +52,6 @@
         </div>
 
         <div class="row mb-3">
-@*             <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="Sistema" class="control-label">Sistema</label>
-                    <input asp-for="Sistema" id="Sistema" readonly class="form-control" />
-                </div>
-            </div> *@
             <div class="col-md-6">
                 <div class="form-group">
                     <label asp-for="Idasignatura" class="control-label">ID Asignatura</label>
@@ -99,7 +93,9 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 
     @* ID GRADOS SEGUN EL ID AÑO SELECCIONADO *@
     <script>
@@ -131,7 +127,6 @@
                 $('#Seccion').val('');
                 $('#Jornada').val('');
                 $('#NivelDescripcion').val('');
-                $('#Sistema').val('');
                 $('#Idasignatura').val('');
                 $('#Asignatura1').val('');
                 $('#Periodo').val('');
@@ -164,7 +159,6 @@
                                 $('#Seccion').val(detalles.seccion);
                                 $('#Jornada').val(detalles.jornada);
                                 $('#NivelDescripcion').val(detalles.nivelDescripcion);
-                                $('#Sistema').val(detalles.sistema);
                             } else {
                                 limpiarCampos();
                             }
@@ -183,7 +177,6 @@
                 $('#Seccion').val('');
                 $('#Jornada').val('');
                 $('#NivelDescripcion').val('');
-                $('#Sistema').val('');
             }
 
             function mostrarAlerta(mensaje, tipo) {
@@ -205,7 +198,7 @@
 
             async function getNextAsignaturaId() {
                 try {
-                    const response = await fetch('/Asignaturas/GetNextAsignaturaId'); // Ajusta la ruta según tu estructura
+                    const response = await fetch('/Asignaturas/GetNextAsignaturaId');
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
@@ -232,9 +225,6 @@
 
             // Actualización inicial
             updateIdAsignatura();
-
-            // Puedes llamar a updateIdAsignatura() cuando sea necesario,
-            // por ejemplo, cuando se abre el formulario para una nueva asignatura
         });
     </script>
 
@@ -311,34 +301,37 @@
         });
     </script>
 
-    @* SCRIPT PARA MOSTRAR MENSAJE QUE SE GUARDO SATISFACTORIMENTE  *@
-    @* PENDIENTE  *@
-
-   <style>
+    <style>
         body {
             background-color: #f8f9fa;
         }
+
         .form-control:read-only {
             background-color: #e9ecef;
         }
+
         label {
             font-weight: bold;
         }
+
         .btn-primary {
             background-color: #007bff;
             border-color: #007bff;
         }
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
-        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+            }
+
         .btn-secondary {
             background-color: #6c757d;
             border-color: #6c757d;
         }
-        .btn-secondary:hover {
-            background-color: #545b62;
-            border-color: #4e555b;
-        }
+
+            .btn-secondary:hover {
+                background-color: #545b62;
+                border-color: #4e555b;
+            }
     </style>
 }

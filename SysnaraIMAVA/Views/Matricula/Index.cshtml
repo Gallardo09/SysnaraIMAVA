@@ -29,14 +29,6 @@
             </select>
         </div>
         <div class="filter-group">
-            <label for="filtroSistema">Sistema</label>
-            <select class="form-select" id="filtroSistema">
-                <option value="">Seleccione un sistema</option>
-                <option value="internacional">INTERNACIONAL</option>
-                <option value="anglosajon">ANGLOSAJÓN</option>
-            </select>
-        </div>
-        <div class="filter-group">
             <label>&nbsp;</label>
             <a class="btn btn-primary form-control" asp-action="Create">Matricular Nuevo</a>
         </div>
@@ -46,8 +38,8 @@
 <table id="matriculasTable" class="table table-striped table-hover" style="width:100%; font-size: 13px;">
     <thead>
         <tr>
-            <th>IDSI</th>
-            <th>Identidad</th>
+            <th>ID IMV</th>
+            <th>DNI</th>
             <th>Nacionalidad</th>
             <th>Nombre del Estudiante</th>
             <th>Fecha de Nacimiento</th>
@@ -55,7 +47,6 @@
             <th>Estado</th>
             <th>Grado</th>
             <th>Estado Ingreso</th>
-            <th>Sistema</th>
             <th>Editar</th>
             <th>Detalles</th>
             <th>Eliminar</th>
@@ -70,8 +61,8 @@
         $(document).ready(function () {
             var table = $('#matriculasTable').DataTable({
                 columns: [
-                    { data: 'idsi' },
-                    { data: 'ididentidad' },
+                    { data: 'idimv' },
+                    { data: 'idestudiante' },
                     { data: 'nacionalidad' },
                     { data: 'nombreEstudiante' },
                     { data: 'fechaNacimiento' },
@@ -79,7 +70,6 @@
                     { data: 'estado' },
                     { data: 'grado' },
                     { data: 'estadoIngreso' },
-                    { data: 'sistema' },
                     {
                         data: 'idest',
                         render: function (data) {
@@ -99,18 +89,17 @@
                         }
                     }
                 ],
-                order: [[5, 'asc'], [3, 'asc']] // Ordenar por género (columna 5) y luego por nombre (columna 3)
+                order: [[5, 'asc'], [3, 'asc']]
             });
 
             function cargarMatriculas() {
                 var idAño = $('#filtroAño').val();
                 var idGrado = $('#filtroGrado').val();
-                var sistema = $('#filtroSistema').val();
 
                 if (idAño) {
                     $.ajax({
                         url: '/Matricula/GetMatriculas',
-                        data: { idAño: idAño, idGrado: idGrado, sistema: sistema },
+                        data: { idAño: idAño, idGrado: idGrado },
                         success: function (data) {
                             table.clear().rows.add(data).draw();
                         }
@@ -140,7 +129,7 @@
                 cargarMatriculas();
             });
 
-            $('#filtroGrado, #filtroSistema').change(cargarMatriculas);
+            $('#filtroGrado').change(cargarMatriculas);
         });
     </script>
 }

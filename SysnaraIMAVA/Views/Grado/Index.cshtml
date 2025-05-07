@@ -6,7 +6,6 @@
 }
 
 <div class="container mt-1" style="margin-bottom: 0px; margin-top: 0px; padding-bottom: 0px; padding-top: 0px;">
-    <!-- Encabezado -->
     <div class="row justify-content-center">
         <div class="col-md-8 text-center">
             <h2 class="text-primary mb-3" style="font-family: Russo One, sans-serif;">Registrar Grado</h2>
@@ -14,13 +13,12 @@
     </div>
 </div>
 
-<!-- Card Contenedor con diseño más suave -->
 <div class="container mt-0" style="margin-bottom: 0px; margin-top: 0px; padding-bottom: 0px; padding-top: 0px;">
     <div class="card shadow-sm border-light">
         <div class="card-body">
             <div class="row justify-content-center">
                 <!-- Filtro de Año -->
-                <div class="col-md-3 mb-2">
+                <div class="col-md-4 mb-2">
                     <label for="filtroAño" class="form-label">Año</label>
                     <select class="form-select" id="filtroAño">
                         <option value="">Seleccione un año</option>
@@ -31,16 +29,6 @@
                                 <option value="@año.Idaño">@año.Idaño</option>
                             }
                         }
-                    </select>
-                </div>
-
-                <!-- Filtro de Sistema -->
-                <div class="col-md-3 mb-2">
-                    <label for="filtroSistema" class="form-label">Sistema</label>
-                    <select class="form-select" id="filtroSistema">
-                        <option value="">Seleccione un sistema</option>
-                        <option value="internacional">INTERNACIONAL</option>
-                        <option value="anglosajon">ANGLOSAJÓN</option>
                     </select>
                 </div>
 
@@ -65,8 +53,6 @@
             <th>Sección</th>
             <th>Jornada</th>
             <th>Nivel Descriptivo</th>
-            <th>Sistema</th>
-            <th>Sistema (Periodo Años)</th>
             <th>ID Año Inicial</th>
             <th>Editar</th>
             <th>Detalles</th>
@@ -77,17 +63,14 @@
     </tbody>
 </table>
 
-
 @section Scripts {
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script>
         $(document).ready(function () {
-            // Destroy existing DataTable if it exists
             if ($.fn.DataTable.isDataTable('#example')) {
                 $('#example').DataTable().destroy();
             }
 
-            // Re-initialize DataTable
             var table = $('#example').DataTable({
                 columns: [
                     { data: 'idgrado' },
@@ -95,8 +78,6 @@
                     { data: 'seccion' },
                     { data: 'jornada' },
                     { data: 'niveldescripcion' },
-                    { data: 'sistema' },
-                    { data: 'sistematiempo' },
                     { data: 'idaño' },
                     {
                         data: 'idgrado',
@@ -121,41 +102,17 @@
 
             function cargarGrados() {
                 var idAño = $('#filtroAño').val();
-                var sistema = $('#filtroSistema').val();
 
-                // Debug logging
-                console.log('Filtros seleccionados:');
-                console.log('Año:', idAño);
-                console.log('Sistema:', sistema);
-
-                // Only load if a year is selected
                 if (idAño) {
                     $.ajax({
                         url: '/Grado/GetGrados',
                         type: 'GET',
-                        data: {
-                            idAño: idAño,
-                            sistema: sistema
-                        },
+                        data: { idAño: idAño },
                         success: function (data) {
-                            console.log('Datos recibidos:', data);
-
-                            // Debug: log number of rows received
-                            console.log('Número de registros:', data.length);
-
-                            // If sistema filter is applied, manually filter data
-                            if (sistema) {
-                                data = data.filter(item =>
-                                    item.sistema.toUpperCase() === sistema.toUpperCase()
-                                );
-                                console.log('Datos después de filtrar por sistema:', data);
-                            }
-
                             table.clear().rows.add(data).draw();
                         },
                         error: function (xhr, status, error) {
                             console.error('Error loading grades:', status, error);
-                            console.log('Response Text:', xhr.responseText);
                         }
                     });
                 } else {
@@ -163,16 +120,10 @@
                 }
             }
 
-            // Trigger data load when year or system filters change
             $('#filtroAño').change(function() {
                 cargarGrados();
             });
 
-            $('#filtroSistema').change(function() {
-                cargarGrados();
-            });
-
-            // Initial load (optional, depending on your requirements)
             cargarGrados();
         });
     </script>

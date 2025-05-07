@@ -19,17 +19,16 @@ namespace SysnaraIMAVA.Controllers
         public ReporteAnglosajonController(DbimavaContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
-            _webHostEnvironment = webHostEnvironment; // Inyectamos IWebHostEnvironment
+            _webHostEnvironment = webHostEnvironment;
         }
 
-        // GET: ReportesController
         public async Task<ActionResult> IndexAsync()
         {
             var años = await _context.Años.ToListAsync();
             ViewBag.Años = años;
             return View();
         }
-        // Nuevo método para obtener grados por año ***************** inicio
+
         [HttpGet]
         public async Task<JsonResult> GetGrados(int idAño)
         {
@@ -40,11 +39,9 @@ namespace SysnaraIMAVA.Controllers
 
             return Json(grados);
         }
-        //**************************************************************** fin
-        // Nuevo método para obtener matrículas filtradas  *************** inicio
 
         [HttpGet]
-        public async Task<JsonResult> GetMatriculas(int idAño, string idGrado, string sistema)
+        public async Task<JsonResult> GetMatriculas(int idAño, string idGrado)
         {
             var query = _context.Matriculas
                 .Where(m => m.Idaño == idAño);
@@ -54,66 +51,50 @@ namespace SysnaraIMAVA.Controllers
                 query = query.Where(m => m.Idgrado == idGrado);
             }
 
-            if (!string.IsNullOrEmpty(sistema))
-            {
-                query = query.Where(m => m.Sistema == sistema);
-            }
-
             var matriculas = await query
                 .Select(m => new {
                     m.Idest,
-                    m.Idsi,
-                    m.Ididentidad,
-                    //m.Nacionalidad,
+                    m.Idestudiante,
                     m.NombreEstudiante,
                     m.FechaNacimiento,
-                    m.Genero,
-                    //m.Estado,
-                    //m.Grado,
-                    //m.EstadoIngreso,
-                    m.Sistema // Añadimos el campo Sistema
+                    m.Genero
                 })
                 .ToListAsync();
 
             return Json(matriculas);
         }
 
-        //FastReport - REPORTE CONTROL DE PAGOS
         public IActionResult GenerarReporteMuestra(string idGrado)
         {
-                // Verificar si idGrado es null o vacío
-                if (string.IsNullOrEmpty(idGrado))
-                {
-                    return BadRequest("Se requiere un ID de grado válido.");
-                }
+            if (string.IsNullOrEmpty(idGrado))
+            {
+                return BadRequest("Se requiere un ID de grado válido.");
+            }
 
-                // Ya no necesitamos extraer o limpiar el idGrado, usamos el valor completo
-                var datos = _context.Matriculas
-                    .Where(m => m.Idgrado == idGrado)
-                    .Select(m => new
-                    {
-                        IDAño = m.Idaño,
-                        IDEst = m.Idest,
-                        IDIdentidad = m.Ididentidad,
-                        Nombre_Estudiante = m.NombreEstudiante,
-                        Genero = m.Genero,
-                        IDGrado = m.Idgrado,
-                        Grado = m.Grado,
-                        Seccion = m.Seccion,
-                        Jornada = m.Jornada,
-                        NivelAcademico = m.NivelDescripcion,
-                        Periodo = m.SistemaTiempo,
-                        Sistema = m.Sistema
-                    }).ToList();
-
-                // Verificar si se encontraron datos
-                if (!datos.Any())
+            var datos = _context.Matriculas
+                .Where(m => m.Idgrado == idGrado)
+                .Select(m => new
                 {
-                    return NotFound($"No se encontraron estudiantes para el grado con ID {idGrado}.");
-                }
+                    IDAño = m.Idaño,
+                    IDEst = m.Idest,
+                    IDEstudiante = m.Idestudiante,
+                    Nombre_Estudiante = m.NombreEstudiante,
+                    Genero = m.Genero,
+                    IDGrado = m.Idgrado,
+                    Grado = m.Grado,
+                    Seccion = m.Seccion,
+                    Jornada = m.Jornada,
+                    NivelAcademico = m.NivelDescripcion
+                }).ToList();
+
+            if (!datos.Any())
+            {
+                return NotFound($"No se encontraron estudiantes para el grado con ID {idGrado}.");
+            }
 
             Report report = new Report();
-            string reportPath = $"{Directory.GetCurrentDirectory()}/Views/ReporteAnglosajon/FR.frx";
+            string reportPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Views", "ReporteAnglosajon", "FR.frx");
+
             try
             {
                 report.Load(reportPath);
@@ -123,20 +104,14 @@ namespace SysnaraIMAVA.Controllers
                 return StatusCode(500, $"Error al cargar el reporte: {ex.Message}");
             }
 
-            // Registrar los datos en el reporte
             report.RegisterData(datos, "MATRICULA");
             report.GetDataSource("MATRICULA").Enabled = true;
 
-            // Obtener el nombre del grado para el título del reporte
             var nombreGrado = datos.FirstOrDefault()?.Grado ?? "Desconocido";
-
-            // Establecer un parámetro para el título del reporte
             report.SetParameterValue("ReportTitle", $"Reporte de Estudiantes - Grado {nombreGrado}");
 
-            // Preparar el reporte
             report.Prepare();
 
-            //PREVISUALIZAR el documento PDF y LUEGO poder descargarlo
             using (MemoryStream ms = new MemoryStream())
             {
                 PDFSimpleExport pdfExport = new PDFSimpleExport();
@@ -151,7 +126,6 @@ namespace SysnaraIMAVA.Controllers
             }
         }
 
-        // FastReport - REPORTE DE MATRICULA
         public IActionResult GenerarReporteMatricula(string idGrado)
         {
             if (string.IsNullOrEmpty(idGrado))
@@ -165,7 +139,7 @@ namespace SysnaraIMAVA.Controllers
                 {
                     IDAño = m.Idaño,
                     IDEst = m.Idest,
-                    IDIdentidad = m.Ididentidad,
+                    IDEstudiante = m.Idestudiante,
                     Nombre_Estudiante = m.NombreEstudiante,
                     Genero = m.Genero,
                     CelEst = m.CelularEstudiante,
@@ -173,9 +147,7 @@ namespace SysnaraIMAVA.Controllers
                     Grado = m.Grado,
                     Seccion = m.Seccion,
                     Jornada = m.Jornada,
-                    NivelAcademico = m.NivelDescripcion,
-                    Periodo = m.SistemaTiempo,
-                    Sistema = m.Sistema
+                    NivelAcademico = m.NivelDescripcion
                 }).ToList();
 
             if (!datos.Any())
@@ -184,8 +156,6 @@ namespace SysnaraIMAVA.Controllers
             }
 
             Report report = new Report();
-
-            // Cambia esta línea para usar la ruta física correcta
             string reportPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Views", "ReporteAnglosajon", "FR_Rep_Matricula.frx");
 
             try
@@ -219,8 +189,6 @@ namespace SysnaraIMAVA.Controllers
             }
         }
 
-
-        // FastReport - REPORTE DE CONTROL DE ACUMULADOS
         public IActionResult GenerarReporteAcumulados(string idGrado)
         {
             if (string.IsNullOrEmpty(idGrado))
@@ -234,7 +202,7 @@ namespace SysnaraIMAVA.Controllers
                 {
                     IDAño = m.Idaño,
                     IDEst = m.Idest,
-                    IDIdentidad = m.Ididentidad,
+                    IDEstudiante = m.Idestudiante,
                     Nombre_Estudiante = m.NombreEstudiante,
                     Genero = m.Genero,
                     CelEst = m.CelularEstudiante,
@@ -242,9 +210,7 @@ namespace SysnaraIMAVA.Controllers
                     Grado = m.Grado,
                     Seccion = m.Seccion,
                     Jornada = m.Jornada,
-                    NivelAcademico = m.NivelDescripcion,
-                    Periodo = m.SistemaTiempo,
-                    Sistema = m.Sistema
+                    NivelAcademico = m.NivelDescripcion
                 }).ToList();
 
             if (!datos.Any())
@@ -253,8 +219,6 @@ namespace SysnaraIMAVA.Controllers
             }
 
             Report report = new Report();
-
-            // Cambia esta línea para usar la ruta física correcta
             string reportPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Views", "ReporteAnglosajon", "FR_Rep_Acumulados.frx");
 
             try
@@ -288,7 +252,6 @@ namespace SysnaraIMAVA.Controllers
             }
         }
 
-        // FastReport - REPORTE DE CONTROL DE ASISTENCIA
         public IActionResult GenerarReporteAsistencia(string idGrado)
         {
             if (string.IsNullOrEmpty(idGrado))
@@ -302,7 +265,7 @@ namespace SysnaraIMAVA.Controllers
                 {
                     IDAño = m.Idaño,
                     IDEst = m.Idest,
-                    IDIdentidad = m.Ididentidad,
+                    IDEstudiante = m.Idestudiante,
                     Nombre_Estudiante = m.NombreEstudiante,
                     Genero = m.Genero,
                     CelEst = m.CelularEstudiante,
@@ -310,9 +273,7 @@ namespace SysnaraIMAVA.Controllers
                     Grado = m.Grado,
                     Seccion = m.Seccion,
                     Jornada = m.Jornada,
-                    NivelAcademico = m.NivelDescripcion,
-                    Periodo = m.SistemaTiempo,
-                    Sistema = m.Sistema
+                    NivelAcademico = m.NivelDescripcion
                 }).ToList();
 
             if (!datos.Any())
@@ -321,8 +282,6 @@ namespace SysnaraIMAVA.Controllers
             }
 
             Report report = new Report();
-
-            // Cambia esta línea para usar la ruta física correcta
             string reportPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Views", "ReporteAnglosajon", "FR_Rep_Asistencia.frx");
 
             try
@@ -356,7 +315,6 @@ namespace SysnaraIMAVA.Controllers
             }
         }
 
-        // FastReport - REPORTE DE PERSONALIDAD
         public IActionResult GenerarReportePersonalidad(string idGrado)
         {
             if (string.IsNullOrEmpty(idGrado))
@@ -370,7 +328,7 @@ namespace SysnaraIMAVA.Controllers
                 {
                     IDAño = m.Idaño,
                     IDEst = m.Idest,
-                    IDIdentidad = m.Ididentidad,
+                    IDEstudiante = m.Idestudiante,
                     Nombre_Estudiante = m.NombreEstudiante,
                     Genero = m.Genero,
                     CelEst = m.CelularEstudiante,
@@ -378,9 +336,7 @@ namespace SysnaraIMAVA.Controllers
                     Grado = m.Grado,
                     Seccion = m.Seccion,
                     Jornada = m.Jornada,
-                    NivelAcademico = m.NivelDescripcion,
-                    Periodo = m.SistemaTiempo,
-                    Sistema = m.Sistema
+                    NivelAcademico = m.NivelDescripcion
                 }).ToList();
 
             if (!datos.Any())
@@ -389,8 +345,6 @@ namespace SysnaraIMAVA.Controllers
             }
 
             Report report = new Report();
-
-            // Cambia esta línea para usar la ruta física correcta
             string reportPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Views", "ReporteAnglosajon", "FR_Rep_Personalidad.frx");
 
             try
@@ -423,37 +377,35 @@ namespace SysnaraIMAVA.Controllers
                 return View("PrevisualizarPdf");
             }
         }
-        //×××××§§§§§§§§§§§§§ CONSTANCIAS §§§§§§§§§§§§××××××××××××××××××
-        public IActionResult GenerarConstanciaMatricula(int idaño, string ididentidad)
+
+        public IActionResult GenerarConstanciaMatricula(int idaño, string idestudiante)
         {
-            if (idaño <= 0 || string.IsNullOrEmpty(ididentidad))
+            if (idaño <= 0 || string.IsNullOrEmpty(idestudiante))
             {
-                return BadRequest("Se requieren un ID de año y un ID de identidad válidos.");
+                return BadRequest("Se requieren un ID de año y un ID de estudiante válidos.");
             }
 
             var datos = _context.Matriculas
-                .Where(m => m.Idaño == idaño && m.Ididentidad == ididentidad)
+                .Where(m => m.Idaño == idaño && m.Idestudiante == idestudiante)
                 .Select(m => new
                 {
                     IDAño = m.Idaño,
                     IDEst = m.Idest,
-                    IDIdentidad = m.Ididentidad,
+                    IDEstudiante = m.Idestudiante,
                     Nombre_Estudiante = m.NombreEstudiante,
                     Fecha_Nacimiento = m.FechaNacimiento,
                     Genero = m.Genero,
                     CelularEstudiante = m.CelularEstudiante,
-                    Sistema = m.Sistema,
                     Grado = m.Grado,
                     Seccion = m.Seccion
                 }).ToList();
 
             if (!datos.Any())
             {
-                return NotFound($"No se encontraron datos para el estudiante con ID de identidad {ididentidad} en el año {idaño}.");
+                return NotFound($"No se encontraron datos para el estudiante con ID {idestudiante} en el año {idaño}.");
             }
 
             Report report = new Report();
-
             string reportPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Views", "ReporteAnglosajon", "FR_Const_Matricula.frx");
 
             try
@@ -481,7 +433,7 @@ namespace SysnaraIMAVA.Controllers
                 ms.Position = 0;
 
                 TempData["PdfStream"] = Convert.ToBase64String(ms.ToArray());
-                TempData["PdfFileName"] = $"Constancia_Matricula_{ididentidad}.pdf";
+                TempData["PdfFileName"] = $"Constancia_Matricula_{idestudiante}.pdf";
 
                 return View("PrevisualizarPdf");
             }

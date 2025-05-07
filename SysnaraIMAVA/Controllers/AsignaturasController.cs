@@ -21,40 +21,27 @@ namespace SysnaraIMAVA.Controllers
         // GET: Asignaturas
         public async Task<IActionResult> Index()
         {
-
             var dbsmileContext = _context.Asignaturas.Include(a => a.IdañoNavigation).Include(a => a.IdgradoNavigation);
-
-            // Obtener los años
             var años = await _context.Años.ToListAsync();
-
-            // Pasar tanto los grados como los años a la vista usando ViewBag
             ViewBag.Años = años;
-
-            // Retornar la vista con la lista de grados
-            //return View(await dbsmileContext.ToListAsync());
             return View(await dbsmileContext.ToListAsync());
-
         }
 
-        // GET: Obtener asignaturas filtradas por Año, Grado y Sección
         [HttpGet]
         public async Task<IActionResult> GetAsignaturas(string idAño, string grado, string seccion)
         {
             var asignaturasQuery = _context.Asignaturas.AsQueryable();
 
-            // Filtrar por Año
             if (!string.IsNullOrEmpty(idAño) && int.TryParse(idAño, out int idAñoParsed))
             {
                 asignaturasQuery = asignaturasQuery.Where(a => a.Idaño == idAñoParsed);
             }
 
-            // Filtrar por Grado
             if (!string.IsNullOrEmpty(grado))
             {
                 asignaturasQuery = asignaturasQuery.Where(a => a.Grado.ToUpper() == grado.ToUpper());
             }
 
-            // Filtrar por Sección
             if (!string.IsNullOrEmpty(seccion))
             {
                 asignaturasQuery = asignaturasQuery.Where(a => a.Seccion.ToUpper() == seccion.ToUpper());
@@ -72,8 +59,7 @@ namespace SysnaraIMAVA.Controllers
                     a.Seccion,
                     a.Jornada,
                     periodo = a.Periodo,
-                    anio = a.Idaño, // Suponiendo que tienes una propiedad AñoDescripcion en la entidad Año
-                    //Estado = a.Sistema, // O cualquier otra propiedad que describa el estado
+                    anio = a.Idaño
                 })
                 .ToListAsync();
 
@@ -104,12 +90,9 @@ namespace SysnaraIMAVA.Controllers
         public IActionResult Create()
         {
             ViewData["Idaño"] = new SelectList(_context.Años, "Idaño", "Idaño");
-            //ViewData["Idgrado"] = new SelectList(_context.Grados, "Idgrado", "Idgrado");
             return View();
         }
-        //GET CREATE PARA PONER ASIGNATURAS SEGUN ID AÑO
-        //---------- inicio ---------
-        //GET: Matricula / AUTORELLENAR (CREATE) Cuando seleccione el año, se generen los IDGRADOS en el select.
+
         [HttpGet]
         public IActionResult GetGradosPorAnio(int idAnio)
         {
@@ -120,7 +103,6 @@ namespace SysnaraIMAVA.Controllers
             return Json(grados);
         }
 
-        //GET ASIGNATURA / AUTORELLENAR (CREATE) Cuando seleccione el IDGRADO que se autorellenen los demas datos
         [HttpGet]
         public IActionResult GetDetallesGrado(string idGrado)
         {
@@ -132,14 +114,13 @@ namespace SysnaraIMAVA.Controllers
                     g.Grado1,
                     g.Seccion,
                     g.Jornada,
-                    g.NivelDescripcion,
-                    g.Sistema
+                    g.NivelDescripcion
                 })
                 .FirstOrDefault();
 
             return Json(detallesGrado);
         }
-        //GET ASIGNATURA UNA MANERA DE CONTAR TODAS LAS ASIGNATURAS DE LA BASE DE DATOS Y AUTOINCREMENTAR UN VALOR EN EL ID ASIGNATURA
+
         [HttpGet]
         public async Task<IActionResult> GetNextAsignaturaId()
         {
@@ -147,14 +128,9 @@ namespace SysnaraIMAVA.Controllers
             return Json(nextId);
         }
 
-        //---------- fin --------------
-
-        // POST: Asignaturas/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Idaño,Idgrado,Grado,Seccion,Jornada,NivelDescripcion,Idasignatura,Asignatura1,Periodo,Sistema,SistemaClase,SistemaTiempo")] Asignatura asignatura)
+        public async Task<IActionResult> Create([Bind("Idaño,Idgrado,Grado,Seccion,Jornada,NivelDescripcion,Idasignatura,Asignatura1,Periodo")] Asignatura asignatura)
         {
             if (ModelState.IsValid)
             {
@@ -185,12 +161,9 @@ namespace SysnaraIMAVA.Controllers
             return View(asignatura);
         }
 
-        // POST: Asignaturas/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Idaño,Idgrado,Grado,Seccion,Jornada,NivelDescripcion,Idasignatura,Asignatura1,Periodo,Sistema,SistemaClase,SistemaTiempo")] Asignatura asignatura)
+        public async Task<IActionResult> Edit(string id, [Bind("Idaño,Idgrado,Grado,Seccion,Jornada,NivelDescripcion,Idasignatura,Asignatura1,Periodo")] Asignatura asignatura)
         {
             if (id != asignatura.Idasignatura)
             {
@@ -242,7 +215,6 @@ namespace SysnaraIMAVA.Controllers
             return View(asignatura);
         }
 
-        // POST: Asignaturas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)

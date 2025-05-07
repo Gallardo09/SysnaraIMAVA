@@ -55,7 +55,7 @@ namespace SysnaraIMAVA.Controllers
 
             // Obtenemos los datos agrupados por estudiante
             var datosEstudiantes = await query
-                .GroupBy(n => new { n.Ididentidad, n.NombreEstudiante, n.Genero, n.Grado, n.Seccion, n.Jornada })
+                .GroupBy(n => new { n.Idestudiante, n.NombreEstudiante, n.Genero, n.Grado, n.Seccion, n.Jornada })
                 .ToListAsync();
 
             // Procesamos cada estudiante para calcular promedios considerando asignaturas que no aplican
@@ -99,7 +99,7 @@ namespace SysnaraIMAVA.Controllers
 
                 var item = new
                 {
-                    grupo.Key.Ididentidad,
+                    grupo.Key.Idestudiante,
                     grupo.Key.NombreEstudiante,
                     grupo.Key.Genero,
                     grupo.Key.Grado,
