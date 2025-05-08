@@ -101,7 +101,7 @@ namespace SysnaraIMAVA.Controllers
             var notas = _context.Notas
                 .Where(n => n.Idaño == idAño && n.Idasignatura == idAsignatura)
                 .Select(n => new {
-                    n.Ididentidad,
+                    n.Idestudiante,
                     n.NombreEstudiante,
                     n.Idnota,
                     n.Iparcial,
@@ -138,9 +138,9 @@ namespace SysnaraIMAVA.Controllers
             var grado = notas.FirstOrDefault()?.Grado;
             var seccion = notas.FirstOrDefault()?.Seccion;
             var jornada = notas.FirstOrDefault()?.Jornada;
-            var sistema = notas.FirstOrDefault()?.Sistema;
-            var sistemaClase = notas.FirstOrDefault()?.SistemaClase;
-            var sistemaTiempo = notas.FirstOrDefault()?.SistemaTiempo;
+            //var sistema = notas.FirstOrDefault()?.Sistema;
+            //var sistemaClase = notas.FirstOrDefault()?.SistemaClase;
+            //var sistemaTiempo = notas.FirstOrDefault()?.SistemaTiempo;
             var idaño = notas.FirstOrDefault()?.Idaño; // Agregar id año
 
             using var package = new ExcelPackage();
@@ -182,17 +182,17 @@ namespace SysnaraIMAVA.Controllers
             worksheet.Cells[8, 1].Style.Font.Bold = true; // Negrita
             worksheet.Cells[8, 2].Value = jornada;
 
-            worksheet.Cells[9, 1].Value = "Sistema:";
-            worksheet.Cells[9, 1].Style.Font.Bold = true; // Negrita
-            worksheet.Cells[9, 2].Value = sistema;
+            //worksheet.Cells[9, 1].Value = "Sistema:";
+            //worksheet.Cells[9, 1].Style.Font.Bold = true; // Negrita
+            //worksheet.Cells[9, 2].Value = sistema;
 
-            worksheet.Cells[10, 1].Value = "Sistema Clase:";
-            worksheet.Cells[10, 1].Style.Font.Bold = true; // Negrita
-            worksheet.Cells[10, 2].Value = sistemaClase;
+            //worksheet.Cells[10, 1].Value = "Sistema Clase:";
+            //worksheet.Cells[10, 1].Style.Font.Bold = true; // Negrita
+            //worksheet.Cells[10, 2].Value = sistemaClase;
 
-            worksheet.Cells[11, 1].Value = "Sistema Tiempo:";
-            worksheet.Cells[11, 1].Style.Font.Bold = true; // Negrita
-            worksheet.Cells[11, 2].Value = sistemaTiempo;
+            //worksheet.Cells[11, 1].Value = "Sistema Tiempo:";
+            //worksheet.Cells[11, 1].Style.Font.Bold = true; // Negrita
+            //worksheet.Cells[11, 2].Value = sistemaTiempo;
 
             worksheet.Cells[12, 1].Value = "EDITANDO";
             worksheet.Cells[12, 1].Style.Font.Bold = true; // Negrita
@@ -240,7 +240,7 @@ namespace SysnaraIMAVA.Controllers
             {
                 var nota = notas[i];
                 worksheet.Cells[i + 14, 1].Value = nota.Idest;
-                worksheet.Cells[i + 14, 2].Value = nota.Ididentidad;
+                worksheet.Cells[i + 14, 2].Value = nota.Idestudiante;
                 worksheet.Cells[i + 14, 3].Value = nota.NombreEstudiante;
                 worksheet.Cells[i + 14, 4].Value = nota.Genero;
                 worksheet.Cells[i + 14, 5].Value = nota.Idnota;
@@ -311,9 +311,9 @@ namespace SysnaraIMAVA.Controllers
             var idaño = matriculas.FirstOrDefault()?.Idaño; // Supone que todos los estudiantes son del mismo año
             var seccion = asignatura.Seccion;
             var jornada = asignatura.Jornada;
-            var sistema = asignatura.Sistema;
-            var sistemaClase = asignatura.SistemaClase;
-            var sistemaTiempo = asignatura.SistemaTiempo;
+            //var sistema = asignatura.Sistema;
+            //var sistemaClase = asignatura.SistemaClase;
+            //var sistemaTiempo = asignatura.SistemaTiempo;
 
             // Crear el archivo Excel
             using var package = new ExcelPackage();
@@ -356,17 +356,17 @@ namespace SysnaraIMAVA.Controllers
             worksheet.Cells[8, 1].Style.Font.Bold = true;
             worksheet.Cells[8, 2].Value = jornada;
 
-            worksheet.Cells[9, 1].Value = "Sistema:";
-            worksheet.Cells[9, 1].Style.Font.Bold = true;
-            worksheet.Cells[9, 2].Value = sistema;
+            //worksheet.Cells[9, 1].Value = "Sistema:";
+            //worksheet.Cells[9, 1].Style.Font.Bold = true;
+            //worksheet.Cells[9, 2].Value = sistema;
 
-            worksheet.Cells[10, 1].Value = "Sistema Clase:";
-            worksheet.Cells[10, 1].Style.Font.Bold = true;
-            worksheet.Cells[10, 2].Value = sistemaClase;
+            //worksheet.Cells[10, 1].Value = "Sistema Clase:";
+            //worksheet.Cells[10, 1].Style.Font.Bold = true;
+            //worksheet.Cells[10, 2].Value = sistemaClase;
 
-            worksheet.Cells[11, 1].Value = "Sistema Tiempo:";
-            worksheet.Cells[11, 1].Style.Font.Bold = true;
-            worksheet.Cells[11, 2].Value = sistemaTiempo;
+            //worksheet.Cells[11, 1].Value = "Sistema Tiempo:";
+            //worksheet.Cells[11, 1].Style.Font.Bold = true;
+            //worksheet.Cells[11, 2].Value = sistemaTiempo;
 
             worksheet.Cells[12, 1].Value = "NUEVOINGRESO";
             worksheet.Cells[12, 1].Style.Font.Bold = true; // Negrita
@@ -422,7 +422,7 @@ namespace SysnaraIMAVA.Controllers
             {
                 var matricula = matriculas[i];
                 worksheet.Cells[i + 14, 1].Value = matricula.Idest;
-                worksheet.Cells[i + 14, 2].Value = matricula.Ididentidad;
+                worksheet.Cells[i + 14, 2].Value = matricula.Idestudiante;
                 worksheet.Cells[i + 14, 3].Value = matricula.NombreEstudiante;
                 worksheet.Cells[i + 14, 4].Value = matricula.Genero;
                 worksheet.Cells[i + 14, 5].Value = 0; // Sin nota
@@ -583,7 +583,7 @@ namespace SysnaraIMAVA.Controllers
                                 {
                                     Idaño = idAño,
                                     Idest = int.Parse(worksheet.Cells[row, 1].Value?.ToString() ?? "0"),
-                                    Ididentidad = worksheet.Cells[row, 2].Value?.ToString(),
+                                    Idestudiante = worksheet.Cells[row, 2].Value?.ToString(),
                                     NombreEstudiante = worksheet.Cells[row, 3].Value?.ToString(),
                                     Genero = worksheet.Cells[row, 4].Value?.ToString(),
                                     Idasignatura = idAsignatura,
@@ -596,9 +596,9 @@ namespace SysnaraIMAVA.Controllers
                                     Iiparcial = int.TryParse(worksheet.Cells[row, 7].Value?.ToString(), out var iip) ? iip : (int?)null,
                                     Iiiparcial = int.TryParse(worksheet.Cells[row, 8].Value?.ToString(), out var iiip) ? iiip : (int?)null,
                                     Ivparcial = int.TryParse(worksheet.Cells[row, 9].Value?.ToString(), out var ivp) ? ivp : (int?)null,
-                                    Sistema = sistema,
-                                    SistemaClase = sistemaClase,
-                                    SistemaTiempo = sistemaTiempo,
+                                    //Sistema = sistema,
+                                    //SistemaClase = sistemaClase,
+                                    //SistemaTiempo = sistemaTiempo,
                                 };
 
                                 // Cálculos de promedios usando decimal

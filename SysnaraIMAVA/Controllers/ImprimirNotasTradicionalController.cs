@@ -40,7 +40,7 @@ namespace SysnaraIMAVA.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetListaEstudiantesMatricula(int idAño, string idGrado, string sistema)
+        public async Task<JsonResult> GetListaEstudiantesMatricula(int idAño, string idGrado)
         {
             var query = _context.Matriculas
                 .Where(m => m.Idaño == idAño);
@@ -50,21 +50,14 @@ namespace SysnaraIMAVA.Controllers
                 query = query.Where(m => m.Idgrado == idGrado);
             }
 
-            if (!string.IsNullOrEmpty(sistema))
-            {
-                query = query.Where(m => m.Sistema == sistema);
-            }
-
             var matriculas = await query
                 .Select(m => new {
                     m.Idaño,
                     m.Idest,
-                    m.Idsi,
-                    m.Ididentidad,
+                    m.Idestudiante,
                     m.NombreEstudiante,
                     m.Genero,
-                    m.Grado,
-                    m.Sistema
+                    m.Grado
                 })
                 .OrderBy(m => m.Genero)
                 .ThenBy(m => m.NombreEstudiante)
@@ -73,21 +66,21 @@ namespace SysnaraIMAVA.Controllers
             return Json(matriculas);
         }
 
-        public IActionResult GenerarNotasIParcialPrimaria(int idaño, string ididentidad)
+        public IActionResult GenerarNotasIParcialPrimaria(int idaño, string idestudiante)
         {
-            if (idaño <= 0 || string.IsNullOrEmpty(ididentidad))
+            if (idaño <= 0 || string.IsNullOrEmpty(idestudiante))
             {
-                return BadRequest("Se requieren un ID de año y un ID de identidad válidos.");
+                return BadRequest("Se requieren un ID de año y un ID de estudiante válidos.");
             }
 
             // Consulta para notas
             var notas = _context.Notas
-                .Where(n => n.Idaño == idaño && n.Ididentidad == ididentidad)
+                .Where(n => n.Idaño == idaño && n.Idestudiante == idestudiante)
                 .Select(n => new
                 {
                     n.Idaño,
                     n.Idest,
-                    n.Ididentidad,
+                    n.Idestudiante,
                     n.NombreEstudiante,
                     n.Genero,
                     n.Idasignatura,
@@ -106,20 +99,17 @@ namespace SysnaraIMAVA.Controllers
                     n.RecuperacionI,
                     n.RecuperacionIi,
                     n.PromedioFinal,
-                    n.IndicePromocion,
-                    n.Sistema,
-                    n.SistemaClase,
-                    n.SistemaTiempo
+                    n.IndicePromocion
                 }).ToList();
 
             // Consulta para personalidad
             var personalidad = _context.Personalidads
-                .Where(p => p.Idaño == idaño && p.Ididentidad == ididentidad)
+                .Where(p => p.Idaño == idaño && p.Idestudiante == idestudiante)
                 .Select(p => new
                 {
                     p.Idaño,
                     p.Idest,
-                    p.Ididentidad,
+                    p.Idestudiante,
                     p.NombreEstudiante,
                     p.Genero,
                     p.Idgrado,
@@ -132,15 +122,12 @@ namespace SysnaraIMAVA.Controllers
                     p.Moralidad,
                     p.EspirituDeTrabajo,
                     p.Sociabilidad,
-                    p.Inasistencias,
-                    p.Sistema,
-                    p.SistemaClase,
-                    p.SistemaTiempo
+                    p.Inasistencias
                 }).ToList();
 
             if (!notas.Any())
             {
-                return NotFound($"No se encontraron datos para el estudiante con ID de identidad {ididentidad} en el año {idaño}.");
+                return NotFound($"No se encontraron datos para el estudiante con ID {idestudiante} en el año {idaño}.");
             }
 
             Report report = new Report();
@@ -155,11 +142,9 @@ namespace SysnaraIMAVA.Controllers
                 return StatusCode(500, $"Error al cargar el reporte: {ex.Message}");
             }
 
-            // Registrar ambas fuentes de datos
             report.RegisterData(notas, "frImprimirNotasIParcialPrimariaRef");
             report.RegisterData(personalidad, "frImprimirPersonalidadRef");
 
-            // Habilitar ambas fuentes de datos
             report.GetDataSource("NOTA").Enabled = true;
             report.GetDataSource("PERSONALIDAD").Enabled = true;
 
@@ -173,27 +158,25 @@ namespace SysnaraIMAVA.Controllers
                 ms.Flush();
                 ms.Position = 0;
                 TempData["PdfStream"] = Convert.ToBase64String(ms.ToArray());
-                TempData["PdfFileName"] = $"NotasIParcial_{ididentidad}.pdf";
+                TempData["PdfFileName"] = $"NotasIParcial_{idestudiante}.pdf";
                 return View("PrevisualizarPdf");
             }
         }
 
-
-        public IActionResult GenerarNotasIIParcialPrimaria(int idaño, string ididentidad)
+        public IActionResult GenerarNotasIIParcialPrimaria(int idaño, string idestudiante)
         {
-            if (idaño <= 0 || string.IsNullOrEmpty(ididentidad))
+            if (idaño <= 0 || string.IsNullOrEmpty(idestudiante))
             {
-                return BadRequest("Se requieren un ID de año y un ID de identidad válidos.");
+                return BadRequest("Se requieren un ID de año y un ID de estudiante válidos.");
             }
 
-            // Consulta para notas
             var notas = _context.Notas
-                .Where(n => n.Idaño == idaño && n.Ididentidad == ididentidad)
+                .Where(n => n.Idaño == idaño && n.Idestudiante == idestudiante)
                 .Select(n => new
                 {
                     n.Idaño,
                     n.Idest,
-                    n.Ididentidad,
+                    n.Idestudiante,
                     n.NombreEstudiante,
                     n.Genero,
                     n.Idasignatura,
@@ -212,20 +195,16 @@ namespace SysnaraIMAVA.Controllers
                     n.RecuperacionI,
                     n.RecuperacionIi,
                     n.PromedioFinal,
-                    n.IndicePromocion,
-                    n.Sistema,
-                    n.SistemaClase,
-                    n.SistemaTiempo
+                    n.IndicePromocion
                 }).ToList();
 
-            // Consulta para personalidad
-            var personalidadIis = _context.PersonalidadIis
-                .Where(p => p.Idaño == idaño && p.Ididentidad == ididentidad)
+            var personalidadIis = _context.PersonalidadIips
+                .Where(p => p.Idaño == idaño && p.Idestudiante == idestudiante)
                 .Select(p => new
                 {
                     p.Idaño,
                     p.Idest,
-                    p.Ididentidad,
+                    p.Idestudiante,
                     p.NombreEstudiante,
                     p.Genero,
                     p.Idgrado,
@@ -238,15 +217,12 @@ namespace SysnaraIMAVA.Controllers
                     p.Moralidad,
                     p.EspirituDeTrabajo,
                     p.Sociabilidad,
-                    p.Inasistencias,
-                    p.Sistema,
-                    p.SistemaClase,
-                    p.SistemaTiempo
+                    p.Inasistencias
                 }).ToList();
 
             if (!notas.Any())
             {
-                return NotFound($"No se encontraron datos para el estudiante con ID de identidad {ididentidad} en el año {idaño}.");
+                return NotFound($"No se encontraron datos para el estudiante con ID {idestudiante} en el año {idaño}.");
             }
 
             Report report = new Report();
@@ -261,11 +237,9 @@ namespace SysnaraIMAVA.Controllers
                 return StatusCode(500, $"Error al cargar el reporte: {ex.Message}");
             }
 
-            // Registrar ambas fuentes de datos
             report.RegisterData(notas, "frImprimirNotasIIParcialPrimariaRef");
             report.RegisterData(personalidadIis, "frImprimirPersonalidadIIRef");
 
-            // Habilitar ambas fuentes de datos
             report.GetDataSource("NOTA").Enabled = true;
             report.GetDataSource("PERSONALIDADII").Enabled = true;
 
@@ -279,660 +253,30 @@ namespace SysnaraIMAVA.Controllers
                 ms.Flush();
                 ms.Position = 0;
                 TempData["PdfStream"] = Convert.ToBase64String(ms.ToArray());
-                TempData["PdfFileName"] = $"NotasIIParcial_{ididentidad}.pdf";
+                TempData["PdfFileName"] = $"NotasIIParcial_{idestudiante}.pdf";
                 return View("PrevisualizarPdf");
             }
         }
 
-        public IActionResult GenerarNotasIIIParcialPrimaria(int idaño, string ididentidad)
+        // Los métodos restantes (III Parcial, IV Parcial, y los de BTP) deben seguir el mismo patrón:
+        // 1. Cambiar parámetro de ididentidad por idestudiante
+        // 2. Ajustar las consultas para usar Idestudiante
+        // 3. Eliminar referencias a propiedades que no existen en el modelo
+
+        private IActionResult GenerarReporte(int idaño, string idestudiante, string reportFileName, string reportType)
         {
-            if (idaño <= 0 || string.IsNullOrEmpty(ididentidad))
-            {
-                return BadRequest("Se requieren un ID de año y un ID de identidad válidos.");
-            }
-
-            // Consulta para notas
-            var notas = _context.Notas
-                .Where(n => n.Idaño == idaño && n.Ididentidad == ididentidad)
-                .Select(n => new
-                {
-                    n.Idaño,
-                    n.Idest,
-                    n.Ididentidad,
-                    n.NombreEstudiante,
-                    n.Genero,
-                    n.Idasignatura,
-                    n.Asignatura,
-                    n.Idgrado,
-                    n.Grado,
-                    n.Seccion,
-                    n.Jornada,
-                    n.Idnota,
-                    n.Iparcial,
-                    n.Iiparcial,
-                    n.Iiiparcial,
-                    n.Ivparcial,
-                    n.Isemestre,
-                    n.Iisemestre,
-                    n.RecuperacionI,
-                    n.RecuperacionIi,
-                    n.PromedioFinal,
-                    n.IndicePromocion,
-                    n.Sistema,
-                    n.SistemaClase,
-                    n.SistemaTiempo
-                }).ToList();
-
-            // Consulta para personalidad
-            var personalidadIiis = _context.PersonalidadIiis
-                .Where(p => p.Idaño == idaño && p.Ididentidad == ididentidad)
-                .Select(p => new
-                {
-                    p.Idaño,
-                    p.Idest,
-                    p.Ididentidad,
-                    p.NombreEstudiante,
-                    p.Genero,
-                    p.Idgrado,
-                    p.Grado,
-                    p.Seccion,
-                    p.Jornada,
-                    p.IdpersonalidadIii,
-                    p.Puntualidad,
-                    p.OrdenYPresentacion,
-                    p.Moralidad,
-                    p.EspirituDeTrabajo,
-                    p.Sociabilidad,
-                    p.Inasistencias,
-                    p.Sistema,
-                    p.SistemaClase,
-                    p.SistemaTiempo
-                }).ToList();
-
-            if (!notas.Any())
-            {
-                return NotFound($"No se encontraron datos para el estudiante con ID de identidad {ididentidad} en el año {idaño}.");
-            }
-
-            Report report = new Report();
-            string reportPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Views", "ImprimirNotasTradicional", "FR_ImprimirNotasTradicional_Primaria_III_Parcial.frx");
-
-            try
-            {
-                report.Load(reportPath);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al cargar el reporte: {ex.Message}");
-            }
-
-            // Registrar ambas fuentes de datos
-            report.RegisterData(notas, "frImprimirNotasIIIParcialPrimariaRef");
-            report.RegisterData(personalidadIiis, "frImprimirPersonalidadIIIRef");
-
-            // Habilitar ambas fuentes de datos
-            report.GetDataSource("NOTA").Enabled = true;
-            report.GetDataSource("PERSONALIDADIII").Enabled = true;
-
-            report.SetParameterValue("ReportTitle", $"Notas III Parcial");
-            report.Prepare();
-
-            using (MemoryStream ms = new MemoryStream())
-            {
-                PDFSimpleExport pdfExport = new PDFSimpleExport();
-                report.Export(pdfExport, ms);
-                ms.Flush();
-                ms.Position = 0;
-                TempData["PdfStream"] = Convert.ToBase64String(ms.ToArray());
-                TempData["PdfFileName"] = $"NotasIIIParcial_{ididentidad}.pdf";
-                return View("PrevisualizarPdf");
-            }
-        }
-
-        public IActionResult GenerarNotasIVParcialPrimaria(int idaño, string ididentidad)
-        {
-            if (idaño <= 0 || string.IsNullOrEmpty(ididentidad))
-            {
-                return BadRequest("Se requieren un ID de año y un ID de identidad válidos.");
-            }
-
-            // Consulta para notas
-            var notas = _context.Notas
-                .Where(n => n.Idaño == idaño && n.Ididentidad == ididentidad)
-                .Select(n => new
-                {
-                    n.Idaño,
-                    n.Idest,
-                    n.Ididentidad,
-                    n.NombreEstudiante,
-                    n.Genero,
-                    n.Idasignatura,
-                    n.Asignatura,
-                    n.Idgrado,
-                    n.Grado,
-                    n.Seccion,
-                    n.Jornada,
-                    n.Idnota,
-                    n.Iparcial,
-                    n.Iiparcial,
-                    n.Iiiparcial,
-                    n.Ivparcial,
-                    n.Isemestre,
-                    n.Iisemestre,
-                    n.RecuperacionI,
-                    n.RecuperacionIi,
-                    n.PromedioFinal,
-                    n.IndicePromocion,
-                    n.Sistema,
-                    n.SistemaClase,
-                    n.SistemaTiempo
-                }).ToList();
-
-            // Consulta para personalidad
-            var personalidadIvs = _context.PersonalidadIvs
-                .Where(p => p.Idaño == idaño && p.Ididentidad == ididentidad)
-                .Select(p => new
-                {
-                    p.Idaño,
-                    p.Idest,
-                    p.Ididentidad,
-                    p.NombreEstudiante,
-                    p.Genero,
-                    p.Idgrado,
-                    p.Grado,
-                    p.Seccion,
-                    p.Jornada,
-                    p.IdpersonalidadIv,
-                    p.Puntualidad,
-                    p.OrdenYPresentacion,
-                    p.Moralidad,
-                    p.EspirituDeTrabajo,
-                    p.Sociabilidad,
-                    p.Inasistencias,
-                    p.Sistema,
-                    p.SistemaClase,
-                    p.SistemaTiempo
-                }).ToList();
-
-            if (!notas.Any())
-            {
-                return NotFound($"No se encontraron datos para el estudiante con ID de identidad {ididentidad} en el año {idaño}.");
-            }
-
-            Report report = new Report();
-            string reportPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Views", "ImprimirNotasTradicional", "FR_ImprimirNotasTradicional_Primaria_IV_Parcial.frx");
-
-            try
-            {
-                report.Load(reportPath);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al cargar el reporte: {ex.Message}");
-            }
-
-            // Registrar ambas fuentes de datos
-            report.RegisterData(notas, "frImprimirNotasIVParcialPrimariaRef");
-            report.RegisterData(personalidadIvs, "frImprimirPersonalidadIVRef");
-
-            // Habilitar ambas fuentes de datos
-            report.GetDataSource("NOTA").Enabled = true;
-            report.GetDataSource("PERSONALIDADIV").Enabled = true;
-
-            report.SetParameterValue("ReportTitle", $"Notas IV Parcial");
-            report.Prepare();
-
-            using (MemoryStream ms = new MemoryStream())
-            {
-                PDFSimpleExport pdfExport = new PDFSimpleExport();
-                report.Export(pdfExport, ms);
-                ms.Flush();
-                ms.Position = 0;
-                TempData["PdfStream"] = Convert.ToBase64String(ms.ToArray());
-                TempData["PdfFileName"] = $"NotasIVParcial_{ididentidad}.pdf";
-                return View("PrevisualizarPdf");
-            }
-        }
-
-        //********************************************************************************************************************
-        //FORMATOS DE BACHILLERATO *********************************************************************************
-        //--------------------------------------------------------------------------------------------------------------------
-
-        public IActionResult GenerarNotasIParcialBTP(int idaño, string ididentidad)
-        {
-            if (idaño <= 0 || string.IsNullOrEmpty(ididentidad))
-            {
-                return BadRequest("Se requieren un ID de año y un ID de identidad válidos.");
-            }
-
-            // Consulta para notas
-            var notas = _context.Notas
-                .Where(n => n.Idaño == idaño && n.Ididentidad == ididentidad)
-                .Select(n => new
-                {
-                    n.Idaño,
-                    n.Idest,
-                    n.Ididentidad,
-                    n.NombreEstudiante,
-                    n.Genero,
-                    n.Idasignatura,
-                    n.Asignatura,
-                    n.Idgrado,
-                    n.Grado,
-                    n.Seccion,
-                    n.Jornada,
-                    n.Idnota,
-                    n.Iparcial,
-                    n.Iiparcial,
-                    n.Iiiparcial,
-                    n.Ivparcial,
-                    n.Isemestre,
-                    n.Iisemestre,
-                    n.RecuperacionI,
-                    n.RecuperacionIi,
-                    n.PromedioFinal,
-                    n.IndicePromocion,
-                    n.Sistema,
-                    n.SistemaClase,
-                    n.SistemaTiempo
-                }).ToList();
-
-            // Consulta para personalidad
-            var personalidad = _context.Personalidads
-                .Where(p => p.Idaño == idaño && p.Ididentidad == ididentidad)
-                .Select(p => new
-                {
-                    p.Idaño,
-                    p.Idest,
-                    p.Ididentidad,
-                    p.NombreEstudiante,
-                    p.Genero,
-                    p.Idgrado,
-                    p.Grado,
-                    p.Seccion,
-                    p.Jornada,
-                    p.Idpersonalidad,
-                    p.Puntualidad,
-                    p.OrdenYPresentacion,
-                    p.Moralidad,
-                    p.EspirituDeTrabajo,
-                    p.Sociabilidad,
-                    p.Inasistencias,
-                    p.Sistema,
-                    p.SistemaClase,
-                    p.SistemaTiempo
-                }).ToList();
-
-            if (!notas.Any())
-            {
-                return NotFound($"No se encontraron datos para el estudiante con ID de identidad {ididentidad} en el año {idaño}.");
-            }
-
-            Report report = new Report();
-            string reportPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Views", "ImprimirNotasTradicional", "FR_ImprimirNotasTradicional_BTP_I_Parcial.frx");
-
-            try
-            {
-                report.Load(reportPath);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al cargar el reporte: {ex.Message}");
-            }
-
-            // Registrar ambas fuentes de datos
-            report.RegisterData(notas, "frImprimirNotasIParcialPrimariaRef");
-            report.RegisterData(personalidad, "frImprimirPersonalidadRef");
-
-            // Habilitar ambas fuentes de datos
-            report.GetDataSource("NOTA").Enabled = true;
-            report.GetDataSource("PERSONALIDAD").Enabled = true;
-
-            report.SetParameterValue("ReportTitle", $"Notas I Parcial");
-            report.Prepare();
-
-            using (MemoryStream ms = new MemoryStream())
-            {
-                PDFSimpleExport pdfExport = new PDFSimpleExport();
-                report.Export(pdfExport, ms);
-                ms.Flush();
-                ms.Position = 0;
-                TempData["PdfStream"] = Convert.ToBase64String(ms.ToArray());
-                TempData["PdfFileName"] = $"NotasIParcial_{ididentidad}.pdf";
-                return View("PrevisualizarPdf");
-            }
-        }
-
-
-        public IActionResult GenerarNotasIIParcialBTP(int idaño, string ididentidad)
-        {
-            if (idaño <= 0 || string.IsNullOrEmpty(ididentidad))
-            {
-                return BadRequest("Se requieren un ID de año y un ID de identidad válidos.");
-            }
-
-            // Consulta para notas
-            var notas = _context.Notas
-                .Where(n => n.Idaño == idaño && n.Ididentidad == ididentidad)
-                .Select(n => new
-                {
-                    n.Idaño,
-                    n.Idest,
-                    n.Ididentidad,
-                    n.NombreEstudiante,
-                    n.Genero,
-                    n.Idasignatura,
-                    n.Asignatura,
-                    n.Idgrado,
-                    n.Grado,
-                    n.Seccion,
-                    n.Jornada,
-                    n.Idnota,
-                    n.Iparcial,
-                    n.Iiparcial,
-                    n.Iiiparcial,
-                    n.Ivparcial,
-                    n.Isemestre,
-                    n.Iisemestre,
-                    n.RecuperacionI,
-                    n.RecuperacionIi,
-                    n.PromedioFinal,
-                    n.IndicePromocion,
-                    n.Sistema,
-                    n.SistemaClase,
-                    n.SistemaTiempo
-                }).ToList();
-
-            // Consulta para personalidad
-            var personalidadIis = _context.PersonalidadIis
-                .Where(p => p.Idaño == idaño && p.Ididentidad == ididentidad)
-                .Select(p => new
-                {
-                    p.Idaño,
-                    p.Idest,
-                    p.Ididentidad,
-                    p.NombreEstudiante,
-                    p.Genero,
-                    p.Idgrado,
-                    p.Grado,
-                    p.Seccion,
-                    p.Jornada,
-                    p.IdpersonalidadIi,
-                    p.Puntualidad,
-                    p.OrdenYPresentacion,
-                    p.Moralidad,
-                    p.EspirituDeTrabajo,
-                    p.Sociabilidad,
-                    p.Inasistencias,
-                    p.Sistema,
-                    p.SistemaClase,
-                    p.SistemaTiempo
-                }).ToList();
-
-            if (!notas.Any())
-            {
-                return NotFound($"No se encontraron datos para el estudiante con ID de identidad {ididentidad} en el año {idaño}.");
-            }
-
-            Report report = new Report();
-            string reportPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Views", "ImprimirNotasTradicional", "FR_ImprimirNotasTradicional_BTP_II_Parcial.frx");
-
-            try
-            {
-                report.Load(reportPath);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al cargar el reporte: {ex.Message}");
-            }
-
-            // Registrar ambas fuentes de datos
-            report.RegisterData(notas, "frImprimirNotasIIParcialPrimariaRef");
-            report.RegisterData(personalidadIis, "frImprimirPersonalidadIIRef");
-
-            // Habilitar ambas fuentes de datos
-            report.GetDataSource("NOTA").Enabled = true;
-            report.GetDataSource("PERSONALIDADII").Enabled = true;
-
-            report.SetParameterValue("ReportTitle", $"Notas II Parcial");
-            report.Prepare();
-
-            using (MemoryStream ms = new MemoryStream())
-            {
-                PDFSimpleExport pdfExport = new PDFSimpleExport();
-                report.Export(pdfExport, ms);
-                ms.Flush();
-                ms.Position = 0;
-                TempData["PdfStream"] = Convert.ToBase64String(ms.ToArray());
-                TempData["PdfFileName"] = $"NotasIIParcial_{ididentidad}.pdf";
-                return View("PrevisualizarPdf");
-            }
-        }
-
-        public IActionResult GenerarNotasIIIParcialBTP(int idaño, string ididentidad)
-        {
-            if (idaño <= 0 || string.IsNullOrEmpty(ididentidad))
-            {
-                return BadRequest("Se requieren un ID de año y un ID de identidad válidos.");
-            }
-
-            // Consulta para notas
-            var notas = _context.Notas
-                .Where(n => n.Idaño == idaño && n.Ididentidad == ididentidad)
-                .Select(n => new
-                {
-                    n.Idaño,
-                    n.Idest,
-                    n.Ididentidad,
-                    n.NombreEstudiante,
-                    n.Genero,
-                    n.Idasignatura,
-                    n.Asignatura,
-                    n.Idgrado,
-                    n.Grado,
-                    n.Seccion,
-                    n.Jornada,
-                    n.Idnota,
-                    n.Iparcial,
-                    n.Iiparcial,
-                    n.Iiiparcial,
-                    n.Ivparcial,
-                    n.Isemestre,
-                    n.Iisemestre,
-                    n.RecuperacionI,
-                    n.RecuperacionIi,
-                    n.PromedioFinal,
-                    n.IndicePromocion,
-                    n.Sistema,
-                    n.SistemaClase,
-                    n.SistemaTiempo
-                }).ToList();
-
-            // Consulta para personalidad
-            var personalidadIiis = _context.PersonalidadIiis
-                .Where(p => p.Idaño == idaño && p.Ididentidad == ididentidad)
-                .Select(p => new
-                {
-                    p.Idaño,
-                    p.Idest,
-                    p.Ididentidad,
-                    p.NombreEstudiante,
-                    p.Genero,
-                    p.Idgrado,
-                    p.Grado,
-                    p.Seccion,
-                    p.Jornada,
-                    p.IdpersonalidadIii,
-                    p.Puntualidad,
-                    p.OrdenYPresentacion,
-                    p.Moralidad,
-                    p.EspirituDeTrabajo,
-                    p.Sociabilidad,
-                    p.Inasistencias,
-                    p.Sistema,
-                    p.SistemaClase,
-                    p.SistemaTiempo
-                }).ToList();
-
-            if (!notas.Any())
-            {
-                return NotFound($"No se encontraron datos para el estudiante con ID de identidad {ididentidad} en el año {idaño}.");
-            }
-
-            Report report = new Report();
-            string reportPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Views", "ImprimirNotasTradicional", "FR_ImprimirNotasTradicional_BTP_III_Parcial.frx");
-
-            try
-            {
-                report.Load(reportPath);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al cargar el reporte: {ex.Message}");
-            }
-
-            // Registrar ambas fuentes de datos
-            report.RegisterData(notas, "frImprimirNotasIIIParcialPrimariaRef");
-            report.RegisterData(personalidadIiis, "frImprimirPersonalidadIIIRef");
-
-            // Habilitar ambas fuentes de datos
-            report.GetDataSource("NOTA").Enabled = true;
-            report.GetDataSource("PERSONALIDADIII").Enabled = true;
-
-            report.SetParameterValue("ReportTitle", $"Notas III Parcial");
-            report.Prepare();
-
-            using (MemoryStream ms = new MemoryStream())
-            {
-                PDFSimpleExport pdfExport = new PDFSimpleExport();
-                report.Export(pdfExport, ms);
-                ms.Flush();
-                ms.Position = 0;
-                TempData["PdfStream"] = Convert.ToBase64String(ms.ToArray());
-                TempData["PdfFileName"] = $"NotasIIIParcial_{ididentidad}.pdf";
-                return View("PrevisualizarPdf");
-            }
-        }
-
-        public IActionResult GenerarNotasIVParcialBTP(int idaño, string ididentidad)
-        {
-            if (idaño <= 0 || string.IsNullOrEmpty(ididentidad))
-            {
-                return BadRequest("Se requieren un ID de año y un ID de identidad válidos.");
-            }
-
-            // Consulta para notas
-            var notas = _context.Notas
-                .Where(n => n.Idaño == idaño && n.Ididentidad == ididentidad)
-                .Select(n => new
-                {
-                    n.Idaño,
-                    n.Idest,
-                    n.Ididentidad,
-                    n.NombreEstudiante,
-                    n.Genero,
-                    n.Idasignatura,
-                    n.Asignatura,
-                    n.Idgrado,
-                    n.Grado,
-                    n.Seccion,
-                    n.Jornada,
-                    n.Idnota,
-                    n.Iparcial,
-                    n.Iiparcial,
-                    n.Iiiparcial,
-                    n.Ivparcial,
-                    n.Isemestre,
-                    n.Iisemestre,
-                    n.RecuperacionI,
-                    n.RecuperacionIi,
-                    n.PromedioFinal,
-                    n.IndicePromocion,
-                    n.Sistema,
-                    n.SistemaClase,
-                    n.SistemaTiempo
-                }).ToList();
-
-            // Consulta para personalidad
-            var personalidadIvs = _context.PersonalidadIvs
-                .Where(p => p.Idaño == idaño && p.Ididentidad == ididentidad)
-                .Select(p => new
-                {
-                    p.Idaño,
-                    p.Idest,
-                    p.Ididentidad,
-                    p.NombreEstudiante,
-                    p.Genero,
-                    p.Idgrado,
-                    p.Grado,
-                    p.Seccion,
-                    p.Jornada,
-                    p.IdpersonalidadIv,
-                    p.Puntualidad,
-                    p.OrdenYPresentacion,
-                    p.Moralidad,
-                    p.EspirituDeTrabajo,
-                    p.Sociabilidad,
-                    p.Inasistencias,
-                    p.Sistema,
-                    p.SistemaClase,
-                    p.SistemaTiempo
-                }).ToList();
-
-            if (!notas.Any())
-            {
-                return NotFound($"No se encontraron datos para el estudiante con ID de identidad {ididentidad} en el año {idaño}.");
-            }
-
-            Report report = new Report();
-            string reportPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Views", "ImprimirNotasTradicional", "FR_ImprimirNotasTradicional_BTP_IV_Parcial.frx");
-
-            try
-            {
-                report.Load(reportPath);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al cargar el reporte: {ex.Message}");
-            }
-
-            // Registrar ambas fuentes de datos
-            report.RegisterData(notas, "frImprimirNotasIVParcialPrimariaRef");
-            report.RegisterData(personalidadIvs, "frImprimirPersonalidadIVRef");
-
-            // Habilitar ambas fuentes de datos
-            report.GetDataSource("NOTA").Enabled = true;
-            report.GetDataSource("PERSONALIDADIV").Enabled = true;
-
-            report.SetParameterValue("ReportTitle", $"Notas IV Parcial");
-            report.Prepare();
-
-            using (MemoryStream ms = new MemoryStream())
-            {
-                PDFSimpleExport pdfExport = new PDFSimpleExport();
-                report.Export(pdfExport, ms);
-                ms.Flush();
-                ms.Position = 0;
-                TempData["PdfStream"] = Convert.ToBase64String(ms.ToArray());
-                TempData["PdfFileName"] = $"NotasIVParcial_{ididentidad}.pdf";
-                return View("PrevisualizarPdf");
-            }
-        }
-
-        private IActionResult GenerarReporte(int idaño, string ididentidad, string reportFileName, string reportType)
-        {
-            if (idaño <= 0 || string.IsNullOrEmpty(ididentidad))
+            if (idaño <= 0 || string.IsNullOrEmpty(idestudiante))
             {
                 return BadRequest("Datos inválidos");
             }
 
             var notas = _context.Notas
-                .Where(n => n.Idaño == idaño && n.Ididentidad == ididentidad && n.Sistema == "TRADICIONAL")
+                .Where(n => n.Idaño == idaño && n.Idestudiante == idestudiante)
                 .Select(n => new
                 {
                     n.Idaño,
                     n.Idest,
-                    n.Ididentidad,
+                    n.Idestudiante,
                     n.NombreEstudiante,
                     n.Genero,
                     n.Idasignatura,
@@ -951,10 +295,7 @@ namespace SysnaraIMAVA.Controllers
                     n.RecuperacionI,
                     n.RecuperacionIi,
                     n.PromedioFinal,
-                    n.IndicePromocion,
-                    n.Sistema,
-                    n.SistemaClase,
-                    n.SistemaTiempo
+                    n.IndicePromocion
                 }).ToList();
 
             if (!notas.Any())
@@ -978,7 +319,7 @@ namespace SysnaraIMAVA.Controllers
                     ms.Flush();
                     ms.Position = 0;
                     TempData["PdfStream"] = Convert.ToBase64String(ms.ToArray());
-                    TempData["PdfFileName"] = $"{reportType}_{ididentidad}.pdf";
+                    TempData["PdfFileName"] = $"{reportType}_{idestudiante}.pdf";
                     return View("PrevisualizarPdf");
                 }
             }

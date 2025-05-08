@@ -76,14 +76,6 @@ namespace SysnaraIMAVA.Controllers
 
             List<string> grades = new List<string>
             {
-                "KINDERGARTEN",
-                "PREPARATORIA",
-                "PRIMER GRADO",
-                "SEGUNDO GRADO",
-                "TERCER GRADO",
-                "CUARTO GRADO",
-                "QUINTO GRADO",
-                "SEXTO GRADO",
                 "SÉPTIMO GRADO",
                 "OCTAVO GRADO",
                 "NOVENO GRADO",
@@ -110,14 +102,6 @@ namespace SysnaraIMAVA.Controllers
 
             List<string> grades = new List<string>
             {
-                "KINDERGARTEN",
-                "PREPARATORIA",
-                "PRIMER GRADO",
-                "SEGUNDO GRADO",
-                "TERCER GRADO",
-                "CUARTO GRADO",
-                "QUINTO GRADO",
-                "SEXTO GRADO",
                 "SÉPTIMO GRADO",
                 "OCTAVO GRADO",
                 "NOVENO GRADO",

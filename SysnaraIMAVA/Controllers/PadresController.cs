@@ -37,7 +37,7 @@ namespace SysnaraIMAVA.Controllers
             }
 
             var padre = await _context.Padres
-                .FirstOrDefaultAsync(m => m.Idencargado == id);
+                .FirstOrDefaultAsync(m => m.Idimvencargado == id);
             if (padre == null)
             {
                 return NotFound();
@@ -91,7 +91,7 @@ namespace SysnaraIMAVA.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Idencargado,Idpadre,NombrePadre,Parentesco,Profesion,Genero,TelefonoPadre,CelPadre,Correo,DireccionPadre,Observacion")] Padre padre)
         {
-            if (id != padre.Idencargado)
+            if (id != padre.Idimvencargado)
             {
                 return NotFound();
             }
@@ -105,7 +105,7 @@ namespace SysnaraIMAVA.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PadreExists(padre.Idencargado))
+                    if (!PadreExists(padre.Idimvencargado))
                     {
                         return NotFound();
                     }
@@ -128,7 +128,7 @@ namespace SysnaraIMAVA.Controllers
             }
 
             var padre = await _context.Padres
-                .FirstOrDefaultAsync(m => m.Idencargado == id);
+                .FirstOrDefaultAsync(m => m.Idimvencargado == id);
             if (padre == null)
             {
                 return NotFound();
@@ -154,7 +154,7 @@ namespace SysnaraIMAVA.Controllers
 
         private bool PadreExists(int id)
         {
-            return _context.Padres.Any(e => e.Idencargado == id);
+            return _context.Padres.Any(e => e.Idimvencargado == id);
         }
     }
 }
