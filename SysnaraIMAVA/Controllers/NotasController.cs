@@ -12,6 +12,7 @@ using OfficeOpenXml;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Configuration;
 
 namespace SysnaraIMAVA.Controllers
 {
@@ -26,8 +27,8 @@ namespace SysnaraIMAVA.Controllers
             _context = context;
             _webHostEnvironment = webHostEnvironment; // Inyectamos IWebHostEnvironment
 
-            // Configurar el contexto de licencia de EPPlus
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // Cambiar a Commercial si aplica
+            // Configuración correcta para EPPlus 8 +
+             ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // O LicenseContext.Commercial si tienes licencia comercial
 
         }
 

@@ -10,7 +10,7 @@ using SysnaraIMAVA.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configurar EPPlus para uso no comercial
-//ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

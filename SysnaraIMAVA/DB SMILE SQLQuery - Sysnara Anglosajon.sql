@@ -51,20 +51,40 @@ ADD Sistema VARCHAR(100),
 	SistemaTiempo VARCHAR(100);
 
 --PROCEDIMIENTO ALMACENADO PARA ACELERAR LA VELOCIDAD DE CARGA EN EL INDEX PADRES
-CREATE PROCEDURE sp_GetAllPadres
+USE [DBIMAVA]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- CREACIÓN (no ALTER) del procedimiento
+CREATE PROCEDURE [dbo].[sp_GetAllPadres]
 AS
 BEGIN
-    SELECT Idencargado, Idpadre, Nombre_Padre, Parentesco, Profesion, Genero, 
-           Telefono_Padre, Cel_Padre, Correo, Direccion_Padre, Observacion
+    SELECT 
+        IDIMVEncargado, 
+        Idpadre, 
+        Nombre_Padre, 
+        Parentesco, 
+        Profesion, 
+        Genero, 
+        Telefono_Padre, 
+        Cel_Padre, 
+        Correo, 
+        Direccion_Padre, 
+        Observacion
     FROM PADRE
 END
+GO
 
 --PROCEDIMIENTO ALMACENADO PARA ACELERAR LA VELOCIDAD DE CARGA EN EL INDEX ASIGNATURAS
 CREATE PROCEDURE sp_GetAllAsignaturas
 AS
 BEGIN
     SELECT a.Idaño, a.Idgrado, a.Grado, a.Seccion, a.Jornada, a.NivelDescripcion,
-           a.Idasignatura, a.Asignatura1, a.Periodo, a.Sistema, a.SistemaClase, a.SistemaTiempo,
+           a.Idasignatura, a.Asignatura1, a.Periodo, 
            anio.Idaño AS IdañoNavigation_Idaño,
            grado.Idgrado AS IdgradoNavigation_Idgrado
     FROM Asignaturas a

@@ -58,7 +58,7 @@ namespace SysnaraIMAVA.Controllers
                     m.Genero,
                     m.Estado,
                     m.Grado,
-                    m.EstadoMatricula
+                    estadoIngreso = m.EstadoMatricula, // Cambiado de EstadoMatricula a estadoIngreso
                 })
                 .OrderBy(m => m.Genero)
                 .ThenBy(m => m.NombreEstudiante)
