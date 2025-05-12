@@ -151,15 +151,42 @@
             const gradoSelect = document.querySelector("select[name='Grado1']");
             const seccionSelect = document.querySelector("select[name='Seccion']");
             const jornadaSelect = document.querySelector("select[name='Jornada']");
+            const nivelSelect = document.querySelector("select[name='NivelDescripcion']");
             const idGradoInput = document.querySelector("input[name='Idgrado']");
+
+            function getNivelSuffix(nivelValue) {
+                switch(nivelValue) {
+                    case "I CICLO DE EDUCACIÓN BÁSICA":
+                        return "-IC";
+                    case "II CICLO DE EDUCACIÓN BÁSICA":
+                        return "-IIC";
+                    case "III CICLO DE EDUCACIÓN BÁSICA":
+                        return "-IIIC";
+                    case "BACHILLERATO TÉCNICO PROFESIONAL":
+                        return "-BTP";
+                    case "BACHILLERATO TÉCNICO PROFESIONAL EN INFORMÁTICA":
+                        return "-I";
+                    case "BACHILLERATO TÉCNICO PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS":
+                        return "-E";
+                    case "BACHILLERATO TÉCNICO PROFESIONAL EN ADMINISTRACIÓN HOTELERA":
+                        return "-T";
+                    case "BACHILLERATO PROFESIONAL EN CIENCIAS Y HUMANIDADES":
+                        return "-H";
+                    case "BACHILLERATO PROFESIONAL EN CIENCIAS Y HUMANIDADES (ACELERADO)":
+                        return "-HA";
+                    default:
+                        return "";
+                }
+            }
 
             function generateIDGrado() {
                 const idAnoValue = idAnoSelect.value.slice(-2);
                 const gradoValue = gradoSelect.value.substring(0, 3).toUpperCase();
                 const seccionValue = seccionSelect.value.substring(0, 1).toUpperCase();
                 const jornadaValue = jornadaSelect.value.substring(0, 1).toUpperCase();
+                const nivelSuffix = nivelSelect.value ? getNivelSuffix(nivelSelect.value) : "";
 
-                const idGrado = `${idAnoValue}-${gradoValue}-${seccionValue}-${jornadaValue}`;
+                const idGrado = `${idAnoValue}-${gradoValue}-${seccionValue}-${jornadaValue}${nivelSuffix}`;
                 idGradoInput.value = idGrado;
             }
 
@@ -167,6 +194,7 @@
             gradoSelect.addEventListener("change", generateIDGrado);
             seccionSelect.addEventListener("change", generateIDGrado);
             jornadaSelect.addEventListener("change", generateIDGrado);
+            nivelSelect.addEventListener("change", generateIDGrado);
         });
     </script>
 }
