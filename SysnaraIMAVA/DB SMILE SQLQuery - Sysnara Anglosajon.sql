@@ -91,3 +91,12 @@ BEGIN
     LEFT JOIN Años anio ON a.Idaño = anio.Idaño
     LEFT JOIN Grados grado ON a.Idgrado = grado.Idgrado
 END
+
+
+-- Paso 1: Agregar la columna IDAño
+ALTER TABLE [DBIMAVA].[dbo].[PADRE]
+ADD [IDAño] INT;
+-- Paso 2: Agregar la clave foránea
+ALTER TABLE [DBIMAVA].[dbo].[PADRE]
+ADD CONSTRAINT FK_PADRE_AÑO
+FOREIGN KEY ([IDAño]) REFERENCES [DBIMAVA].[dbo].[AÑO]([IDAño]);

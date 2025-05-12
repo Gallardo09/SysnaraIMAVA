@@ -27,5 +27,9 @@ public partial class Padre
 
     public string? Observacion { get; set; }
 
+    public int? Idaño { get; set; }
+
+    public virtual Año? IdañoNavigation { get; set; }
+
     public virtual ICollection<Matricula> Matriculas { get; set; } = new List<Matricula>();
 }

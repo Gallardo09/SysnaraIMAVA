@@ -23,6 +23,8 @@ public partial class Año
 
     public virtual ICollection<Nota> Nota { get; set; } = new List<Nota>();
 
+    public virtual ICollection<Padre> Padres { get; set; } = new List<Padre>();
+
     public virtual ICollection<PersonalidadIiip> PersonalidadIiips { get; set; } = new List<PersonalidadIiip>();
 
     public virtual ICollection<PersonalidadIip> PersonalidadIips { get; set; } = new List<PersonalidadIip>();

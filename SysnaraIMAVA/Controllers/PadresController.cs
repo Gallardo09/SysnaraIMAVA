@@ -19,15 +19,73 @@ namespace SysnaraIMAVA.Controllers
         }
 
         // GET: Padres
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? idAño)
         {
-            //return View(await _context.Padres.ToListAsync());
-            //var padres = await _context.Padres.FromSqlRaw("EXEC sp_GetAllPadres").ToListAsync();
-            //return View(padres);
-            var padres = await _context.Set<Padre>().FromSqlRaw("EXEC sp_GetAllPadres").ToListAsync();
-            return View(padres);
+            // Obtener todos los años disponibles para el dropdown
+            var años = await _context.Años.ToListAsync();
+            ViewBag.Años = años;
+
+            // Filtrar padres por año si se seleccionó uno
+            if (idAño.HasValue)
+            {
+                var padres = await _context.Padres
+                    .Include(p => p.IdañoNavigation)
+                    .Where(p => p.Idaño == idAño.Value)
+                    .ToListAsync();
+
+                ViewBag.AñoSeleccionado = idAño.Value;
+                return View(padres);
+            }
+
+            // Si no se seleccionó año, retornar vista sin datos
+            return View(new List<Padre>());
         }
 
+        [HttpGet]
+        public IActionResult ObtenerPadresPorAño(int idAño)
+        {
+            var padres = _context.Padres
+                .Where(p => p.Idaño == idAño)
+                .Select(p => new {
+                    p.Idimvencargado,
+                    p.Idpadre,
+                    p.NombrePadre,
+                    p.Parentesco,
+                    p.Profesion,
+                    p.Genero,
+                    p.TelefonoPadre,
+                    p.CelPadre,
+                    p.Correo,
+                    p.DireccionPadre,
+                    p.Observacion
+                })
+                .ToList();
+
+            return Json(padres);
+        }
+
+        [HttpGet]
+        public IActionResult ObtenerPadresSinAño()
+        {
+            var padres = _context.Padres
+                .Where(p => p.Idaño == null)
+                .Select(p => new {
+                    p.Idimvencargado,
+                    p.Idpadre,
+                    p.NombrePadre,
+                    p.Parentesco,
+                    p.Profesion,
+                    p.Genero,
+                    p.TelefonoPadre,
+                    p.CelPadre,
+                    p.Correo,
+                    p.DireccionPadre,
+                    p.Observacion
+                })
+                .ToList();
+
+            return Json(padres);
+        }
         // GET: Padres/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -49,15 +107,14 @@ namespace SysnaraIMAVA.Controllers
         // GET: Padres/Create
         public IActionResult Create()
         {
+            var años = _context.Años.ToList();
+            ViewBag.Años = años;
             return View();
         }
 
-        // POST: Padres/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Idencargado,Idpadre,NombrePadre,Parentesco,Profesion,Genero,TelefonoPadre,CelPadre,Correo,DireccionPadre,Observacion")] Padre padre)
+        public async Task<IActionResult> Create([Bind("Idencargado,Idpadre,NombrePadre,Parentesco,Profesion,Genero,TelefonoPadre,CelPadre,Correo,DireccionPadre,Observacion,Idaño")] Padre padre)
         {
             if (ModelState.IsValid)
             {
@@ -85,8 +142,6 @@ namespace SysnaraIMAVA.Controllers
         }
 
         // POST: Padres/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Idencargado,Idpadre,NombrePadre,Parentesco,Profesion,Genero,TelefonoPadre,CelPadre,Correo,DireccionPadre,Observacion")] Padre padre)

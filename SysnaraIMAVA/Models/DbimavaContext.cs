@@ -398,6 +398,7 @@ public partial class DbimavaContext : DbContext
             entity.Property(e => e.Genero)
                 .HasMaxLength(15)
                 .IsUnicode(false);
+            entity.Property(e => e.Idaño).HasColumnName("IDAño");
             entity.Property(e => e.Idpadre)
                 .HasMaxLength(15)
                 .IsUnicode(false)
@@ -419,6 +420,10 @@ public partial class DbimavaContext : DbContext
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasColumnName("Telefono_Padre");
+
+            entity.HasOne(d => d.IdañoNavigation).WithMany(p => p.Padres)
+                .HasForeignKey(d => d.Idaño)
+                .HasConstraintName("FK_PADRE_AÑO");
         });
 
         modelBuilder.Entity<Personalidad>(entity =>
