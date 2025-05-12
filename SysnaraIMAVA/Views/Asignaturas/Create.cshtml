@@ -236,32 +236,144 @@
             const nuevaAsignaturaInput = $('#nuevaAsignatura');
 
             // Objeto con las asignaturas por grado
-            const asignaturasPorGrado = {
-                'KINDERGARTEN': ['', ''],
-                'PREPARATORY': [''],
-                'FIRST GRADE': ['EDUCACIÓN FISICA Y DEPORTES - P.E.', 'ESPAÑOL - SPANISH', 'MATEMÁTICAS - MATH', 'FONÉTICA - PHONICS', 'LENGUAJE ESCRITO Y ORAL - LANGUAGE', 'ACTIVIDADES AGROPECUARIAS - AGROPECUARY', 'CALIGRAFÍA - PENMASHIP', 'DIBUJO - DRAWING - (ARTÍSTICA)', 'MÚSICA - MUSIC', 'EDUCACIÓN PARA EL HOGAR - HOME ECONOMICS', 'ARTES MANUALES - MANUAL ARTS', 'BIBLIA - BIBLE', 'CIENCIAS - SCIENCE', 'CIENCIAS SOCIALES (ESPAÑOL) - SOCIAL STUDIES', 'LECTURA - READING', 'ESTUDIOS SOCIALES (INGLÉS) - SOCIAL STUDIES', 'ORTOGRAFÍA - SPELLING'],
-                'SECOND GRADE': ['EDUCACIÓN FISICA Y DEPORTES - P.E.', 'FONÉTICA - PHONICS', 'LENGUAJE ESCRITO Y ORAL - LANGUAGE', 'CALIGRAFÍA - PENMASHIP', 'DIBUJO - DRAWING', 'MÚSICA - MUSIC', 'EDUCACIÓN PARA EL HOGAR - HOME ECONOMICS', 'ARTES MANUALES - MANUAL ARTS', 'LABORATORIO - LABORATORY', 'BIBLIA - BIBLE', 'ESPAÑOL - SPANISH', 'MATEMÁTICAS - MATH', 'CIENCIAS - SCIENCE', 'CIENCIAS SOCIALES (ESPAÑOL) - SOCIAL STUDIES', 'ESTUDIOS SOCIALES (INGLÉS) - SOCIAL STUDIES', 'LECTURA - READING', 'ORTOGRAFÍA - SPELLING'],
-                'THIRD GRADE': ['EDUCACIÓN FISICA Y DEPORTES - P.E.', 'EDUCACIÓN PARA EL HOGAR - HOME ECONOMICS', 'ARTES MANUALES - MANUAL ARTS', 'ESPAÑOL - SPANISH', 'COMPUTACIÓN - COMPUTER', 'ACTIVIDADES AGROPECUARIAS - AGROPECUARY', 'CALIGRAFÍA - PENMASHIP', 'DIBUJO - DRAWING', 'MÚSICA - MUSIC', 'ESTUDIOS SOCIALES (INGLÉS) - SOCIAL STUDIES', 'MATEMÁTICAS - MATH', 'LENGUAJE ESCRITO Y ORAL - LANGUAGE', 'CIENCIAS - SCIENCE', 'FONÉTICA - PHONICS', 'LABORATORIO - LABORATORY', 'ORTOGRAFÍA - SPELLING', 'LECTURA - READING', 'BIBLIA - BIBLE', 'CIENCIAS SOCIALES (ESPAÑOL) - SOCIAL STUDIES'],
-                'FOURTH GRADE': ['EDUCACIÓN FISICA Y DEPORTES - P.E.', 'LENGUAJE ESCRITO Y ORAL - LANGUAGE', 'CALIGRAFÍA - PENMASHIP', 'DIBUJO - DRAWING', 'MÚSICA - MUSIC', 'EDUCACIÓN PARA EL HOGAR - HOME ECONOMICS', 'ARTES MANUALES - MANUAL ARTS', 'ACTIVIDADES AGROPECUARIAS - AGROPECUARY', 'BIBLIA - BIBLE', 'CÍVICA - CIVIC', 'ESPAÑOL - SPANISH', 'MATEMÁTICAS - MATH', 'CIENCIAS - SCIENCE', 'CIENCIAS SOCIALES (ESPAÑOL) - SOCIAL STUDIES', 'INGLÉS (PRONUNCIACIÓN) - SPELLING', 'ESTUDIOS SOCIALES (INGLÉS) - SOCIAL STUDIES', 'COMPUTACIÓN - COMPUTER', 'LECTURA - READING'],
-                'FIFTH GRADE': ['ORTOGRAFÍA - SPELLING', 'ESTUDIOS SOCIALES (INGLÉS) - SOCIAL STUDIES', 'EDUCACIÓN PARA EL HOGAR - HOME ECONOMICS', 'ARTES MANUALES - MANUAL ARTS', 'LABORATORIO - LABORATORY', 'EDUCACIÓN FISICA Y DEPORTES - P.E.', 'MATEMÁTICAS - MATH', 'LECTURA - READING', 'CIENCIAS - SCIENCE', 'LENGUAJE ESCRITO Y ORAL - LANGUAGE', 'COMPUTACIÓN - COMPUTER', 'ESPAÑOL - SPANISH', 'CIENCIAS SOCIALES (ESPAÑOL) -SOCIAL STUDIES', 'DIBUJO - DRAWING', 'CALIGRAFÍA - PENMASHIP', 'CÍVICA - CIVIC', 'MÚSICA - MUSIC', 'BIBLIA - BIBLE', 'ACTIVIDADES AGROPECUARIAS - AGROPECUARY'],
-                'SIXTH GRADE': ['EDUCACIÓN FISICA Y DEPORTES - P.E.', 'CALIGRAFÍA - PENMASHIP', 'DIBUJO - DRAWING', 'MÚSICA - MUSIC', 'EDUCACIÓN PARA EL HOGAR - HOME ECONOMICS', 'ARTES MANUALES - MANUAL ARTS', 'ACTIVIDADES AGROPECUARIAS - AGROPECUARY', 'BIBLIA - BIBLE', 'CÍVICA - CIVIC', 'COMPUTACIÓN - COMPUTER', 'ESPAÑOL - SPANISH', 'ESTUDIOS SOCIALES (INGLÉS) -SOCIAL STUDIES', 'ORTOGRAFÍA - SPELLING', 'MATEMÁTICAS - MATH', 'CIENCIAS - SCIENCE', 'CIENCIAS SOCIALES (ESPAÑOL)- SOCIAL STUDIES', 'LECTURA - READING', 'LABORATORIO - LABORATORY', 'LENGUAJE ESCRITO Y ORAL - LANGUAGE'],
-                'SEVENTH GRADE': ['EDUCACIÓN ARTÍSTICA - EDUCT ARTISTICA', 'BIBLIA - BIBLE', 'ORTOGRAFÍA - PENMASHIP', 'EDUCACIÓN CÍVICA - CIVIC EDUCATION', 'ESPAÑOL - SPANISH', 'ESTUDIOS SOCIALES (ESPAÑOL) - SOCIAL STUDIES', 'GRAMÁTICA - GRAMMAR', 'INGLÉS (PRONUNCIACIÓN) - READING', 'CIENCIAS - SCIENCE', 'ESTUDIOS SOCIALES (INGLÉS) - SOCIAL STUDIES', 'EDUCACIÓN FISICA Y DEPORTES - P.E.', 'TECNOLOGÍA - TECNOLOGY', 'INGLÉS (PRONUNCIACIÓN) - SPELLING'],
-                'EIGHTH GRADE': ['GRAMÁTICA - GRAMMAR', 'ESTUDIOS SOCIALES (INGLÉS) - SOCIAL ESTUDIES', 'TECNOLOGÍA - TECNOLOGY', 'EDUCACIÓN ARTÍSTICA - EDUCT ARTISTICA', 'CIENCIAS NATURALES - SCIENCE', 'INGLÉS (PRONUNCIACIÓN) - SPELLING', 'EDUCACIÓN CÍVICA - CIVIC EDUCATION', 'ORTOGRAFÍA - PENMASHIP', 'INGLÉS (PRONUNCIACIÓN) - READING', 'ESPAÑOL - SPANISH', 'ESTUDIOS SOCIALES (ESPAÑOL) - SOCIAL STUDIES', 'MATEMÁTICAS - MATH', 'BIBLIA - BIBLE'],
-                'NINTH GRADE': ['GRAMÁTICA - GRAMMAR', 'BIBLIA - BIBLE', 'TECNOLOGÍA - TECNOLOGY', 'EDUCACIÓN CÍVICA - CIVIC EDUCATION', 'MATEMÁTICAS - MATH', 'INGLÉS (PRONUNCIACIÓN) - READING', 'ESTUDIOS SOCIALES (ESPAÑOL) - SOCIAL STUDIES', 'EDUCACIÓN FÍSICA Y DEPORTES - P.E.', 'CIENCIAS NATURALES - SCIENCE', 'ESTUDIOS SOCIALES (INGLÉS) - SOCIAL ESTUDIES', 'ESPAÑOL - SPANISH', 'ORTOGRAFÍA - PENMASHIP', 'INGLÉS (PRONUNCIACIÓN) - SPELLING'],
-                'TENTH GRADE': ['ESPAÑOL I - SPANISH I', 'SOCIOLOGÍA - SOCIOLOGY', 'HISTORIA DE HONDURAS - HONDURAS HISTORY', 'ORTOGRAFÍA - PENMASHIP', 'PSICOLOGÍA - PSYCHOLOGY', 'INFORMÁTICA - INFORMATIC', 'BIOLOGÍA I - BIOLOGY I', 'GRAMÁTICA (INGLÉS I) - GRAMMAR', 'INGLÉS I (PRONUNCIACIÓN) - SPELLING', 'INGLÉS I (LECTURA) - READING', 'GEOGRAFÍA - GEOGRAPHY', 'MATEMÁTICA I - MATH I', 'FÍSICA I - PHYSICS I', 'QUÍMICA I - CHEMISTRY I', 'EDUCACIÓN FÍSICA Y DEPORTES - P.E.', 'BIBLIA - BIBLE'],
-                'ELEVENTH GRADE': ['FÍSICA APLICADA - APPLIED PHYSICS', 'QUÍMICA III - CHEMISTRY III', 'ORTOGRAFÍA - PENMASHIP', 'COMMUNICATION TECHNOLOGY', 'DIBUJO TÉCNICO - TECHNİCAL DRAWING', 'ANTROPOLOGÍA - ANTHROPOLOGY', 'BIOLOGÍA HUMANA - HUMAN BIOLOGY', 'FILOSOFÍA - PHILOSOPHY', 'ESPAÑOL II - SPANISH II', 'INGLÉS III (GRAMÁTICA) - GRAMMAR', 'INGLÉS III (LECTURA) - READING', 'APPRECIATION', 'INGLÉS III (PRONUNCIACIÓN) - SPELLING', 'MATEMÁTICA III - MATH III', 'HISTORIA UNIVERSAL', 'BIBLIA - BELE', 'FÍSICA II - PHYSIC II', 'ETIQUETA - LABEL', 'ESPAÑOL - SPANISH', 'APRECIACIÓN ARTÍSTICA - ARTISTIC APPRECIATION', 'MATEMÁTICA III (APLICADA) - APPLIED MATHEMATICS', 'DIBUJO TÉCNICO - TECHNICAL DRAWING', 'LEGISLATION', 'PROGRAMACIÓN - PROGRAMMING', 'ANÁLISIS Y DISEÑO I - ANALYSIS AND DESIGN I', 'COMPUTER LAB', 'EDUCACIÓN FISICA Y DEPORTES - P.E.'],
-                'TWELVE GRADE': ['REDES INFORMÁTICAS - COMPUTER NETWORKS', 'GESTIÓN EMPRESARIAL ORIENTADO A LA INFORMÁTICA', 'PROGRAMACIÓN - PROGRAMMING', 'PRODUCCIONES DIGITALES', 'DESARROLLO WEB - WEB DEVELOPMENT', 'MANTENIMIENTO Y REPARACIÓN - MAINTENANCE AND REPAIR', 'GRAMÁTICA - GRAMMAR', 'LABORATORIO DE INFORMÁTICA - COMPUTER LAB', 'ORTOGRAFÍA - PENMASHIP', 'INGLÉS (PRONUNCIACIÓN) - SPELLING', 'ORIENTACIÓN A LA EDUCACIÓN SUPERIOR - ORIENTATION TO HIGHER EDUCATION', 'INGLÉS (LECTURA) - READING', 'BIBLIA - BIBLE'],
-            };
+        const asignaturasPorGrado = {
+            'SÉPTIMO GRADO': ['ESPAÑOL', 'INGLÉS', 'EDUCACIÓN ARTÍSTICA', 'MATEMÁTICA', 'CIENCIAS NATURALES', 'ESTUDIOS SOCIALES', 'EDUCACIÓN CÍVICA', 'EDUCACIÓN FÍSICA Y DEPORTES', 'TECNOLOGÍA'],
+            'OCTAVO GRADO': ['ESPAÑOL', 'INGLÉS', 'EDUCACIÓN ARTÍSTICA', 'MATEMÁTICAS', 'CIENCIAS NATURALES', 'ESTUDIOS SOCIALES', 'EDUCACIÓN CÍVICA', 'EDUCACIÓN FÍSICA Y DEPORTES', 'TECNOLOGÍA'],
+            'NOVENO GRADO': ['ESPAÑOL', 'INGLÉS', 'EDUCACIÓN ARTÍSTICA', 'MATEMÁTICA', 'CIENCIAS NATURALES', 'ESTUDIOS SOCIALES', 'EDUCACIÓN CÍVICA', 'EDUCACIÓN FÍSICA Y DEPORTES', 'TECNOLOGÍA'],
+            'DÉCIMO GRADO': ['ESPAÑOL', 'FÍSICA', 'QUÍMICA', 'BIOLOGÍA', 'HISTORIA DE HONDURAS', 'SOCIOLOGÍA', 'INGLÉS', 'INFORMÁTICA', 'FUNDAMENTOS DE PSICOLOGÍA', 'EDUCACIÓN FÍSICA Y DEPORTES'],
+            'UNDÉCIMO GRADO': {
+                'BACHILLERATO TÉCNICO PROFESIONAL EN INFORMÁTICA': [
+                    'ANÁLISIS Y DISEÑO DE SISTEMAS',
+                    'EDUCACIÓN Y APRECIACIÓN ARTÍSTICA',
+                    'ESPAÑOL',
+                    'FILOSOFÍA ',
+                    'FÍSICA',
+                    'INFORMÁTICA APLICADA',
+                    'INGLÉS TÉCNICO ',
+                    'LEGISLACIÓN APLICADA A LA INFORMÁTICA ',
+                    'MATEMÁTICA',
+                    'OFIMÁTICA',
+                    'PROGRAMACIÓN I'
+                ],
+                'BACHILLERATO TÉCNICO PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS': [
+                    'MATEMÁTICA FINANCIERA',
+                    'ESPAÑOL II',
+                    'EDUCACIÓN Y APRECIACIÓN ARTÍSTICA',
+                    'INGLÉS TÉCNICO',
+                    'FILOSOFÍA',
+                    'LEGISLACIÓN MERCANTIL',
+                    'CULTURA EMPRESARIAL ',
+                    'ESTADÍSTICA PARA ADMINISTRADORES',
+                    'CONTABILIDAD BÁSICA',
+                    'ADMINISTRACIÓN ORGANIZACIONAL',
+                    'INVESTIGACIÓN Y FORMULACIÓN DE PROYECTO EMPRESARIAL',
+                    'INFORMÁTICA EMPRESARIAL'
+                ],
+                'BACHILLERATO TÉCNICO PROFESIONAL EN ADMINISTRACIÓN HOTELERA': [
+                    'EDUCACIÓN Y APRECIACIÓN ARTÍSTICA',
+                    'ESPAÑOL',
+                    'FILOSOFÍA',
+                    'GESTIÓN DE HABITACIONES Y LAVANDERÍA',
+                    'GESTIÓN EMPRESARIAL',
+                    'INGLÉS TÉCNICO',
+                    'INTRODUCCIÓN AL TURISMO',
+                    'LEGISLACIÓN TURÍSTICA',
+                    'MATEMÁTICA FINANCIERA',
+                    'SEGURIDAD LABORAL EN EMPRESAS HOTELERAS',
+                    'TÉCNICAS DE RECEPCIÓN Y CONSERJERÍA',
+                    'VENTA Y MANEJO EN CAJA EN HOTELERÍA'
+                ],
+                'BACHILLERATO PROFESIONAL EN CIENCIAS Y HUMANIDADES': [
+                    'MATEMÁTICA II',
+                    'ESPAÑOL II',
+                    'FÍSICA II',
+                    'QUÍMICA II',
+                    'BIOLOGÍA II',
+                    'INGLÉS II',
+                    'INTRODUCCIÓN A LA ECONOMÍA',
+                    'ANTROPOLOGÍA',
+                    'HISTORIA UNIVERSAL',
+                    'FILOSOFÍA',
+                    'EDUACIÓN Y APRECIACIÓN ARTÍSTICA'
+                ],
+                'BACHILLERATO PROFESIONAL EN CIENCIAS Y HUMANIDADES (ACELERADO)': [
+                    'MATEMÁTICA II',
+                    'ESPAÑOL II',
+                    'FÍSICA II',
+                    'QUÍMICA II',
+                    'BIOLOGÍA II',
+                    'INGLÉS II',
+                    'INTRODUCCIÓN A LA ECONOMÍA',
+                    'ANTROPOLOGÍA',
+                    'HISTORIA UNIVERSAL',
+                    'FILOSOFÍA',
+                    'EDUACIÓN Y APRECIACIÓN ARTÍSTICA'
+                ]
+            },
+            'DUODÉCIMO GRADO': {
+                'BACHILLERATO TÉCNICO PROFESIONAL EN INFORMÁTICA': [
+                    'DESARROLLO WEB',
+                    'GESTIÓN EMPRESARIAL ORIENTADA A INFORMÁTICA',
+                    'MANTENIMIENTO Y REPACIÓN',
+                    'PRODUCCIONES DIGITALES',
+                    'PROGRAMACIÓN II',
+                    'REDES INFORMÁTICAS'
+                ],
+                'BACHILLERATO TÉCNICO PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS': [
+                    'TALENTO HUMANO',
+                    'MERCADOTECNIA EMPRESARIAL',
+                    'GERENCIA DE PRODUCCIÓN Y OPERACIONES',
+                    'AUDITORÍA',
+                    'ADMINISTRACIÓN FINANCIERA EMPRESARIAL',
+                    'INFORMÁTICA CONTABLE',
+                    'CONSTABILIDAD DE COSTOS',
+                    'CONSTABILIDAD DE SOCIEDADES',
+                    'PLANEACIÓN ESTRATÉGICA Y VENTA'
+                ],
+                'BACHILLERATO TÉCNICO PROFESIONAL EN ADMINISTRACIÓN HOTELERA': [
+                    'INTRODUCCIÓN AL ÁREA DE ALIMENTOS Y BEBIDAS',
+                    'COCINA BÁSICA',
+                    'PREPARACIÓN DE ALIMENTOS PARA CÓCTELES',
+                    'PLANIFICACIÓN Y CONTROL DE ALIMENTOS Y BEBIDAS',
+                    'ELABORACIÓN DE MENÚ Y VINO',
+                    'TÉCNICAS DE SERVICIO EN RESTAURANTE',
+                    'TÉCNICAS DE SERVICIO EN BAR',
+                    'ORGANIZACIÓN Y EJECUCIÓN DE EVENTOS',
+                    'FUNDAMENTOS DE ADMINISTRACIÓN HOTELERA',
+                    'SISTEMAS DE COMUNICACIONES TURÍSTICAS'
+                ]
+            }
+        };
 
             // Función para cargar asignaturas según el grado
             function cargarAsignaturas(grado) {
                 asignaturaSelect.empty();
                 asignaturaSelect.append($('<option></option>').val('').text('Seleccione una asignatura'));
-                if (asignaturasPorGrado[grado]) {
+
+                // Si el grado tiene carreras (UNDÉCIMO y DUODÉCIMO)
+                if (typeof asignaturasPorGrado[grado] === 'object' && !Array.isArray(asignaturasPorGrado[grado])) {
+                    // Primero mostramos las carreras
+                    const carreras = Object.keys(asignaturasPorGrado[grado]);
+                    carreras.forEach(carrera => {
+                        asignaturaSelect.append($('<option></option>')
+                            .val(carrera)
+                            .text(carrera)
+                            .addClass('carrera-option')
+                            .prop('disabled', true));
+
+                        // Luego las asignaturas de cada carrera
+                        asignaturasPorGrado[grado][carrera].forEach(asignatura => {
+                            asignaturaSelect.append($('<option></option>').val(asignatura).text(asignatura));
+                        });
+                    });
+                }
+                // Para grados sin carreras
+                else if (Array.isArray(asignaturasPorGrado[grado])) {
                     asignaturasPorGrado[grado].forEach(asignatura => {
                         asignaturaSelect.append($('<option></option>').val(asignatura).text(asignatura));
                     });
                 }
+
                 asignaturaSelect.append($('<option></option>').val('NUEVA').text('Agregar nueva asignatura'));
             }
 
@@ -280,10 +392,17 @@
 
             // Manejar la selección de asignatura
             asignaturaSelect.change(function () {
-                if ($(this).val() === 'NUEVA') {
+                const selectedValue = $(this).val();
+
+                if (selectedValue === 'NUEVA') {
                     nuevaAsignaturaInput.show();
                 } else {
-                    nuevaAsignaturaInput.hide();
+                    // Verificar si se seleccionó una carrera (que está deshabilitada)
+                    if ($(this).find('option:selected').hasClass('carrera-option')) {
+                        $(this).val(''); // No permitir seleccionar la carrera
+                    } else {
+                        nuevaAsignaturaInput.hide();
+                    }
                 }
             });
 
@@ -333,5 +452,11 @@
                 background-color: #545b62;
                 border-color: #4e555b;
             }
+
+        .carrera-option {
+            font-weight: bold;
+            background-color: #f0f0f0;
+            color: #333;
+        }
     </style>
 }
