@@ -4,431 +4,563 @@
     ViewData["Title"] = "Crear Matricula";
 }
 
-<h2 class="text-center mb-4" style="font-family: 'Russo One', sans-serif;">Matricular Estudiante</h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SysnaraIMAVA</title>
 
-<div class="container">
-    <form asp-action="Create" enctype="multipart/form-data">
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Datos del Padre o Encargado</h5>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <!-- Agrega esto en el head -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css">
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .card {
+            border-radius: 0.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            border: none;
+        }
+
+        .card-header {
+            border-radius: 0.5rem 0.5rem 0 0 !important;
+            padding: 0.75rem 1.25rem;
+        }
+
+        .form-control, .form-select {
+            font-size: 0.875rem;
+            border-radius: 0.25rem;
+        }
+
+        .form-label {
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+        }
+
+        .accordion-button:not(.collapsed) {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        .accordion-button:focus {
+            box-shadow: none;
+            border-color: rgba(0,0,0,.125);
+        }
+
+        .btn-primary {
+            background-color: #4e73df;
+            border-color: #4e73df;
+        }
+
+            .btn-primary:hover {
+                background-color: #3a5bbf;
+                border-color: #3a5bbf;
+            }
+
+        .toast-header {
+            background-color: #4e73df;
+            color: white;
+        }
+
+        .title-font {
+            font-family: 'Russo One', sans-serif;
+        }
+
+        .small-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .input-group-text {
+            font-size: 0.875rem;
+        }
+
+        .ui-autocomplete {
+            max-height: 200px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 0;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        }
+
+            .ui-autocomplete li {
+                padding: 8px 12px;
+                border-bottom: 1px solid #eee;
+                cursor: pointer;
+            }
+
+                .ui-autocomplete li:hover {
+                    background-color: #f5f5f5;
+                }
+
+                .ui-autocomplete li div {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-3">
+        <div class="card border-0 shadow">
+            <div class="card-header bg-gradient-primary text-white">
+                <h3 class="mb-0 title-font"><i class="fas fa-user-graduate me-2"></i>Matricular Estudiante</h3>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="form-group col-md-3">
-                        <label asp-for="Idpadre" class="control-label">Identidad del Padre</label>
-                        <input asp-for="Idpadre" class="form-control" id="Idpadre" />
-                        <span asp-validation-for="Idpadre" class="text-danger"></span>
+
+            <div class="card-body p-4">
+                <form asp-action="Create" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <!-- Sección Padre/Encargado - Acordeón -->
+                    <div class="accordion mb-4" id="accordionPadre">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePadre">
+                                    <i class="fas fa-user-tie me-2"></i>Datos del Padre/Encargado
+                                </button>
+                            </h2>
+                            <div id="collapsePadre" class="accordion-collapse collapse" data-bs-parent="#accordionPadre">
+                                <div class="accordion-body p-3">
+                                    <div class="row g-3">
+                                        <div class="col-md-3">
+                                            <label asp-for="Idpadre" class="form-label small-label">Identidad del Padre</label>
+                                            <input asp-for="Idpadre" class="form-control" id="Idpadre" placeholder="Buscar por identidad o nombre" />
+                                            <input type="hidden" id="IdpadreHidden" name="Idpadre" />
+                                            <span asp-validation-for="Idpadre" class="text-danger small"></span>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label asp-for="NombrePadre" class="form-label small-label">Nombre</label>
+                                            <input asp-for="NombrePadre" class="form-control" id="NombrePadre" readonly />
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <label asp-for="Parentesco" class="form-label small-label">Parentesco</label>
+                                            <input asp-for="Parentesco" class="form-control" id="Parentesco" readonly />
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <label asp-for="TelefonoPadre" class="form-label small-label">Teléfono</label>
+                                            <input asp-for="TelefonoPadre" class="form-control" id="TelefonoPadre" readonly />
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <label asp-for="CelPadre" class="form-label small-label">Celular</label>
+                                            <input asp-for="CelPadre" class="form-control" id="CelPadre" readonly />
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label asp-for="DireccionPadre" class="form-label small-label">Dirección</label>
+                                            <input asp-for="DireccionPadre" class="form-control" id="DireccionPadre" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group col-md-3">
-                        <label asp-for="NombrePadre" class="control-label">Nombre del Padre</label>
-                        <input asp-for="NombrePadre" class="form-control" id="NombrePadre" readonly />
+
+                    <!-- Sección Estudiante -->
+                    <div class="card border mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="fas fa-user-graduate me-2"></i>Datos del Estudiante</h5>
+                        </div>
+                        <div class="card-body p-3">
+                            <div class="row g-3">
+                                <div class="col-md-2">
+                                    <label asp-for="Idaño" class="form-label small-label">Año</label>
+                                    <select asp-for="Idaño" id="Idaño" class="form-select" asp-items="ViewBag.Idaño"></select>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="Idestudiante" class="form-label small-label">Identidad</label>
+                                    <div class="input-group input-group-sm">
+                                        <input asp-for="Idestudiante" class="form-control" id="Ididentidad" onkeydown="buscarEstudiante(event)" placeholder="Ingrese identidad" />
+                                    </div>
+                                    <span asp-validation-for="Idestudiante" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="NombreEstudiante" class="form-label small-label">Nombre Completo</label>
+                                    <input asp-for="NombreEstudiante" id="NombreEstudiante" class="form-control" />
+                                    <span asp-validation-for="NombreEstudiante" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="Nacionalidad" class="form-label small-label">Nacionalidad</label>
+                                    <select asp-for="Nacionalidad" class="form-select">
+                                        <option value="HONDUREÑO(A)">HONDUREÑO(A)</option>
+                                        <option value="EXTRANJERO(A)">EXTRANJERO(A)</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="FechaNacimiento" class="form-label small-label">Fecha Nacimiento</label>
+                                    <input type="date" asp-for="FechaNacimiento" id="FechaNacimiento" class="form-control" />
+                                    <span asp-validation-for="FechaNacimiento" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label asp-for="LugarNacimiento" class="form-label small-label">Lugar Nacimiento</label>
+                                    <input asp-for="LugarNacimiento" class="form-control" />
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="Genero" class="form-label small-label">Género</label>
+                                    <select asp-for="Genero" class="form-select">
+                                        <option value=""></option>
+                                        <option value="FEMENINO">FEMENINO</option>
+                                        <option value="MASCULINO">MASCULINO</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="TipoSangre" class="form-label small-label">Tipo Sangre</label>
+                                    <select asp-for="TipoSangre" class="form-select">
+                                        <option value=""></option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="Alergia" class="form-label small-label">Alergias</label>
+                                    <select asp-for="Alergia" class="form-select">
+                                        <option value="NO">NO</option>
+                                        <option value="SI">SI</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-1">
+                                    <label asp-for="Edad" class="form-label small-label">Edad</label>
+                                    <input type="number" asp-for="Edad" id="Edad" readonly class="form-control" />
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="TelefonoEstudiante" class="form-label small-label">Teléfono</label>
+                                    <input asp-for="TelefonoEstudiante" class="form-control" placeholder="(+504)2525-2525" />
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="CelularEstudiante" class="form-label small-label">Celular</label>
+                                    <input asp-for="CelularEstudiante" class="form-control" placeholder="(+504)9999-9999" />
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label asp-for="Correo" class="form-label small-label">Correo</label>
+                                    <input type="email" asp-for="Correo" class="form-control" />
+                                </div>
+
+                                <div class="col-md-5">
+                                    <label asp-for="Direccion" class="form-label small-label">Dirección</label>
+                                    <input asp-for="Direccion" class="form-control" />
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="Estado" class="form-label small-label">Estado</label>
+                                    <select asp-for="Estado" class="form-select">
+                                        <option value=""></option>
+                                        <option value="ACTIVO">ACTIVO</option>
+                                        <option value="INACTIVO">INACTIVO</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="VacunasCovid" class="form-label small-label">Vacunas Covid</label>
+                                    <input type="number" asp-for="VacunasCovid" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group col-md-2">
-                        <label asp-for="Parentesco" class="control-label">Parentesco</label>
-                        <input asp-for="Parentesco" class="form-control" id="Parentesco" readonly />
+
+                    <!-- Sección Académica -->
+                    <div class="card border mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="fas fa-graduation-cap me-2"></i>Información Académica</h5>
+                        </div>
+                        <div class="card-body p-3">
+                            <div class="row g-3">
+                                <div class="col-md-2">
+                                    <label asp-for="Idgrado" class="form-label small-label">ID Grado</label>
+                                    <select asp-for="Idgrado" id="Idgrado" class="form-select">
+                                        <option value="">Seleccione</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="Grado" class="form-label small-label">Grado</label>
+                                    <input asp-for="Grado" class="form-control" id="Grado" readonly />
+                                </div>
+
+                                <div class="col-md-1">
+                                    <label asp-for="Seccion" class="form-label small-label">Sección</label>
+                                    <input asp-for="Seccion" class="form-control" id="Seccion" readonly />
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="Jornada" class="form-label small-label">Jornada</label>
+                                    <input asp-for="Jornada" class="form-control" id="Jornada" readonly />
+                                </div>
+
+                                <div class="col-md-5">
+                                    <label asp-for="NivelDescripcion" class="form-label small-label">Nivel Académico</label>
+                                    <input asp-for="NivelDescripcion" class="form-control" id="NivelDescripcion" readonly />
+                                </div>
+
+                                <div class="col-md-5">
+                                    <label asp-for="Proviene" class="form-label small-label">Institución de Procedencia</label>
+                                    <input asp-for="Proviene" class="form-control" />
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="Beca" class="form-label small-label">Beca</label>
+                                    <select asp-for="Beca" class="form-select">
+                                        <option value="SIN BECA">SIN BECA</option>
+                                        <option value="MEDIA BECA">MEDIA BECA</option>
+                                        <option value="BECA COMPLETA">BECA COMPLETA</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="RepiteAño" class="form-label small-label">Repitente</label>
+                                    <select asp-for="RepiteAño" class="form-select">
+                                        <option value="NO">NO</option>
+                                        <option value="SI">SI</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label asp-for="EstadoMatricula" class="form-label small-label">Estado de Ingreso</label>
+                                    <select asp-for="EstadoMatricula" class="form-select">
+                                        <option value="REINGRESO">REINGRESO</option>
+                                        <option value="PRIMER INGRESO">PRIMER INGRESO</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="Observacion" class="form-label small-label">Observación</label>
+                                    <input asp-for="Observacion" class="form-control" />
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="FechaIngreso" class="form-label small-label">Fecha Ingreso</label>
+                                    <input type="date" asp-for="FechaIngreso" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group col-md-2">
-                        <label asp-for="TelefonoPadre" class="control-label">Teléfono</label>
-                        <input asp-for="TelefonoPadre" class="form-control" id="TelefonoPadre" readonly />
+
+                    <!-- Botones de Acción -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a class="btn btn-outline-secondary" asp-action="Index">
+                            <i class="fas fa-arrow-left me-2"></i>Regresar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Guardar Matrícula
+                        </button>
                     </div>
-                    <div class="form-group col-md-2">
-                        <label asp-for="CelPadre" class="control-label">Celular</label>
-                        <input asp-for="CelPadre" class="form-control" id="CelPadre" readonly />
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="form-group col-md-12">
-                        <label asp-for="DireccionPadre" class="control-label">Dirección del Padre</label>
-                        <input asp-for="DireccionPadre" class="form-control" id="DireccionPadre" readonly />
-                    </div>
-                </div>
+                </form>
             </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header bg-success text-white">
-                <h5 class="mb-0">Datos del Estudiante</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="form-group col-md-2">
-                        <label asp-for="Idaño" class="control-label">Año</label>
-                        <select asp-for="Idaño" id="Idaño" class="form-control" asp-items="ViewBag.Idaño"></select>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label asp-for="Idestudiante" class="control-label">Identidad</label>
-                        <input asp-for="Idestudiante" class="form-control" id="Ididentidad" onkeydown="buscarEstudiante(event)" />
-                        <span asp-validation-for="Idestudiante" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label asp-for="NombreEstudiante" class="control-label">Nombre del Estudiante</label>
-                        <input asp-for="NombreEstudiante" id="NombreEstudiante" class="form-control" />
-                        <span asp-validation-for="NombreEstudiante" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label asp-for="Nacionalidad" class="control-label">Nacionalidad</label>
-                        <select asp-for="Nacionalidad" class="form-control">
-                            <option value="HONDUREÑO(A)">HONDUREÑO(A)</option>
-                            <option value="EXTRANJERO(A)">EXTRANJERO(A)</option>
-                        </select>
-                        <span asp-validation-for="Nacionalidad" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label asp-for="FechaNacimiento" class="control-label">Fecha de Nacimiento</label>
-                        <input type="date" asp-for="FechaNacimiento" id="FechaNacimiento" class="form-control" />
-                        <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="form-group col-md-3">
-                        <label asp-for="LugarNacimiento" class="control-label">Lugar de Nacimiento</label>
-                        <input asp-for="LugarNacimiento" class="form-control" />
-                        <span asp-validation-for="LugarNacimiento" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label asp-for="Genero" class="control-label">Género</label>
-                        <select asp-for="Genero" class="form-control">
-                            <option value=""></option>
-                            <option value="FEMENINO">FEMENINO</option>
-                            <option value="MASCULINO">MASCULINO</option>
-                        </select>
-                        <span asp-validation-for="Genero" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label asp-for="TipoSangre" class="control-label">Tipo Sangre</label>
-                        <select asp-for="TipoSangre" class="form-control">
-                            <option value=""></option>
-                            <option value="A+">A+</option>
-                            <option value="A-">A-</option>
-                            <option value="B+">B+</option>
-                            <option value="B-">B-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="AB-">AB-</option>
-                            <option value="O+">O+</option>
-                            <option value="O-">O-</option>
-                        </select>
-                        <span asp-validation-for="TipoSangre" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label asp-for="Alergia" class="control-label">Alergias</label>
-                        <select asp-for="Alergia" class="form-control">
-                            <option value="NO">NO</option>
-                            <option value="SI">SI</option>
-                        </select>
-                        <span asp-validation-for="Alergia" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-1">
-                        <label asp-for="Edad" class="control-label">Edad</label>
-                        <input type="number" asp-for="Edad" id="Edad" readonly class="form-control" />
-                        <span asp-validation-for="Edad" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label asp-for="TelefonoEstudiante" class="control-label">Teléfono</label>
-                        <input asp-for="TelefonoEstudiante" class="form-control" placeholder="(+504)2525-2525" />
-                        <span asp-validation-for="TelefonoEstudiante" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="form-group col-md-2">
-                        <label asp-for="CelularEstudiante" class="control-label">Celular</label>
-                        <input asp-for="CelularEstudiante" class="form-control" placeholder="(+504)9999-9999" />
-                        <span asp-validation-for="CelularEstudiante" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label asp-for="Correo" class="control-label">Correo</label>
-                        <input type="email" asp-for="Correo" class="form-control" />
-                        <span asp-validation-for="Correo" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-5">
-                        <label asp-for="Direccion" class="control-label">Dirección del Estudiante</label>
-                        <input asp-for="Direccion" class="form-control" />
-                        <span asp-validation-for="Direccion" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label asp-for="Estado" class="control-label">Estado</label>
-                        <select asp-for="Estado" class="form-control">
-                            <option value=""></option>
-                            <option value="ACTIVO">ACTIVO</option>
-                            <option value="INACTIVO">INACTIVO</option>
-                        </select>
-                        <span asp-validation-for="Estado" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="form-group col-md-2">
-                        <label asp-for="VacunasCovid" class="control-label">Vacunas Covid</label>
-                        <input type="number" asp-for="VacunasCovid" class="form-control" />
-                        <span asp-validation-for="VacunasCovid" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header bg-info text-white">
-                <h5 class="mb-0">Información Académica</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="form-group col-md-2">
-                        <label asp-for="Idgrado" class="control-label">ID Grado</label>
-                        <select asp-for="Idgrado" id="Idgrado" class="form-control">
-                            <option value="">Seleccione un grado</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label asp-for="Grado" class="control-label">Grado</label>
-                        <input asp-for="Grado" class="form-control" id="Grado" readonly />
-                        <span asp-validation-for="Grado" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-1">
-                        <label asp-for="Seccion" class="control-label">Sección</label>
-                        <input asp-for="Seccion" class="form-control" id="Seccion" readonly />
-                        <span asp-validation-for="Seccion" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label asp-for="Jornada" class="control-label">Jornada</label>
-                        <input asp-for="Jornada" class="form-control" id="Jornada" readonly />
-                        <span asp-validation-for="Jornada" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-5">
-                        <label asp-for="NivelDescripcion" class="control-label">Nivel Académico Escolar</label>
-                        <input asp-for="NivelDescripcion" class="form-control" id="NivelDescripcion" readonly />
-                        <span asp-validation-for="NivelDescripcion" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="form-group col-md-5">
-                        <label asp-for="Proviene" class="control-label">Institución de donde proviene el estudiante</label>
-                        <input asp-for="Proviene" class="form-control" />
-                        <span asp-validation-for="Proviene" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label asp-for="Beca" class="control-label">Beca</label>
-                        <select asp-for="Beca" class="form-control">
-                            <option value="SIN BECA">SIN BECA</option>
-                            <option value="MEDIA BECA">MEDIA BECA</option>
-                            <option value="BECA COMPLETA">BECA COMPLETA</option>
-                        </select>
-                        <span asp-validation-for="Beca" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label asp-for="RepiteAño" class="control-label">Repitente</label>
-                        <select asp-for="RepiteAño" class="form-control">
-                            <option value="NO">NO</option>
-                            <option value="SI">SI</option>
-                        </select>
-                        <span asp-validation-for="RepiteAño" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label asp-for="EstadoMatricula" class="control-label">Estado de Ingreso</label>
-                        <select asp-for="EstadoMatricula" class="form-control">
-                            <option value="REINGRESO">REINGRESO</option>
-                            <option value="PRIMER INGRESO">PRIMER INGRESO</option>
-                        </select>
-                        <span asp-validation-for="EstadoMatricula" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="form-group col-md-4">
-                        <label asp-for="Observacion" class="control-label">Observación</label>
-                        <input asp-for="Observacion" class="form-control" />
-                        <span asp-validation-for="Observacion" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label asp-for="FechaIngreso" class="control-label">Fecha de Ingreso</label>
-                        <input type="date" asp-for="FechaIngreso" class="form-control" />
-                        <span asp-validation-for="FechaIngreso" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group text-center mt-4">
-            <button type="submit" class="btn btn-primary btn-lg">Matricular</button>
-            <a class="btn btn-warning btn-lg ml-2" asp-action="Index">Regresar a la Lista</a>
-        </div>
-    </form>
-</div>
-
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-    <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <strong class="me-auto">Notificación</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-            La identidad no está registrada. Puede continuar con la matrícula.
         </div>
     </div>
-</div>
 
-@section Scripts {
+    <!-- Toast Notificación -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-warning text-white">
+                <strong class="me-auto">Notificación</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                La identidad no está registrada. Puede continuar con la matrícula.
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Validation Scripts -->
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
     <script>
-        $(document).ready(function () {
-            $('#Idpadre').on('keydown', function (e) {
+        $(document).ready(function() {
+            // Configurar evento Enter para buscar padre
+            $('#Idpadre').on('keydown', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     buscarPadre();
                 }
             });
 
-            function buscarPadre() {
-                var idpadre = $('#Idpadre').val();
+            // Calcular edad cuando cambia la fecha de nacimiento
+            $('#FechaNacimiento').change(function() {
+                calcularEdad();
+            });
 
-                $.get('@Url.Action("GetPadreInfo", "Matricula")', { idpadre: idpadre })
-                    .done(function (result) {
-                        if (result.success) {
-                            $('#NombrePadre').val(result.nombrePadre);
-                            $('#Parentesco').val(result.parentesco);
-                            $('#TelefonoPadre').val(result.telefonoPadre);
-                            $('#CelPadre').val(result.celPadre);
-                            $('#DireccionPadre').val(result.direccionPadre);
-                        } else {
-                            mostrarAlerta('No se encontró ningún padre registrado con esa identidad.', 'error');
-                        }
-                    })
-                    .fail(function () {
-                        mostrarAlerta('Ocurrió un error al buscar la información del padre.', 'error');
-                    });
-            }
-
-            function mostrarAlerta(mensaje, tipo) {
-                Swal.fire({
-                    title: 'Atención',
-                    text: mensaje,
-                    icon: tipo,
-                    timer: 2000,
-                    timerProgressBar: true,
-                    showConfirmButton: false
-                });
-            }
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            $('#Idaño').change(function () {
+            // Cargar grados cuando cambia el año
+            $('#Idaño').change(function() {
                 var idAnio = $(this).val();
                 if (idAnio) {
-                    $.get('@Url.Action("GetGradosPorAnio", "Matricula")', { idAnio: idAnio })
-                        .done(function (grados) {
-                            var selectGrado = $('#Idgrado');
-                            selectGrado.empty();
-                            selectGrado.append($('<option></option>').val('').text('Seleccione un grado'));
-                            $.each(grados, function (index, grado) {
-                                selectGrado.append($('<option></option>').val(grado.idgrado).text(grado.idgrado));
-                            });
-                        })
-                        .fail(function () {
-                            mostrarAlerta('Error al cargar los grados', 'error');
-                        });
+                    cargarGrados(idAnio);
                 } else {
                     $('#Idgrado').empty().append($('<option></option>').val('').text('Seleccione un grado'));
                 }
             });
 
-            function mostrarAlerta(mensaje, tipo) {
-                Swal.fire({
-                    title: 'Atención',
-                    text: mensaje,
-                    icon: tipo,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    showConfirmButton: false
-                });
-            }
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            $('#Idgrado').change(function () {
+            // Cargar detalles del grado cuando se selecciona uno
+            $('#Idgrado').change(function() {
                 var idGrado = $(this).val();
                 if (idGrado) {
-                    $.get('@Url.Action("GetDetallesGrado", "Matricula")', { idGrado: idGrado })
-                        .done(function (detalles) {
-                            if (detalles) {
-                                $('#Grado').val(detalles.grado1);
-                                $('#Seccion').val(detalles.seccion);
-                                $('#Jornada').val(detalles.jornada);
-                                $('#NivelDescripcion').val(detalles.nivelDescripcion);
-                            } else {
-                                limpiarCampos();
-                            }
-                        })
-                        .fail(function () {
-                            mostrarAlerta('Error al cargar los detalles del grado', 'error');
-                            limpiarCampos();
-                        });
+                    cargarDetallesGrado(idGrado);
                 } else {
-                    limpiarCampos();
+                    limpiarCamposGrado();
                 }
             });
+        });
 
-            function limpiarCampos() {
-                $('#Grado').val('');
-                $('#Seccion').val('');
-                $('#Jornada').val('');
-                $('#NivelDescripcion').val('');
-            }
+        // Función para cargar los grados disponibles para un año
+        function cargarGrados(idAnio) {
+            $.get('@Url.Action("GetGradosPorAnio", "Matricula")', { idAnio: idAnio })
+                .done(function(grados) {
+                    var selectGrado = $('#Idgrado');
+                    selectGrado.empty();
+                    selectGrado.append($('<option></option>').val('').text('Seleccione un grado'));
 
-            function mostrarAlerta(mensaje, tipo) {
+                    // Asegúrate de que estamos accediendo a la propiedad correcta
+                    $.each(grados, function(index, grado) {
+                        selectGrado.append($('<option></option>').val(grado.idGrado).text(grado.idGrado));
+                    });
+                })
+                .fail(function() {
+                    mostrarAlerta('Error al cargar los grados', 'error');
+                });
+        }
+
+        // Función para cargar los detalles de un grado específico
+        function cargarDetallesGrado(idGrado) {
+            $.get('@Url.Action("GetDetallesGrado", "Matricula")', { idGrado: idGrado })
+                .done(function(detalles) {
+                    if (detalles) {
+                        $('#Grado').val(detalles.grado1);
+                        $('#Seccion').val(detalles.seccion);
+                        $('#Jornada').val(detalles.jornada);
+                        $('#NivelDescripcion').val(detalles.nivelDescripcion);
+                    } else {
+                        limpiarCamposGrado();
+                    }
+                })
+                .fail(function() {
+                    mostrarAlerta('Error al cargar los detalles del grado', 'error');
+                    limpiarCamposGrado();
+                });
+        }
+
+        // Función para limpiar los campos de grado
+        function limpiarCamposGrado() {
+            $('#Grado').val('');
+            $('#Seccion').val('');
+            $('#Jornada').val('');
+            $('#NivelDescripcion').val('');
+        }
+
+        // Función para buscar padre/encargado
+        function buscarPadre() {
+            var idpadre = $('#Idpadre').val();
+            if (!idpadre) {
                 Swal.fire({
-                    title: 'Atención',
-                    text: mensaje,
-                    icon: tipo,
-                    timer: 3000,
-                    timerProgressBar: true,
+                    icon: 'warning',
+                    title: 'Campo vacío',
+                    text: 'Por favor ingrese una identidad para buscar',
+                    timer: 2000,
                     showConfirmButton: false
                 });
-            }
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            function calcularEdad() {
-                var fechaNacimiento = new Date($('#FechaNacimiento').val());
-                var hoy = new Date();
-                var edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
-                var m = hoy.getMonth() - fechaNacimiento.getMonth();
-
-                if (m < 0 || (m === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
-                    edad--;
-                }
-
-                $('#Edad').val(edad);
+                return;
             }
 
-            $('#FechaNacimiento').change(function () {
-                calcularEdad();
-            });
+            $.get('@Url.Action("GetPadreInfo", "Matricula")', { idpadre: idpadre })
+                .done(function (result) {
+                    if (result.success) {
+                        $('#NombrePadre').val(result.nombrePadre);
+                        $('#Parentesco').val(result.parentesco);
+                        $('#TelefonoPadre').val(result.telefonoPadre);
+                        $('#CelPadre').val(result.celPadre);
+                        $('#DireccionPadre').val(result.direccionPadre);
+                    } else {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'No encontrado',
+                            text: 'No se encontró ningún padre registrado con esa identidad',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }
+                })
+                .fail(function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Ocurrió un error al buscar la información del padre',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                });
+        }
 
-            if ($('#FechaNacimiento').val()) {
-                calcularEdad();
-            }
-        });
-    </script>
-
-    <script>
+        // Función para buscar estudiante
         function buscarEstudiante(event) {
             if (event.key === 'Enter') {
                 event.preventDefault();
-                var ididentidad = document.getElementById('Ididentidad').value;
+                var ididentidad = $('#Ididentidad').val();
 
-                fetch(`/Matricula/BuscarEstudiante?ididentidad=${ididentidad}`)
-                    .then(response => response.json())
-                    .then(data => {
+                if (!ididentidad) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Campo vacío',
+                        text: 'Por favor ingrese una identidad para buscar',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    return;
+                }
+
+                $.get('@Url.Action("BuscarEstudiante", "Matricula")', { ididentidad: ididentidad })
+                    .done(function(data) {
                         if (data.estudianteRegistrado) {
                             Swal.fire({
                                 title: 'Estudiante Registrado',
@@ -438,56 +570,140 @@
                                 showConfirmButton: false
                             });
 
-                            document.getElementById('NombreEstudiante').value = data.nombreEstudiante;
-                            document.getElementById('Nacionalidad').value = data.nacionalidad;
-                            document.getElementById('FechaNacimiento').value = data.fechaNacimiento;
-                            document.getElementById('LugarNacimiento').value = data.lugarNacimiento;
-                            document.getElementById('Genero').value = data.genero;
-                            document.getElementById('TipoSangre').value = data.tipoSangre;
-                            document.getElementById('Alergia').value = data.alergia;
-                            document.getElementById('Edad').value = data.edad;
-                            document.getElementById('TelefonoEstudiante').value = data.telefonoEstudiante;
-                            document.getElementById('CelularEstudiante').value = data.celularEstudiante;
-                            document.getElementById('Correo').value = data.correo;
-                            document.getElementById('Direccion').value = data.direccion;
-                            document.getElementById('Estado').value = data.estado;
-                            document.getElementById('VacunasCovid').value = data.vacunasCovid;
-                            document.getElementById('Proviene').value = data.proviene;
-                            document.getElementById('Beca').value = data.beca;
-                            document.getElementById('RepiteAño').value = data.repiteAño;
-                            document.getElementById('Observacion').value = data.observacion;
-                            document.getElementById('EstadoMatricula').value = data.estadoIngreso;
-                            document.getElementById('FechaIngreso').value = data.fechaIngreso;
-                            document.getElementById('Idpadre').value = data.idpadre;
-                            document.getElementById('NombrePadre').value = data.nombrePadre;
-                            document.getElementById('Parentesco').value = data.parentesco;
-                            document.getElementById('TelefonoPadre').value = data.telefonoPadre;
-                            document.getElementById('CelPadre').value = data.celPadre;
-                            document.getElementById('DireccionPadre').value = data.direccionPadre;
+                            // Llenar los campos con los datos del estudiante
+                            $('#NombreEstudiante').val(data.nombreEstudiante);
+                            $('#Nacionalidad').val(data.nacionalidad);
+                            $('#FechaNacimiento').val(data.fechaNacimiento);
+                            $('#LugarNacimiento').val(data.lugarNacimiento);
+                            $('#Genero').val(data.genero);
+                            $('#TipoSangre').val(data.tipoSangre);
+                            $('#Alergia').val(data.alergia);
+                            $('#Edad').val(data.edad);
+                            $('#TelefonoEstudiante').val(data.telefonoEstudiante);
+                            $('#CelularEstudiante').val(data.celularEstudiante);
+                            $('#Correo').val(data.correo);
+                            $('#Direccion').val(data.direccion);
+                            $('#Estado').val(data.estado);
+                            $('#VacunasCovid').val(data.vacunasCovid);
+                            $('#Proviene').val(data.proviene);
+                            $('#Beca').val(data.beca);
+                            $('#RepiteAño').val(data.repiteAño);
+                            $('#Observacion').val(data.observacion);
+                            $('#EstadoMatricula').val(data.estadoIngreso);
+                            if (data.fechaIngreso) {
+                                $('#FechaIngreso').val(data.fechaIngreso);
+                            }
+
+                            // Llenar datos del padre si existen
+                            if (data.idpadre) {
+                                $('#Idpadre').val(data.idpadre);
+                                $('#NombrePadre').val(data.nombrePadre);
+                                $('#Parentesco').val(data.parentesco);
+                                $('#TelefonoPadre').val(data.telefonoPadre);
+                                $('#CelPadre').val(data.celPadre);
+                                $('#DireccionPadre').val(data.direccionPadre);
+                            }
                         } else {
-                            var toastLiveExample = document.getElementById('liveToast')
-                            var toast = new bootstrap.Toast(toastLiveExample)
-                            toast.show()
-                            document.getElementById('NombreEstudiante').focus();
+                            var toastLiveExample = document.getElementById('liveToast');
+                            var toast = new bootstrap.Toast(toastLiveExample);
+                            toast.show();
+                            $('#NombreEstudiante').focus();
                         }
+                    })
+                    .fail(function() {
+                        mostrarAlerta('Error al buscar el estudiante', 'error');
                     });
             }
         }
-    </script>
 
-    <script>
+        // Función para calcular la edad
+        function calcularEdad() {
+            var fechaNacimiento = new Date($('#FechaNacimiento').val());
+            if (isNaN(fechaNacimiento.getTime())) {
+                return;
+            }
+
+            var hoy = new Date();
+            var edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+            var m = hoy.getMonth() - fechaNacimiento.getMonth();
+
+            if (m < 0 || (m === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+                edad--;
+            }
+
+            $('#Edad').val(edad);
+        }
+
+        // Función para mostrar alertas
+        function mostrarAlerta(mensaje, tipo) {
+            Swal.fire({
+                title: 'Atención',
+                text: mensaje,
+                icon: tipo,
+                timer: 3000,
+                timerProgressBar: true,
+                showConfirmButton: false
+            });
+        }
+
+        // Mostrar mensaje de éxito si existe
         $(document).ready(function () {
         @if (TempData["SuccessMessage"] != null)
         {
             <text>
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Éxito!',
-                        text: '@TempData["SuccessMessage"]',
-                        confirmButtonText: 'Aceptar'
-                    });
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: '@TempData["SuccessMessage"]',
+                            confirmButtonText: 'Aceptar'
+                        });
             </text>
         }
         });
+
+
+        //FUNCIÓN ENCONTRAR PADRE DESPÚES DE 3 CARACTERES
+        $(function() {
+            $("#Idpadre").autocomplete({
+                source: function(request, response) {
+                    $.get('@Url.Action("BuscarPadres", "Matricula")', {
+                        term: request.term
+                    }, function(data) {
+                        response($.map(data, function(item) {
+                            return {
+                                label: item.idPadre + " - " + item.nombrePadre + " (" + item.parentesco + ")",
+                                value: item.idPadre,
+                                nombre: item.nombrePadre,
+                                parentesco: item.parentesco,
+                                telefono: item.telefonoPadre,
+                                celular: item.celPadre,
+                                direccion: item.direccionPadre
+                            };
+                        }));
+                    });
+                },
+                minLength: 3,
+                select: function(event, ui) {
+                    // Llenar todos los campos con los datos del padre seleccionado
+                    $("#Idpadre").val(ui.item.value);
+                    $("#NombrePadre").val(ui.item.nombre);
+                    $("#Parentesco").val(ui.item.parentesco);
+                    $("#TelefonoPadre").val(ui.item.telefono);
+                    $("#CelPadre").val(ui.item.celular);
+                    $("#DireccionPadre").val(ui.item.direccion);
+                    $("#IdpadreHidden").val(ui.item.value);
+                    return false;
+                },
+                focus: function(event, ui) {
+                    $("#Idpadre").val(ui.item.label);
+                    return false;
+                }
+            }).autocomplete("instance")._renderItem = function(ul, item) {
+                return $("<li>")
+                    .append(`<div>${item.label}</div>`)
+                    .appendTo(ul);
+            };
+        });
     </script>
-}
+</body>
+</html>

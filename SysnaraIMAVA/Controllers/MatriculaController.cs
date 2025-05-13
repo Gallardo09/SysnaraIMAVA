@@ -97,6 +97,17 @@ namespace SysnaraIMAVA.Controllers
             return View();
         }
 
+        //[HttpGet]
+        //public IActionResult GetAnioActual()
+        //{
+        //    var anioActual = _context.Años
+        //        .OrderByDescending(a => a.Idaño)
+        //        .Select(a => new { idAño = a.Idaño })
+        //        .FirstOrDefault();
+
+        //    return Json(anioActual);
+        //}
+
         [HttpGet]
         public IActionResult BuscarEstudiante(string ididentidad)
         {
@@ -199,14 +210,33 @@ namespace SysnaraIMAVA.Controllers
                 return Json(new { success = false });
             }
         }
+        [HttpGet]
+        public IActionResult BuscarPadres(string term)
+        {
+            var padres = _context.Padres
+                .Where(p => p.Idpadre.Contains(term) || p.NombrePadre.Contains(term))
+                .Select(p => new {
+                    idPadre = p.Idpadre,
+                    nombrePadre = p.NombrePadre,
+                    parentesco = p.Parentesco,
+                    telefonoPadre = p.TelefonoPadre,
+                    celPadre = p.CelPadre,
+                    direccionPadre = p.DireccionPadre
+                })
+                .Take(10)
+                .ToList();
+
+            return Json(padres);
+        }
 
         [HttpGet]
-        public IActionResult GetGradosPorAnio(int idAnio)
+        public async Task<JsonResult> GetGradosPorAnio(int idAnio)
         {
-            var grados = _context.Grados
+            var grados = await _context.Grados
                 .Where(g => g.Idaño == idAnio)
-                .Select(g => new { g.Idgrado })
-                .ToList();
+                .Select(g => new { idGrado = g.Idgrado }) // Asegúrate que el nombre de la propiedad coincide
+                .ToListAsync();
+
             return Json(grados);
         }
 
@@ -217,11 +247,10 @@ namespace SysnaraIMAVA.Controllers
                 .Where(g => g.Idgrado == idGrado)
                 .Select(g => new
                 {
-                    g.Idgrado,
-                    g.Grado1,
-                    g.Seccion,
-                    g.Jornada,
-                    g.NivelDescripcion
+                    grado1 = g.Grado1,  // Asegúrate que estos nombres coincidan
+                    seccion = g.Seccion,
+                    jornada = g.Jornada,
+                    nivelDescripcion = g.NivelDescripcion
                 })
                 .FirstOrDefault();
 
