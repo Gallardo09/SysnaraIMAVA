@@ -4,77 +4,133 @@
     ViewData["Title"] = "Delete";
 }
 
-<h2 style="font-family: Russo One, sans-serif;">Eliminar Datos</h2>
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-danger text-white">
+            <h2 class="card-title" style="font-family: 'Russo One', sans-serif; color:white;">
+                <i class="fas fa-exclamation-triangle me-2" style="color:white"></i>Eliminar Registro de Padre/Encargado
+            </h2>
+        </div>
 
-<h3>¿Esta seguro(a) de eliminar los datos?</h3>
-<div>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            Identidad
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Idpadre)
-        </dd>
-        <dt class = "col-sm-2">
-            Nombre del Padre
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NombrePadre)
-        </dd>
-        <dt class = "col-sm-2">
-            Parentesco
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Parentesco)
-        </dd>
-        <dt class = "col-sm-2">
-            Profesión
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Profesion)
-        </dd>
-        <dt class = "col-sm-2">
-            Género
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Genero)
-        </dd>
-        <dt class = "col-sm-2">
-            Teléfono
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TelefonoPadre)
-        </dd>
-        <dt class = "col-sm-2">
-            Celular
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CelPadre)
-        </dd>
-        <dt class = "col-sm-2">
-            Correo
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Correo)
-        </dd>
-        <dt class = "col-sm-2">
-            Dirección del Padre o Encargado
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DireccionPadre)
-        </dd>
-        <dt class = "col-sm-2">
-            Observación
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Observacion)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Idimvencargado" />
-        <input type="submit" value="Eliminar" class="btn btn-danger" /> |
-        <a class="btn btn-warning" asp-action="Index">Regresar a la Lista</a>
-    </form>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <h4><i class="fas fa-question-circle me-2"></i>¿Está seguro(a) de eliminar este registro?</h4>
+                <p class="mb-0">Esta acción no se puede deshacer y se eliminarán todos los datos asociados permanentemente.</p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="info-box bg-light p-3 rounded mb-3">
+                        <h4 class="text-danger mb-3">Información Personal</h4>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Identidad:</div>
+                            <div class="col-sm-8">@Html.DisplayFor(model => model.Idpadre)</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Nombre:</div>
+                            <div class="col-sm-8">@Html.DisplayFor(model => model.NombrePadre)</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Parentesco:</div>
+                            <div class="col-sm-8">@Html.DisplayFor(model => model.Parentesco)</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Género:</div>
+                            <div class="col-sm-8">@Html.DisplayFor(model => model.Genero)</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Profesión:</div>
+                            <div class="col-sm-8">@Html.DisplayFor(model => model.Profesion)</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Año Registrado:</div>
+                            <div class="col-sm-8">@Html.DisplayFor(model => model.Idaño)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="info-box bg-light p-3 rounded mb-3">
+                        <h4 class="text-danger mb-3">Información de Contacto</h4>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Teléfono:</div>
+                            <div class="col-sm-8">@Html.DisplayFor(model => model.TelefonoPadre)</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Celular:</div>
+                            <div class="col-sm-8">@Html.DisplayFor(model => model.CelPadre)</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Correo:</div>
+                            <div class="col-sm-8">@Html.DisplayFor(model => model.Correo)</div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">Dirección:</div>
+                            <div class="col-sm-8">@Html.DisplayFor(model => model.DireccionPadre)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="info-box bg-light p-3 rounded mb-3">
+                        <div class="row mb-2">
+                            <div class="col-sm-2 fw-bold">Observaciones:</div>
+                            <div class="col-sm-10">@Html.DisplayFor(model => model.Observacion)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form asp-action="Delete" class="mt-4">
+                <input type="hidden" asp-for="Idimvencargado" />
+                <div class="d-flex justify-content-between">
+                    <a class="btn btn-outline-secondary" asp-action="Index">
+                        <i class="fas fa-arrow-left me-1"></i> Cancelar y Regresar
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt me-1"></i> Confirmar Eliminación
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
+<style>
+    .info-box {
+        border-left: 4px solid #dc3545;
+        transition: all 0.3s ease;
+    }
+
+        .info-box:hover {
+            box-shadow: 0 0 10px rgba(220, 53, 69, 0.2);
+        }
+
+    .card {
+        border-radius: 10px;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0 !important;
+    }
+
+    .fw-bold {
+        color: #495057;
+    }
+
+    .alert-warning {
+        border-left: 4px solid #ffc107;
+    }
+</style>

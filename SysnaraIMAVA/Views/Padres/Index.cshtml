@@ -100,8 +100,8 @@
                                     <td>@item.Correo</td>
                                     <td>@item.DireccionPadre</td>
                                     <td>@item.Observacion</td>
-                                    <td class="text-center">
-                                        <div class="action-buttons">
+                                    <td class="text-center" style="min-width: 150px;">
+                                        <div class="d-flex justify-content-center gap-1">
                                             <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.Idimvencargado" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </a>
@@ -264,3 +264,31 @@
         });
     </script>
 }
+
+
+<style>
+    /* Estilo para la columna de acciones */
+    .action-column {
+        min-width: 150px;
+        white-space: nowrap;
+    }
+
+    /* Contenedor de botones */
+    .action-buttons {
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+    }
+
+    /* Ajustar tamaño de botones */
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    /* Asegurar que la tabla no sea demasiado ancha */
+    .table-responsive {
+        overflow-x: auto;
+        max-width: 100%;
+    }
+</style>
