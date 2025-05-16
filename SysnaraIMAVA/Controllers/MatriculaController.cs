@@ -157,34 +157,63 @@ namespace SysnaraIMAVA.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Matricula matricula, IFormFile fotoInput)
+        public async Task<IActionResult> Create(Matricula matricula)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    //if (fotoInput != null && fotoInput.Length > 0)
-                    //{
-                    //    using (var memoryStream = new MemoryStream())
-                    //    {
-                    //        await fotoInput.CopyToAsync(memoryStream);
-                    //        matricula.FotoData = memoryStream.ToArray();
-                    //    }
-                    //}
-
                     _context.Add(matricula);
                     await _context.SaveChangesAsync();
+
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new
+                        {
+                            success = true,
+                            message = "El alumno ha sido matriculado exitosamente"
+                        });
+                    }
+
+                    TempData["SuccessMessage"] = "El alumno ha sido matriculado exitosamente";
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("", "Ocurrió un error al guardar la matrícula.");
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new
+                        {
+                            success = false,
+                            message = $"Ocurrió un error al guardar: {ex.Message}"
+                        });
+                    }
+
+                    ModelState.AddModelError("", $"Ocurrió un error al guardar: {ex.Message}");
                 }
             }
 
+            // Si es AJAX, devolver errores de validación
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return Json(new
+                {
+                    success = false,
+                    message = "Error de validación",
+                    errors = errors
+                });
+            }
+
+            // Recargar ViewData para el formulario
             ViewData["Idaño"] = new SelectList(_context.Años, "Idaño", "Idaño", matricula.Idaño);
             ViewData["Idimvencargado"] = new SelectList(_context.Padres, "Idimvencargado", "Idimvencargado", matricula.Idimvencargado);
             ViewData["Idgrado"] = new SelectList(_context.Grados, "Idgrado", "Idgrado", matricula.Idgrado);
+
             return View(matricula);
         }
 
@@ -283,7 +312,7 @@ namespace SysnaraIMAVA.Controllers
             [Bind("Idaño,Idimvencargado,Idpadre,NombrePadre,Parentesco,Idest,Idimv,Idestudiante,Nacionalidad,NombreEstudiante,FechaNacimiento,LugarNacimiento,Genero,TipoSangre,Alergia,Edad,TelefonoEstudiante,CelularEstudiante,Correo,Direccion,Estado,Idgrado,Grado,Seccion,Jornada,Proviene,Beca,RepiteAño,Observacion,NivelDescripcion,TelefonoPadre,CelPadre,DireccionPadre,VacunasCovid,EstadoMatricula,FechaIngreso")]
             Matricula matricula,
             IFormFile fotoInput)
-        {
+            {
             if (id != matricula.Idest)
             {
                 return NotFound();

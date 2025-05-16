@@ -23,107 +23,8 @@
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
-    <!-- Agrega esto en el head -->
+    <!-- jQuery UI -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css">
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        .card {
-            border-radius: 0.5rem;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-            border: none;
-        }
-
-        .card-header {
-            border-radius: 0.5rem 0.5rem 0 0 !important;
-            padding: 0.75rem 1.25rem;
-        }
-
-        .form-control, .form-select {
-            font-size: 0.875rem;
-            border-radius: 0.25rem;
-        }
-
-        .form-label {
-            margin-bottom: 0.25rem;
-            font-weight: 500;
-        }
-
-        .bg-gradient-primary {
-            background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
-        }
-
-        .accordion-button:not(.collapsed) {
-            background-color: #f8f9fa;
-            color: #2c3e50;
-        }
-
-        .accordion-button:focus {
-            box-shadow: none;
-            border-color: rgba(0,0,0,.125);
-        }
-
-        .btn-primary {
-            background-color: #4e73df;
-            border-color: #4e73df;
-        }
-
-            .btn-primary:hover {
-                background-color: #3a5bbf;
-                border-color: #3a5bbf;
-            }
-
-        .toast-header {
-            background-color: #4e73df;
-            color: white;
-        }
-
-        .title-font {
-            font-family: 'Russo One', sans-serif;
-        }
-
-        .small-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #495057;
-        }
-
-        .input-group-text {
-            font-size: 0.875rem;
-        }
-
-        .ui-autocomplete {
-            max-height: 200px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: 0;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-shadow: 0 6px 12px rgba(0,0,0,.175);
-        }
-
-            .ui-autocomplete li {
-                padding: 8px 12px;
-                border-bottom: 1px solid #eee;
-                cursor: pointer;
-            }
-
-                .ui-autocomplete li:hover {
-                    background-color: #f5f5f5;
-                }
-
-                .ui-autocomplete li div {
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                }
-    </style>
 </head>
 <body>
     <div class="container-fluid py-3">
@@ -133,7 +34,7 @@
             </div>
 
             <div class="card-body p-4">
-                <form asp-action="Create" enctype="multipart/form-data" class="needs-validation" novalidate>
+                <form asp-action="Create" enctype="multipart/form-data" class="needs-validation" novalidate id="matriculaForm">
                     <!-- Sección Padre/Encargado - Acordeón -->
                     <div class="accordion mb-4" id="accordionPadre">
                         <div class="accordion-item">
@@ -147,18 +48,18 @@
                                     <div class="row g-3">
                                         <div class="col-md-3">
                                             <label asp-for="Idpadre" class="form-label small-label">Identidad del Padre</label>
-                                            <input asp-for="Idpadre" class="form-control" id="Idpadre" placeholder="Buscar por identidad o nombre" />
+                                            <input asp-for="Idpadre" class="form-control" id="Idpadre" placeholder="Buscar por identidad o nombre" required />
                                             <input type="hidden" id="IdpadreHidden" name="Idpadre" />
                                             <span asp-validation-for="Idpadre" class="text-danger small"></span>
                                         </div>
                                         <div class="col-md-3">
                                             <label asp-for="NombrePadre" class="form-label small-label">Nombre</label>
-                                            <input asp-for="NombrePadre" class="form-control" id="NombrePadre" readonly />
+                                            <input asp-for="NombrePadre" class="form-control" id="NombrePadre" readonly required />
                                         </div>
 
                                         <div class="col-md-2">
                                             <label asp-for="Parentesco" class="form-label small-label">Parentesco</label>
-                                            <input asp-for="Parentesco" class="form-control" id="Parentesco" readonly />
+                                            <input asp-for="Parentesco" class="form-control" id="Parentesco" readonly required />
                                         </div>
 
                                         <div class="col-md-2">
@@ -190,26 +91,28 @@
                             <div class="row g-3">
                                 <div class="col-md-2">
                                     <label asp-for="Idaño" class="form-label small-label">Año</label>
-                                    <select asp-for="Idaño" id="Idaño" class="form-select" asp-items="ViewBag.Idaño"></select>
+                                    <select asp-for="Idaño" id="Idaño" class="form-select" asp-items="ViewBag.Idaño" required>
+                                        <option value="">Seleccione</option>
+                                    </select>
                                 </div>
 
                                 <div class="col-md-2">
                                     <label asp-for="Idestudiante" class="form-label small-label">Identidad</label>
                                     <div class="input-group input-group-sm">
-                                        <input asp-for="Idestudiante" class="form-control" id="Ididentidad" onkeydown="buscarEstudiante(event)" placeholder="Ingrese identidad" />
+                                        <input asp-for="Idestudiante" class="form-control" id="Ididentidad" onkeydown="buscarEstudiante(event)" placeholder="Ingrese identidad" required />
                                     </div>
                                     <span asp-validation-for="Idestudiante" class="text-danger small"></span>
                                 </div>
 
                                 <div class="col-md-4">
                                     <label asp-for="NombreEstudiante" class="form-label small-label">Nombre Completo</label>
-                                    <input asp-for="NombreEstudiante" id="NombreEstudiante" class="form-control" />
+                                    <input asp-for="NombreEstudiante" id="NombreEstudiante" class="form-control" required />
                                     <span asp-validation-for="NombreEstudiante" class="text-danger small"></span>
                                 </div>
 
                                 <div class="col-md-2">
                                     <label asp-for="Nacionalidad" class="form-label small-label">Nacionalidad</label>
-                                    <select asp-for="Nacionalidad" class="form-select">
+                                    <select asp-for="Nacionalidad" class="form-select" required>
                                         <option value="HONDUREÑO(A)">HONDUREÑO(A)</option>
                                         <option value="EXTRANJERO(A)">EXTRANJERO(A)</option>
                                     </select>
@@ -217,7 +120,7 @@
 
                                 <div class="col-md-2">
                                     <label asp-for="FechaNacimiento" class="form-label small-label">Fecha Nacimiento</label>
-                                    <input type="date" asp-for="FechaNacimiento" id="FechaNacimiento" class="form-control" />
+                                    <input type="date" asp-for="FechaNacimiento" id="FechaNacimiento" class="form-control" required />
                                     <span asp-validation-for="FechaNacimiento" class="text-danger small"></span>
                                 </div>
 
@@ -228,8 +131,8 @@
 
                                 <div class="col-md-2">
                                     <label asp-for="Genero" class="form-label small-label">Género</label>
-                                    <select asp-for="Genero" class="form-select">
-                                        <option value=""></option>
+                                    <select asp-for="Genero" class="form-select" required>
+                                        <option value="">Seleccione</option>
                                         <option value="FEMENINO">FEMENINO</option>
                                         <option value="MASCULINO">MASCULINO</option>
                                     </select>
@@ -238,7 +141,7 @@
                                 <div class="col-md-2">
                                     <label asp-for="TipoSangre" class="form-label small-label">Tipo Sangre</label>
                                     <select asp-for="TipoSangre" class="form-select">
-                                        <option value=""></option>
+                                        <option value="">Seleccione</option>
                                         <option value="A+">A+</option>
                                         <option value="A-">A-</option>
                                         <option value="B+">B+</option>
@@ -286,7 +189,7 @@
                                 <div class="col-md-2">
                                     <label asp-for="Estado" class="form-label small-label">Estado</label>
                                     <select asp-for="Estado" class="form-select">
-                                        <option value=""></option>
+                                        <option value="">Seleccione</option>
                                         <option value="ACTIVO">ACTIVO</option>
                                         <option value="INACTIVO">INACTIVO</option>
                                     </select>
@@ -309,14 +212,14 @@
                             <div class="row g-3">
                                 <div class="col-md-2">
                                     <label asp-for="Idgrado" class="form-label small-label">ID Grado</label>
-                                    <select asp-for="Idgrado" id="Idgrado" class="form-select">
+                                    <select asp-for="Idgrado" id="Idgrado" class="form-select" required>
                                         <option value="">Seleccione</option>
                                     </select>
                                 </div>
 
                                 <div class="col-md-2">
                                     <label asp-for="Grado" class="form-label small-label">Grado</label>
-                                    <input asp-for="Grado" class="form-control" id="Grado" readonly />
+                                    <input asp-for="Grado" class="form-control" id="Grado" readonly required />
                                 </div>
 
                                 <div class="col-md-1">
@@ -382,24 +285,11 @@
                         <a class="btn btn-outline-secondary" asp-action="Index">
                             <i class="fas fa-arrow-left me-2"></i>Regresar
                         </a>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary" id="btnGuardar">
                             <i class="fas fa-save me-2"></i>Guardar Matrícula
                         </button>
                     </div>
                 </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Notificación -->
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-        <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header bg-warning text-white">
-                <strong class="me-auto">Notificación</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                La identidad no está registrada. Puede continuar con la matrícula.
             </div>
         </div>
     </div>
@@ -409,6 +299,7 @@
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -420,6 +311,69 @@
 
     <script>
         $(document).ready(function() {
+            // Configurar el envío del formulario
+            $('#matriculaForm').on('submit', function(e) {
+                e.preventDefault();
+
+                var form = $(this);
+                var formData = new FormData(form[0]);
+
+                Swal.fire({
+                    title: 'Procesando',
+                    html: 'Guardando matrícula...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        Swal.close();
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '¡Éxito!',
+                                text: response.message,
+                                confirmButtonText: 'Aceptar'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = '@Url.Action("Index", "Matricula")';
+                                }
+                            });
+                        } else {
+                            var errorMsg = response.message;
+                            if (response.errors && response.errors.length > 0) {
+                                errorMsg += '<ul>';
+                                response.errors.forEach(function(error) {
+                                    errorMsg += '<li>' + error + '</li>';
+                                });
+                                errorMsg += '</ul>';
+                            }
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                html: errorMsg
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        Swal.close();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Error en la comunicación con el servidor'
+                        });
+                    }
+                });
+            });
+
             // Configurar evento Enter para buscar padre
             $('#Idpadre').on('keydown', function(e) {
                 if (e.key === 'Enter') {
@@ -452,6 +406,46 @@
                     limpiarCamposGrado();
                 }
             });
+
+            // Configurar autocomplete para padres
+            $("#Idpadre").autocomplete({
+                source: function(request, response) {
+                    $.get('@Url.Action("BuscarPadres", "Matricula")', {
+                        term: request.term
+                    }, function(data) {
+                        response($.map(data, function(item) {
+                            return {
+                                label: item.idPadre + " - " + item.nombrePadre + " (" + item.parentesco + ")",
+                                value: item.idPadre,
+                                nombre: item.nombrePadre,
+                                parentesco: item.parentesco,
+                                telefono: item.telefonoPadre,
+                                celular: item.celPadre,
+                                direccion: item.direccionPadre
+                            };
+                        }));
+                    });
+                },
+                minLength: 3,
+                select: function(event, ui) {
+                    $("#Idpadre").val(ui.item.value);
+                    $("#NombrePadre").val(ui.item.nombre);
+                    $("#Parentesco").val(ui.item.parentesco);
+                    $("#TelefonoPadre").val(ui.item.telefono);
+                    $("#CelPadre").val(ui.item.celular);
+                    $("#DireccionPadre").val(ui.item.direccion);
+                    $("#IdpadreHidden").val(ui.item.value);
+                    return false;
+                },
+                focus: function(event, ui) {
+                    $("#Idpadre").val(ui.item.label);
+                    return false;
+                }
+            }).autocomplete("instance")._renderItem = function(ul, item) {
+                return $("<li>")
+                    .append(`<div>${item.label}</div>`)
+                    .appendTo(ul);
+            };
         });
 
         // Función para cargar los grados disponibles para un año
@@ -462,7 +456,6 @@
                     selectGrado.empty();
                     selectGrado.append($('<option></option>').val('').text('Seleccione un grado'));
 
-                    // Asegúrate de que estamos accediendo a la propiedad correcta
                     $.each(grados, function(index, grado) {
                         selectGrado.append($('<option></option>').val(grado.idGrado).text(grado.idGrado));
                     });
@@ -604,9 +597,6 @@
                                 $('#DireccionPadre').val(data.direccionPadre);
                             }
                         } else {
-                            var toastLiveExample = document.getElementById('liveToast');
-                            var toast = new bootstrap.Toast(toastLiveExample);
-                            toast.show();
                             $('#NombreEstudiante').focus();
                         }
                     })
@@ -645,65 +635,6 @@
                 showConfirmButton: false
             });
         }
-
-        // Mostrar mensaje de éxito si existe
-        $(document).ready(function () {
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <text>
-                        Swal.fire({
-                            icon: 'success',
-                            title: '¡Éxito!',
-                            text: '@TempData["SuccessMessage"]',
-                            confirmButtonText: 'Aceptar'
-                        });
-            </text>
-        }
-        });
-
-
-        //FUNCIÓN ENCONTRAR PADRE DESPÚES DE 3 CARACTERES
-        $(function() {
-            $("#Idpadre").autocomplete({
-                source: function(request, response) {
-                    $.get('@Url.Action("BuscarPadres", "Matricula")', {
-                        term: request.term
-                    }, function(data) {
-                        response($.map(data, function(item) {
-                            return {
-                                label: item.idPadre + " - " + item.nombrePadre + " (" + item.parentesco + ")",
-                                value: item.idPadre,
-                                nombre: item.nombrePadre,
-                                parentesco: item.parentesco,
-                                telefono: item.telefonoPadre,
-                                celular: item.celPadre,
-                                direccion: item.direccionPadre
-                            };
-                        }));
-                    });
-                },
-                minLength: 3,
-                select: function(event, ui) {
-                    // Llenar todos los campos con los datos del padre seleccionado
-                    $("#Idpadre").val(ui.item.value);
-                    $("#NombrePadre").val(ui.item.nombre);
-                    $("#Parentesco").val(ui.item.parentesco);
-                    $("#TelefonoPadre").val(ui.item.telefono);
-                    $("#CelPadre").val(ui.item.celular);
-                    $("#DireccionPadre").val(ui.item.direccion);
-                    $("#IdpadreHidden").val(ui.item.value);
-                    return false;
-                },
-                focus: function(event, ui) {
-                    $("#Idpadre").val(ui.item.label);
-                    return false;
-                }
-            }).autocomplete("instance")._renderItem = function(ul, item) {
-                return $("<li>")
-                    .append(`<div>${item.label}</div>`)
-                    .appendTo(ul);
-            };
-        });
     </script>
 </body>
 </html>
