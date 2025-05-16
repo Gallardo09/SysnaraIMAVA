@@ -308,13 +308,16 @@ namespace SysnaraIMAVA.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
-            int id,
-            [Bind("Idaño,Idimvencargado,Idpadre,NombrePadre,Parentesco,Idest,Idimv,Idestudiante,Nacionalidad,NombreEstudiante,FechaNacimiento,LugarNacimiento,Genero,TipoSangre,Alergia,Edad,TelefonoEstudiante,CelularEstudiante,Correo,Direccion,Estado,Idgrado,Grado,Seccion,Jornada,Proviene,Beca,RepiteAño,Observacion,NivelDescripcion,TelefonoPadre,CelPadre,DireccionPadre,VacunasCovid,EstadoMatricula,FechaIngreso")]
-            Matricula matricula,
-            IFormFile fotoInput)
-            {
+     int id,
+     [Bind("Idaño,Idimvencargado,Idpadre,NombrePadre,Parentesco,Idest,Idimv,Idestudiante,Nacionalidad,NombreEstudiante,FechaNacimiento,LugarNacimiento,Genero,TipoSangre,Alergia,Edad,TelefonoEstudiante,CelularEstudiante,Correo,Direccion,Estado,Idgrado,Grado,Seccion,Jornada,Proviene,Beca,RepiteAño,Observacion,NivelDescripcion,TelefonoPadre,CelPadre,DireccionPadre,VacunasCovid,EstadoMatricula,FechaIngreso")]
+    Matricula matricula)
+        {
             if (id != matricula.Idest)
             {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = "ID de matrícula no coincide" });
+                }
                 return NotFound();
             }
 
@@ -322,43 +325,76 @@ namespace SysnaraIMAVA.Controllers
             {
                 try
                 {
-                    //if (fotoInput != null && fotoInput.Length > 0)
-                    //{
-                    //    using (var memoryStream = new MemoryStream())
-                    //    {
-                    //        await fotoInput.CopyToAsync(memoryStream);
-                    //        matricula.FotoData = memoryStream.ToArray();
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    var existingMatricula = await _context.Matriculas.AsNoTracking().FirstOrDefaultAsync(m => m.Idest == id);
-                    //    if (existingMatricula != null)
-                    //    {
-                    //        matricula.FotoData = existingMatricula.FotoData;
-                    //    }
-                    //}
-
                     _context.Update(matricula);
                     await _context.SaveChangesAsync();
+
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new
+                        {
+                            success = true,
+                            message = "Los cambios se guardaron correctamente"
+                        });
+                    }
+
+                    TempData["SuccessMessage"] = "Los cambios se guardaron correctamente";
                     return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException ex)
                 {
                     if (!MatriculaExists(matricula.Idest))
                     {
+                        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                        {
+                            return Json(new { success = false, message = "La matrícula no existe" });
+                        }
                         return NotFound();
                     }
                     else
                     {
+                        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                        {
+                            return Json(new { success = false, message = "Error de concurrencia: " + ex.Message });
+                        }
                         throw;
                     }
                 }
+                catch (Exception ex)
+                {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new
+                        {
+                            success = false,
+                            message = "Error al guardar: " + ex.Message
+                        });
+                    }
+
+                    ModelState.AddModelError("", "Error al guardar: " + ex.Message);
+                }
             }
 
+            // Si es AJAX, devolver errores de validación
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return Json(new
+                {
+                    success = false,
+                    message = "Error de validación",
+                    errors = errors
+                });
+            }
+
+            // Recargar ViewData para el formulario
             ViewData["Idaño"] = new SelectList(_context.Años, "Idaño", "Idaño", matricula.Idaño);
             ViewData["Idimvencargado"] = new SelectList(_context.Padres, "Idimvencargado", "Idimvencargado", matricula.Idimvencargado);
             ViewData["Idgrado"] = new SelectList(_context.Grados, "Idgrado", "Idgrado", matricula.Idgrado);
+
             return View(matricula);
         }
 
@@ -385,31 +421,33 @@ namespace SysnaraIMAVA.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, Matricula model)
         {
-            var matricula = await _context.Matriculas.FindAsync(id);
-            if (matricula != null)
+            try
             {
-                _context.Matriculas.Remove(matricula);
-            }
+                var matricula = await _context.Matriculas.FindAsync(id);
+                if (matricula != null)
+                {
+                    _context.Matriculas.Remove(matricula);
+                    await _context.SaveChangesAsync();
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                    // Pasar el modelo a la vista
+                    ViewBag.DeleteSuccess = true;
+                    return View(model); // Devuelve la vista con el modelo
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.DeleteError = "Ocurrio un error al eliminar la matricula, este alumno ya tiene registros en la Base de Datos.";
+                return View(await _context.Matriculas.FindAsync(id));
+            }
         }
 
         private bool MatriculaExists(int id)
         {
             return _context.Matriculas.Any(e => e.Idest == id);
         }
-
-        //public IActionResult MostrarFoto(int id)
-        //{
-        //    var matricula = _context.Matriculas.FirstOrDefault(m => m.Idest == id);
-        //    if (matricula?.FotoData != null)
-        //    {
-        //        return File(matricula.FotoData, "image/jpeg");
-        //    }
-        //    return NotFound();
-        //}
     }
 }
